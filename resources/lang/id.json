@@ -1,0 +1,40 @@
+{
+    "Create New" : "Buat Baru",
+    "Add New" : "Tambah Baru",
+    "All Data" : "Semua Data",
+    "Delete" : "Hapus",
+    "Save" : "Simpan",
+    "Remove" : "Hapus",
+    "Are you sure to delete this item ?" : "Apakah anda yakin akan menghapus data ini ?",
+
+    "Categories" : "Kategori",
+    "Category" : "Kategori",
+    "Create Category" : "Buat Kategori",
+    "Update Category" : "Edit Kategori",
+
+    "Products" : "Produk",
+    "Product" : "Produk",
+    "Product Variant" : "Varian Produk",
+    "Create Product" : "Buat Produk",
+    "Update Product" : "Edit Produk",
+    "Product Description" : "Deskripsi Produk",
+    "Product Attribute" : "Atribut Produk",
+
+    "Cards" : "Kartu Member",
+    "Card"  : "Kartu Member",
+    "Create Card" : "Buat Kartu Member",
+    "Update Card" : "Edit Kartu Member",
+
+    "Payment Methods" : "Metode Pembayaran",
+    "Custom Fields" : "Bidang Kustom",
+
+    "First Name" : "Nama Depan",
+    "Last Name" : "Nama Belakang",
+    "Address" : "Alamat",
+    "Postal Code" : "Kode Pos",
+    "Whatsapp Number" : "No. Whatsapp",
+    "Province" : "Provinsi",
+    "District" : "Kabupaten / Kota",
+
+    "Card Number and Shipping Details" : "Kartu dan Alamat Tujuan"
+}
