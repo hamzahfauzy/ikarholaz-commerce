@@ -21,5 +21,10 @@ class StaffTableSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => 'password'
         ]);
+
+        Category::create([
+            'name' => 'Desain Kartu',
+            'slug' => 'desain-kartu'
+        ]);
     }
 }
