@@ -51,7 +51,7 @@
                                             <td>{{ ++$i }}</td>
                                             
 											<td>
-                                            <a href="{{route('shop.product-detail',$transactionItem->product->slug)}}">{{ $transactionItem->product->name }}</a>
+                                            <a href="{{route('staff.products.edit',$transactionItem->product->id)}}">{{ $transactionItem->product->name }}</a>
                                             <br>
                                             @foreach($transactionItem->product->custom_fields as $cf)
                                             {{Form::label($cf->customField->field_key)}} : {{ $cf->field_value }}<br>
