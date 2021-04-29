@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Staff;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
 
 class StaffTableSeeder extends Seeder
