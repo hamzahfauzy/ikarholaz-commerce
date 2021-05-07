@@ -329,7 +329,7 @@ Order ID: #$transaction->id
 Rincian transaksi
 $order_items_string
             
-Total: ".number_format($all_total_price)."
+Total: ".number_format($all_total_price+$payment['total_fee']['flat'])."
             
 Silahkan melakukan pembayaran melalui $request->payment_method dengan kode pembayaran $response_data[pay_code]
             
@@ -381,6 +381,8 @@ WaBlast::send($request->phone_number,$message);
             ]);
             Card::create([
                 'card_number' => $request->no_kartu_fix,
+                'tahun' => $tahun_lulus,
+                'unique_number' => $nomor_kartu[1],
                 'name' => $request->nama_tercetak_di_kartu,
                 'status' => 'Booking'
             ]);
