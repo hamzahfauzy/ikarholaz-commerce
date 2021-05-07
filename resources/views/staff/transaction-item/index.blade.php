@@ -80,6 +80,30 @@
                                             <td></td>
                                             <td>{{$transactionItems[0]->transaction->shipping->service_rates_formated}}</td>
                                         </tr>
+                                        @if($transactionItems[0]->transaction->shipping->resi_number == NULL)
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <form action="{{route('staff.update-shipping',$transactionItems[0]->transaction_id)}}" method="POST">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label for="">Update Nomor Resi :</label>
+                                                        <input type="text" class="form-control" name="resi_number" required>
+                                                    </div>
+                                                    <button class="btn btn-success">Update</button>
+                                                </form>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        @else
+                                        <tr>
+                                            <td></td>
+                                            <td>Nomor Resi</td>
+                                            <td>{{$transactionItems[0]->transaction->shipping->resi_number}}</td>
+                                            <td></td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <td></td>
                                             <td>Admin Fee</td>

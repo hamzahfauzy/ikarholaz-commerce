@@ -134,7 +134,6 @@ function checkKartu()
     event.preventDefault()
     var nomor_kartu = parseInt(no_kartu.value)
     var digit = `${nomor_kartu}`.length
-    console.log(nomor_kartu,digit)
     var no_request = nomor_kartu
     if(nomor_kartu < 10)
         nomor_kartu = '0000000'+nomor_kartu
@@ -159,7 +158,7 @@ function checkKartu()
 
     no_kartu.value = nomor_kartu
     var nomorkartu = no_seri.value +'.'+ nomor_kartu
-    fetch('/api/get-kartu/'+nomorkartu)
+    fetch('/api/get-kartu/'+nomor_kartu)
     .then(res => {
         if (!res.ok) {
             throw Error(res.statusText);

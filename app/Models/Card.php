@@ -24,6 +24,8 @@ class Card extends Model
 		'card_number' => 'required',
 		'name' => 'required',
 		'status' => 'required',
+		'unique_number' => 'required',
+		'tahun' => 'required',
     ];
 
     protected $perPage = 20;
@@ -33,7 +35,7 @@ class Card extends Model
      *
      * @var array
      */
-    protected $fillable = ['card_number','name','status'];
+    protected $fillable = ['card_number','name','status','unique_number','tahun'];
 
 
 

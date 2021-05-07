@@ -143,6 +143,8 @@ function recalculateSubtotal()
 async function placeOrder()
 {
     event.preventDefault();
+    document.querySelector(".btn-order").disabled="disabled"
+    document.querySelector(".btn-order").innerHTML="Mohon Menunggu..."
     // check nomor kartu
     if(document.querySelectorAll('.nomorkartu'))
     {

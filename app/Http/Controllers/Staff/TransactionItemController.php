@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Models\TransactionItem;
+use App\Models\WaBlast;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\TransactionItem;
 use App\Http\Controllers\Controller;
 
 /**
@@ -106,5 +108,20 @@ class TransactionItemController extends Controller
 
         return redirect()->route('staff.transaction_items.index')
             ->with('success', 'TransactionItem deleted successfully');
+    }
+
+    public function updateShipping(Request $request, Transaction $transaction)
+    {
+        $transaction->shipping->update([
+            'resi_number' => $request->resi_number
+        ]);
+
+        $message = "Hai Kak ".$transaction->customer->full_name.". Barang pesanan kakak telah dikirim ke alamat ".$transaction->shipping->address." via ".$transaction->shipping->courir_name.".
+No resinya ".$request->resi_number.".
+Pakai no resi ini untuk melacak pengiriman melalui web ".$transaction->shipping->courir_name;
+        WaBlast::send($transaction->customer->phone_number,$message);
+
+        return redirect()->route('staff.transaction-items.index',['transaction_id'=>$transaction->id])
+            ->with('success', 'Resi Number updated successfully');
     }
 }

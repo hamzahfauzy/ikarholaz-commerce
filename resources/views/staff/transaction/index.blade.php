@@ -40,6 +40,7 @@
 										<th>Total</th>
 										<th>Status</th>
 										<th>Date</th>
+										<th>Nomor Resi</th>
 
                                         <th></th>
                                     </tr>
@@ -53,6 +54,9 @@
 											<td>{{ $transaction->total_formated }}</td>
 											<td>{{ $transaction->status }}</td>
 											<td>{{ $transaction->created_at->format('j F Y') }}</td>
+											<td>
+                                            {{ $transaction->shipping->resi_number != NULL ? $transaction->shipping->resi_number : 'Belum ada nomor resi' }}
+                                            </td>
 
                                             <td>
                                                 <form action="{{ route('staff.transactions.destroy',$transaction->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">

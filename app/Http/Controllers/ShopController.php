@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Price;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\WaBlast;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Shipping;
@@ -107,7 +108,7 @@ class ShopController extends Controller
     {
         // validation place here
 
-        
+        $order_items_string = "";
         $order_items = [];
         $shipping_rates = ShippingRates::init($request->dest_id,cart()->get_weight(),$request->courier)->get();
         $dest = District::province($request->province_id)->find($request->dest_id);
@@ -132,6 +133,9 @@ class ShopController extends Controller
             'price'     => $shipping_rates[$request->service]->cost[0]->value,
             'quantity'  => 1
         ];
+
+        $order_items_string .= "Ongkir : ".number_format($shipping_rates[$request->service]->cost[0]->value)."\n";
+        $order_items_string .= "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
 
         $data = [];
         $data['request'] = $request->all();
@@ -189,6 +193,8 @@ class ShopController extends Controller
                     'price'     => (int) $cart->price, // *cart()->get($cart->id),
                     'quantity'  => (int) cart()->get($cart->id)
                 ];
+
+                $order_items_string .= $cart->name." x ".cart()->get($cart->id)." : ".number_format($cart->price*cart()->get($cart->id))."\n";
 
                 // cart item
                 if(isset($request->cart_item) && isset($request->cart_item[$cart->id]))
@@ -248,6 +254,8 @@ class ShopController extends Controller
                     'price'     => (int) $request->donasi,
                     'quantity'  => 1
                 ];
+
+                $order_items_string .= "Donasi : ".$request->donasi."\n";
 
                 $all_total_price += (int) $request->donasi;
             }
@@ -314,6 +322,19 @@ class ShopController extends Controller
 
             DB::commit();
 
+            $message = "Halo $user->name
+
+Berikut ini adalah data order kamu
+Order ID: #$transaction->id
+Rincian transaksi
+$order_items_string
+            
+Total: ".number_format($all_total_price)."
+            
+Silahkan melakukan pembayaran melalui $request->payment_method dengan kode pembayaran $response_data[pay_code]
+            
+Terima kasih.";
+WaBlast::send($request->phone_number,$message);
 
             return redirect()->to($response_data['checkout_url']);
         } catch (\Throwable $th) {

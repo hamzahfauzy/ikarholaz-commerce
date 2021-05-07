@@ -40,6 +40,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('transactions', TransactionController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentController::class);
+    Route::post('transaction-items/update-shipping/{transaction}', [TransactionItemController::class,'updateShipping'])->name('update-shipping');
     Route::resource('transaction-items', TransactionItemController::class);
 
     Route::get('product-images/delete/{id}',[ProductImageController::class,'delete'])->name('product-images.delete');

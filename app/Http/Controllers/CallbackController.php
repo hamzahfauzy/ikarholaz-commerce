@@ -55,23 +55,34 @@ class CallbackController extends Controller
             ];
             $payment->update($data);
             $payment->transaction()->update($data);
-            foreach($payment->transaction->transaction_items as $item)
+            if($callback->status == "PAID")
             {
-                if($item->product->custom_fields)
+                foreach($payment->transaction->transaction_items as $item)
                 {
-                    $cart = $item->product;
-                    $card_number = '';
-                    foreach($cart->custom_fields as $cf)
+                    if($item->product->custom_fields)
                     {
-                        if($cf->customField->field_key == 'nomor_kartu')
-                            $card_number = $cf->field_value;
+                        $cart = $item->product;
+                        $card_number = '';
+                        foreach($cart->custom_fields as $cf)
+                        {
+                            if($cf->customField->field_key == 'nomor_kartu')
+                                $card_number = $cf->field_value;
+                        }
+                        $card = Card::where('card_number',$card_number)->first();
+                        $card->update([
+                            'status' => 'Active'
+                        ]);
                     }
-                    $card = Card::where('card_number',$card_number)->first();
-                    $card->update([
-                        'status' => 'Active'
-                    ]);
                 }
+                
+                $message = "Terima Kasih Kak ".$payment->transaction->customer->full_name."
+Pembayaran atas tagihan #$payement->transaction_id sebesar ".$payment->total_formated." telah kami terima.
+            
+Pesanan kakak segera kami proses ya
+Terima kasih.";
+                WaBlast::send($payment->transaction->customer->phone_number,$message);
             }
+            
             return ['success'=>true];
         }
     }

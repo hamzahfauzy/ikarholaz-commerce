@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Card;
 use App\Models\Cart;
 use App\Models\Price;
+use App\Models\WaBlast;
 use App\Models\Ref\Tripay;
 use App\Models\Ref\District;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class BaseController extends Controller
 
     public function getKartu($nomor)
     {
-        return Card::where('card_number',$nomor)->where('status','Active')->firstOrFail();
+        return Card::where('unique_number',$nomor)->firstOrFail();
     }
 
     public function getNomorRegular($tahun_lulus)
@@ -47,5 +48,22 @@ class BaseController extends Controller
     public function getPrice($digit)
     {
         return number_format(Price::get($digit));
+    }
+
+    public function testWa()
+    {
+        $message = "Halo Bro
+
+            Berikut ini adalah data order kamu
+            Order ID: #1
+            Rincian transaksi
+            Oke
+            
+            Total: 10000
+            
+            Silahkan melakukan pembayaran melalui
+            
+            Terima kasih.";
+        return WaBlast::send("082369378823",$message);
     }
 }
