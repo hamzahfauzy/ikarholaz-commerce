@@ -1,7 +1,12 @@
 <div class="row">
     <div class="col-12">
+    <center>
+        Atau
+    </center>
+    </div>
+    <div class="col-12">
         <label for="">Pilih Desain</label>
-        <div class="variation-list">
+        <div class="variation-list" style="height: 300px;overflow-x: scroll;padding: 10px;">
             @foreach($desain_products as $product)
             <div class="property-card property-horizontal bg-white container-desain" style="cursor:pointer" onclick="pilihDesain(this)" data-id="{{$product->id}}">
                 <div class="row">

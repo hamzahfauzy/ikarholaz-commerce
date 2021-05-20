@@ -358,19 +358,31 @@ WaBlast::send($request->phone_number,$message);
         // return $data;
         DB::beginTransaction();
         try {
-            $desain = Product::findOrFail($request->desain_id);
+            $data_desain = [];
+            if($request->file('kustom_desain'))
+            {
+                $file_url = $request->file('kustom_desain')->store('products');
+                $data_desain['price'] = env('HARGA_KUSTOM_DESAIN',0);
+                $data_desain['file_url'] = $file_url;
+            }
+            else
+            {
+                $desain = Product::findOrFail($request->desain_id);
+                $data_desain['price'] = $desain->price;
+                $data_desain['file_url'] = $desain->thumb->file_url;
+            }
             $product = Product::create([
-                'name' => 'KTA - #'.$request->no_kartu_fix.' & Desain ('.$desain->price.')',
+                'name' => 'KTA - #'.$request->no_kartu_fix.' & Desain ('.$data_desain['price'].')',
                 'slug' => 'kta-'.$request->no_kartu_fix,
-                'base_price' => $harga+$desain->price,
-                'description' => 'KTA - #'.$request->no_kartu_fix.', Nama Lengkap : '.$request->nama_lengkap.', Nama Kartu : '.$request->nama_tercetak_di_kartu.', Desain ('.$desain->price.')',
+                'base_price' => $harga+$data_desain['price'],
+                'description' => 'KTA - #'.$request->no_kartu_fix.', Nama Lengkap : '.$request->nama_lengkap.', Nama Kartu : '.$request->nama_tercetak_di_kartu.', Desain ('.$data_desain['price'].')',
                 'stock' => 0,
                 'stock_status' => 'Dynamic Product',
                 'is_dynamic' => 1
             ]);
             ProductImage::create([
                 'product_id' => $product->id,
-                'file_url' => $desain->thumb->file_url
+                'file_url' => $data_desain['file_url']
             ]); 
             $product->set_custom_fields([
                 'nama_lengkap' => $request->nama_lengkap,
