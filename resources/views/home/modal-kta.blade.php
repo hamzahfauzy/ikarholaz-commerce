@@ -41,6 +41,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="">Kustom Desain</label>
+                            <input type="file" name="kustom_desain" class="form-control">
+                        </div>
+                    </div>
+                </div>
                 @include('home.list-desain')
                 </form>
             </div>
