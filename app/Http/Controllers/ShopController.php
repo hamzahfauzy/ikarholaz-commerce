@@ -322,6 +322,8 @@ class ShopController extends Controller
 
             DB::commit();
 
+            if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
+
             $message = "Halo $user->name
 
 Berikut ini adalah data order kamu
@@ -335,6 +337,7 @@ Silahkan melakukan pembayaran melalui $request->payment_method dengan kode pemba
             
 Terima kasih.";
 WaBlast::send($request->phone_number,$message);
+            endif;
 
             return redirect()->to($response_data['checkout_url']);
         } catch (\Throwable $th) {
