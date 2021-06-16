@@ -32,6 +32,8 @@ class CreateAlumnisTable extends Migration
             $table->text('biography');
             $table->string('profile_pic');
             $table->date('registration_date');
+            $table->string('approval_status');
+            $table->string('approval_by');
             $table->timestamps();
         });
     }
