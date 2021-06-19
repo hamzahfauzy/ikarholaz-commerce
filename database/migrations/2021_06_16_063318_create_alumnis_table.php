@@ -15,6 +15,7 @@ class CreateAlumnisTable extends Migration
     {
         Schema::create('alumnis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->nullable();
             $table->string('name');
             $table->string('graduation_year');
             $table->string('class_name')->nullable();
@@ -34,6 +35,8 @@ class CreateAlumnisTable extends Migration
             $table->date('registration_date')->nullable();
             $table->string('approval_status')->nullable();
             $table->string('approval_by')->nullable();
+            $table->boolean('private_email')->default(0)->nullable();
+            $table->boolean('private_phone')->default(0)->nullable();
             $table->timestamps();
         });
     }

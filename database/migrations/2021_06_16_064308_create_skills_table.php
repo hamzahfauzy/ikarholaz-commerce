@@ -17,6 +17,7 @@ class CreateSkillsTable extends Migration
             $table->id();
             $table->foreignId('alumni_id')->constrained()->cascadeOnDelete();
             $table->string('name');
+            $table->timestamps();
         });
     }
 
