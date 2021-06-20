@@ -44,7 +44,7 @@ class AuthController extends Controller
         if ($request['login'] == "user") {
             $user = User::where('email', $request['phone'])->first();
         } else {
-            $user = Staff::where('email', $request['email'])->first();
+            $user = Staff::where('email', $request['phone'])->first();
         }
 
         if ($user) {
