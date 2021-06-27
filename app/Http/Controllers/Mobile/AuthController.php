@@ -50,7 +50,7 @@ class AuthController extends Controller
         if ($user) {
 
             $updatedUser = $user->update([
-                'password' => 123
+                'password' => 1234
             ]);
 
             if ($updatedUser) {
