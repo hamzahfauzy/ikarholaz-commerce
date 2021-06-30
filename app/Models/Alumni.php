@@ -11,6 +11,17 @@ class Alumni extends Model
 
     protected $guarded = [];
 
+    static $rules = [
+        'name' => 'required',
+        'graduation_year' => 'required',
+        'gender' => 'required',
+        'address' => 'required',
+        'city' => 'required',
+        'province' => 'required',
+        'country' => 'required',
+        'date_of_birth' => 'required',
+    ];
+
     function user()
     {
         return $this->belongsTo(User::class);

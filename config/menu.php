@@ -94,6 +94,7 @@ $menu[] = [
     // ]
 ];
 
+
 $menu[] = [
     'label' => 'Cards',
     'icon'  => 'mdi mdi-account-card-details',
@@ -115,6 +116,45 @@ $menu[] = [
         //     'childs' => []
         // ]
     ]
+];
+
+$menu[] = [
+    'label' => 'Alumni',
+    'icon'  => 'mdi mdi-account',
+    'route' => 'staff.alumnis.index',
+    'childs' => [
+        [
+            'label' => 'All Data',
+            'route' => 'staff.alumnis.index',
+            'childs' => []
+        ],
+        [
+            'label' => 'Add New',
+            'route' => 'staff.alumnis.create',
+            'childs' => []
+        ],
+        [
+            'label' => 'Import',
+            'route' => 'staff.alumnis.import',
+            'childs' => []
+        ],
+    ]
+    //     [
+    //         'label' => 'All Data',
+    //         'route' => 'staff.payments.index',
+    //         'childs' => []
+    //     ],
+    //     [
+    //         'label' => 'Add New',
+    //         'route' => 'staff.payments.create',
+    //         'childs' => []
+    //     ],
+    //     [
+    //         'label' => 'Payment Methods',
+    //         'route' => 'staff.payments.create',
+    //         'childs' => []
+    //     ]
+    // ]
 ];
 
 // $menu[] = [
