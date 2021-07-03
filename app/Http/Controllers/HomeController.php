@@ -28,7 +28,8 @@ class HomeController extends Controller
     public function index()
     {
         $products = Product::where('is_dynamic',NULL)->doesntHave('parent')->orderby('created_at','desc')->paginate(8);
-        $desain_products = Category::find(getenv('DESAIN_KARTU_KATEGORI',1))->products;
+        $category = Category::find(getenv('DESAIN_KARTU_KATEGORI',1));
+        $desain_products = $category ? $category->products : [];
         return view('home',compact('products','desain_products'));
     }
 }
