@@ -11,10 +11,16 @@ use App\Models\Ref\District;
 use Illuminate\Http\Request;
 use App\Models\Ref\ShippingRates;
 use App\Http\Controllers\Controller;
+use App\Models\Ref\Province;
 
 class BaseController extends Controller
 {
     //
+    function getProvinces()
+    {
+        return Province::get();
+    }
+
     function getDistrict($province_id)
     {
         return District::province($province_id)->get();
@@ -24,25 +30,25 @@ class BaseController extends Controller
     {
         $weight = $_GET['weight'];
         $dest = $_GET['dest'];
-        return ShippingRates::init($dest,$weight,$courier)->get();
+        return ShippingRates::init($dest, $weight, $courier)->get();
     }
 
     public function paymentChannel()
     {
         $tripay = new Tripay(getenv('TRIPAY_PRIVATE_KEY'), getenv('TRIPAY_API_KEY'));
-        return $tripay->curlAPI($tripay->URL_channelMp,'','GET');
+        return $tripay->curlAPI($tripay->URL_channelMp, '', 'GET');
     }
 
     public function getKartu($nomor)
     {
-        return Card::where('unique_number',$nomor)->firstOrFail();
+        return Card::where('unique_number', $nomor)->firstOrFail();
     }
 
     public function getNomorRegular($tahun_lulus)
     {
-        $tahun_lulus = substr($tahun_lulus,2,2);
-        $nomor_kartu = substr(strtotime('now'),2,8);
-        return $tahun_lulus.'.'.$nomor_kartu;
+        $tahun_lulus = substr($tahun_lulus, 2, 2);
+        $nomor_kartu = substr(strtotime('now'), 2, 8);
+        return $tahun_lulus . '.' . $nomor_kartu;
     }
 
     public function getPrice($digit)
@@ -64,6 +70,6 @@ class BaseController extends Controller
             Silahkan melakukan pembayaran melalui
             
             Terima kasih.";
-        return WaBlast::send("082369378823",$message);
+        return WaBlast::send("082369378823", $message);
     }
 }
