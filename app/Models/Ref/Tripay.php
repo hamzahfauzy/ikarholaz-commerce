@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Models\Ref;
+
 class Tripay
 {
     protected $api_PKey = '';
@@ -11,29 +13,29 @@ class Tripay
     protected $tabel_trans = 'trx'; // nama tabel transaksi
 
     // URLs Channel
-    public $URL_channelPs = 'https://payment.tripay.co.id/api-sandbox/payment/channel';
-    public $URL_channelPp = 'https://payment.tripay.co.id/api/payment/channel';
-    public $URL_channelMs = 'https://payment.tripay.co.id/api-sandbox/merchant/payment-channel';
-    public $URL_channelMp = 'https://payment.tripay.co.id/api/merchant/payment-channel';
+    public $URL_channelPs = 'https://tripay.co.id/api-sandbox/payment/channel';
+    public $URL_channelPp = 'https://tripay.co.id/api/payment/channel';
+    public $URL_channelMs = 'https://tripay.co.id/api-sandbox/merchant/payment-channel';
+    public $URL_channelMp = 'https://tripay.co.id/api/merchant/payment-channel';
     // URLs Calculator
-    public $URL_calcMs = 'https://payment.tripay.co.id/api-sandbox/merchant/fee-calculator';
-    public $URL_calcMp = 'https://payment.tripay.co.id/api/merchant/fee-calculator';
+    public $URL_calcMs = 'https://tripay.co.id/api-sandbox/merchant/fee-calculator';
+    public $URL_calcMp = 'https://tripay.co.id/api/merchant/fee-calculator';
     /*
 	* URLs Transaction
 	*/
     // Create
-    public $URL_transMs = 'https://payment.tripay.co.id/api-sandbox/transaction/create';
-    public $URL_transMp = 'https://payment.tripay.co.id/api/transaction/create';
+    public $URL_transMs = 'https://tripay.co.id/api-sandbox/transaction/create';
+    public $URL_transMp = 'https://tripay.co.id/api/transaction/create';
     public $URL_transOpenMs = '';
-    public $URL_transOpenMp = 'https://payment.tripay.co.id/api/transaction/open-payment/create';
+    public $URL_transOpenMp = 'https://tripay.co.id/api/transaction/open-payment/create';
     // Detail Close Sistem
-    public $URL_transDetailMs = 'https://payment.tripay.co.id/api-sandbox/transaction/detail';
-    public $URL_transDetailMp = 'https://payment.tripay.co.id/api/transaction/detail';
+    public $URL_transDetailMs = 'https://tripay.co.id/api-sandbox/transaction/detail';
+    public $URL_transDetailMp = 'https://tripay.co.id/api/transaction/detail';
     // Detail Open Sistem with uuid
     public $URL_transDetailOpenMs = '';
-    public $URL_transDetailOpenMp = 'https://payment.tripay.co.id/api/transaction/open-payment/';
+    public $URL_transDetailOpenMp = 'https://tripay.co.id/api/transaction/open-payment/';
     public $URL_transPembOpenMs = '';
-    public $URL_transPembOpenMp = 'https://payment.tripay.co.id/api/transaction/open-payment/';
+    public $URL_transPembOpenMp = 'https://tripay.co.id/api/transaction/open-payment/';
 
     public function __construct($privateKey = null, $apiKey = null)
     {
@@ -106,7 +108,7 @@ class Tripay
             $this->checkKey();
             $result = array();
             $curl = curl_init();
-    
+
             if ($method === null and $url === null) {
                 $result['error'] = true;
                 $result['status'] = 404;
@@ -123,13 +125,13 @@ class Tripay
                 curl_setopt($curl, CURLOPT_HEADER, false);
                 curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $this->api_Key));
                 curl_setopt($curl, CURLOPT_FAILONERROR, false);
-    
+
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
                 $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
                 curl_close($curl);
-    
+
                 if (!empty($err)) {
                     $result['error'] = true;
                     $result['status'] = $http_status;
@@ -146,13 +148,13 @@ class Tripay
                 curl_setopt($curl, CURLOPT_FAILONERROR, false);
                 curl_setopt($curl, CURLOPT_POST, true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($payloads));
-    
+
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
                 $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
+
                 curl_close($curl);
-    
+
                 if (!empty($err)) {
                     $result['error'] = true;
                     $result['status'] = $http_status;
@@ -161,11 +163,11 @@ class Tripay
                     $result = $response;
                 }
             }
-    
+
             return json_decode($result, 1);
         } catch (\Throwable $th) {
             //throw $th;
-            return ['data'=>[]];
+            return ['data' => []];
         }
     }
 }
