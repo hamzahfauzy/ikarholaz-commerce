@@ -36,6 +36,8 @@ Route::prefix('mobile')->group(function () {
     Route::post('otp', [AuthController::class, 'otp']);
     Route::post('register', [AuthController::class, 'register']);
 
+    Route::get('kta/{id}', [AlumniController::class, 'kta']);
+
     Route::prefix('alumni')->group(function () {
         Route::post('edit', [AlumniController::class, 'edit']);
 

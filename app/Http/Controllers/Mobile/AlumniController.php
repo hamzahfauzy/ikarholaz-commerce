@@ -3,13 +3,37 @@
 namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\Controller;
+use App\Models\Alumni;
 use App\Models\Skill;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
 
 class AlumniController extends Controller
 {
+    function kta($id)
+    {
+        $alumni = Alumni::find($id);
+        $html = view("mobile.kta", compact('alumni'))->render();
+
+        // reference the Dompdf namespace
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        $dompdf->render();
+
+        return  $dompdf->stream('kartu.pdf',['Attachment'=>false]);
+    }
+
+    function ktaDemo()
+    {
+        $alumni = Alumni::first();
+        return view("mobile.kta", compact('alumni'));
+    }
+
     function edit(Request $request)
     {
         $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills'])->first();

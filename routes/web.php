@@ -25,6 +25,8 @@ use App\Http\Controllers\Staff\TransactionItemController;
 
 Auth::routes();
 
+Route::get('kta', [App\Http\Controllers\Mobile\AlumniController::class, 'ktaDemo']);
+
 Route::get('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'showLoginForm'])->name('staff-login-form');
 Route::post('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'login'])->name('staff-login');
 Route::post('staff-logout', [App\Http\Controllers\Auth\StaffLoginController::class, 'logout'])->name('staff-logout');
