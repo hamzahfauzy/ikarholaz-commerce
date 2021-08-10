@@ -15,7 +15,20 @@ class AlumniController extends Controller
     function kta($id)
     {
         $alumni = Alumni::find($id);
-        $html = view("mobile.kta", compact('alumni'))->render();
+        $bg_name = '80.jpg';
+        if((int) $alumni->graduation_year <= 1990)
+            $bg_name = '90.jpg';
+        elseif((int) $alumni->graduation_year <= 2000)
+            $bg_name = '2000.jpg';
+        else
+            $bg_name = '2001.jpg';
+
+        $bg = public_path().'/assets/v-card/'.$bg_name;
+        $type = pathinfo($bg, PATHINFO_EXTENSION);
+        $bg = file_get_contents($bg);
+        $bg = 'data:image/' . $type . ';base64,' . base64_encode($bg);
+
+        $html = view("mobile.kta", compact('alumni','bg'))->render();
 
         // reference the Dompdf namespace
 
@@ -24,8 +37,17 @@ class AlumniController extends Controller
         $dompdf->loadHtml($html);
 
         $dompdf->render();
+        $content = $dompdf->output();
+        file_put_contents('assets/kta/'.$id.'.pdf', $content);
 
-        return  $dompdf->stream('kartu.pdf',['Attachment'=>false]);
+        $imagick = new \Imagick();
+        $imagick->setResolution(300, 300);
+        $imagick->readImage('assets/kta/'.$id.'.pdf');
+        $imagick->writeImages('assets/kta/'.$id.'.jpg', false);
+
+        return '<img src="'.asset('assets/kta/'.$id.'.jpg').'">';
+
+        // return $dompdf->stream('kartu.pdf',['Attachment'=>false]);
     }
 
     function ktaDemo()

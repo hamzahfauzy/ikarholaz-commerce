@@ -1,4 +1,8 @@
 <style>
+    @page {
+        margin:0px;
+        size: 650px 400px;
+    }
     #cardBg {
         width: 500;
         height: 300;
@@ -35,44 +39,12 @@
     }
 </style>
 
-@if((int) $alumni->graduation_year <= 1980) 
 
-<div id="cardBg" style="background:url({{asset('assets/v-card/80.jpg')}})">
+<div id="cardBg">
+    <img src="{{$bg}}" alt="" width="100%" height="100%">
     <span id="nama">{{$alumni->name}}</span>
     <span id="ttl">{{$alumni->place_of_birth}}/{{$alumni->date_of_birth}}</span>
     <span id="alamat">{{$alumni->address}}</span>
     <span id="kelas">{{$alumni->class_name}}</span>
     <span id="lulus">{{$alumni->graduation_year}}</span>
 </div>
-
-@elseif((int) $alumni->graduation_year <= 1990)
-
-<div id="cardBg" style="background:url({{asset('assets/v-card/90.jpg')}})">
-    <span id="nama">{{$alumni->name}}</span>
-    <span id="ttl">{{$alumni->place_of_birth}}/{{$alumni->date_of_birth}}</span>
-    <span id="alamat">{{$alumni->address}}</span>
-    <span id="kelas">{{$alumni->class_name}}</span>
-    <span id="lulus">{{$alumni->graduation_year}}</span>
-</div>
-
-@elseif((int) $alumni->graduation_year <= 2000) 
-
-<div id="cardBg" style="background:url({{asset('assets/v-card/2000.jpg')}})">
-    <span id="nama">{{$alumni->name}}</span>
-    <span id="ttl">{{$alumni->place_of_birth}}/{{$alumni->date_of_birth}}</span>
-    <span id="alamat">{{$alumni->address}}</span>
-    <span id="kelas">{{$alumni->class_name}}</span>
-    <span id="lulus">{{$alumni->graduation_year}}</span>
-</div>
-
-@else
-
-<div id="cardBg" style="background:url({{asset('assets/v-card/2001.jpg')}})">
-    <span id="nama">{{$alumni->name}}</span>
-    <span id="ttl">{{$alumni->place_of_birth}}/{{$alumni->date_of_birth}}</span>
-    <span id="alamat">{{$alumni->address}}</span>
-    <span id="kelas">{{$alumni->class_name}}ss</span>
-    <span id="lulus">{{$alumni->graduation_year}}</span>
-</div>
-
-@endif

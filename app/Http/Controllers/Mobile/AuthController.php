@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Mobile;
 
-use App\Http\Controllers\Controller;
-use App\Models\Alumni;
-use App\Models\Staff;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Staff;
+use App\Models\Alumni;
+use App\Models\WaBlast;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -40,7 +41,6 @@ class AuthController extends Controller
 
     function login(Request $request)
     {
-
         if ($request['login'] == "user") {
             $user = User::where('email', $request['phone'])->first();
         } else {
@@ -48,9 +48,13 @@ class AuthController extends Controller
         }
 
         if ($user) {
+            $otp = mt_rand(1111,9999);
+            $message = "Kode OTP Anda adalah $otp";
+
+            WaBlast::send($request['phone'], $message);
 
             $updatedUser = $user->update([
-                'password' => 1234
+                'password' => $otp
             ]);
 
             if ($updatedUser) {
@@ -71,6 +75,9 @@ class AuthController extends Controller
 
         if ($user) {
             if (Hash::check($request['otp'], $user->password)) {
+                $user->update([
+                    'password' => strtotime('now')
+                ]);
                 return response()->json(['message' => 'success to retrieve data', 'data' => $user], 200);
             }
         }
