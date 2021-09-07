@@ -25,12 +25,35 @@ class AuthController extends Controller
         ]);
 
         if ($new_user) {
+
             $new_alumni = $new_user->alumni()->create([
                 'name' => $request['name'],
                 'graduation_year' => $request['graduation_year'],
             ]);
 
             if ($new_alumni) {
+
+                if ($request->file('profile')) {
+
+                    $profile = $request->file('profile')->store('profiles');
+
+                    if ($profile) {
+
+                        $oldPic = $new_user->alumni->profile_pic;
+
+                        if ($oldPic) {
+                            Storage::delete($oldPic);
+                        }
+
+                        $uploaded = $new_user->alumni()->update([
+                            'profile_pic' => $profile
+                        ]);
+
+                        if ($uploaded) {
+                            return response()->json(['message' => 'success to create'], 200);
+                        }
+                    }
+                }
 
                 return response()->json(['message' => 'success to create'], 200);
             }
