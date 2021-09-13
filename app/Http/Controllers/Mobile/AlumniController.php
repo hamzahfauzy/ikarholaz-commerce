@@ -78,6 +78,7 @@ class AlumniController extends Controller
                 'country' => $request['country'],
                 'private_email' => $request['private_email'],
                 'private_phone' => $request['private_phone'],
+                'private_domisili' => $request['private_domisili'],
             ]);
 
             if ($alumni) {
