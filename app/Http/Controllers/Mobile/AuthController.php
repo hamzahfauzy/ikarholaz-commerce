@@ -97,12 +97,12 @@ class AuthController extends Controller
         }
 
         if ($user) {
-            if (Hash::check($request['otp'], $user->password)) {
-                $user->update([
-                    'password' => strtotime('now')
-                ]);
-                return response()->json(['message' => 'success to retrieve data', 'data' => $user], 200);
-            }
+            // if (Hash::check($request['otp'], $user->password)) {
+            //     $user->update([
+            //         'password' => strtotime('now')
+            //     ]);
+            // }
+            return response()->json(['message' => 'success to retrieve data', 'data' => $user], 200);
         }
 
         return response()->json(['message' => 'data not found'], 403);
