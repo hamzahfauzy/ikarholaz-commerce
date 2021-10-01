@@ -90,10 +90,15 @@ class AuthController extends Controller
 
     function otp(Request $request)
     {
+        $phone = $request['phone'];
+        if($phone[0] == "0")
+            $phone = substr($phone,0);
+        elseif($phone[0] == "+")
+            $phone = substr($phone,3);
         if ($request['login'] == "user") {
-            $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills'])->first();
+            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni', 'alumni.skills'])->first();
         } else {
-            $user = Staff::where('email', $request['phone'])->first();
+            $user = Staff::where('email', 'LIKE', '%'.$phone.'%')->first();
         }
 
         if ($user) {
