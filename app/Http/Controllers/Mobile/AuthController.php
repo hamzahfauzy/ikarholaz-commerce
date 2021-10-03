@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Twilio\Rest\Client;
 
 class AuthController extends Controller
 {
@@ -74,7 +75,8 @@ class AuthController extends Controller
             $otp = mt_rand(1111,9999);
             $message = "Kode OTP Anda adalah $otp";
 
-            WaBlast::send($request['phone'], $message);
+            // WaBlast::send($request['phone'], $message);
+            $this->sendOTP($request['phone']);  
 
             $updatedUser = $user->update([
                 'password' => $otp
@@ -83,6 +85,7 @@ class AuthController extends Controller
             if ($updatedUser) {
                 return response()->json(['message' => 'success to update data'], 200);
             }
+
         }
 
         return response()->json(['message' => 'data not found'], 403);
@@ -102,14 +105,57 @@ class AuthController extends Controller
         }
 
         if ($user) {
+            $validate = $this->verifyOTP($request['phone'],$request['otp']);
+
             // if (Hash::check($request['otp'], $user->password)) {
             //     $user->update([
             //         'password' => strtotime('now')
             //     ]);
             // }
+
+            if($validate->valid){
+                $user->update([
+                    'password' => strtotime('now')
+                ]);
+            }
+
             return response()->json(['message' => 'success to retrieve data', 'data' => $user], 200);
         }
 
         return response()->json(['message' => 'data not found'], 403);
+    }
+
+    private function sendMessage($recipient, $message)
+    {
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create($recipient, 
+                ['from' => $twilio_number, 'body' => $message] );
+    }
+
+    private function sendOTP($recipient)
+    {
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $twilio->verify->v2->services($twilio_verify_sid)
+            ->verifications
+            ->create($recipient,"sms");
+    }
+
+    private function verifyOTP($recipient, $code)
+    {
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $verification = $twilio->verify->v2->services($twilio_verify_sid)
+            ->verificationChecks
+            ->create($code, ["to" => $recipient]);
+
+        return $verification;
     }
 }
