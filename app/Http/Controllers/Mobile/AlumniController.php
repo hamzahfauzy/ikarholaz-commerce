@@ -9,9 +9,34 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Dompdf\Dompdf;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AlumniController extends Controller
 {
+
+    function getNotifications($id){
+        $user = User::find($id);
+
+        return response()->json(['data' => $user->unreadNotifications], 200);
+    }
+
+    
+    function markAsRead($id,$user_id){
+        $user = User::find($user_id);
+
+        $user->email_verified_at = date("Y-m-d H:i:s");
+
+        if($user->update()){
+
+            DB::table('notifications')->where('id',$id)->update(['read_at'=>Carbon::now()]);
+    
+            return response()->json(['message' => 'success'], 200);
+        }
+
+        return response()->json(['message' => 'failed'], 400);
+    }
+
     function kta($id)
     {
         $alumni = Alumni::find($id);

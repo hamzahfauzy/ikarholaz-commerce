@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Staff;
 use App\Models\Alumni;
 use App\Models\WaBlast;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -46,12 +47,36 @@ class AuthController extends Controller
                             Storage::delete($oldPic);
                         }
 
-                        $uploaded = $new_user->alumni()->update([
-                            'profile_pic' => $profile
-                        ]);
+                        $alumnis = Alumni::where('graduation_year',$new_alumni->graduation_year)->inRandomOrder()->limit(5)->get();
 
-                        if ($uploaded) {
-                            return response()->json(['message' => 'success to create'], 200);
+                        if(empty($alumnis)){
+                            $new_user->update([
+                                "email_verified_at" => date("Y-m-d H:i:s")
+                            ]);
+
+                            $uploaded = $new_user->alumni()->update([
+                                'profile_pic' => $profile
+                            ]);
+
+                            if ($uploaded) {
+                                return response()->json(['message' => 'success to create'], 200);
+                            }
+                        }else{
+
+                            $uploaded = $new_user->alumni()->update([
+                                'profile_pic' => $profile
+                            ]);
+
+                            
+                            if ($uploaded) {
+                                $notifUser = User::find($new_user->id);
+
+                                foreach($alumnis as $alumni){
+                                    $alumni->user->notify(new UserNotification($notifUser));
+                                }
+                                
+                                return response()->json(['message' => 'success to create'], 200);
+                            }
                         }
                     }
                 }
@@ -72,6 +97,11 @@ class AuthController extends Controller
         }
 
         if ($user) {
+
+            if($user->email_verified_at == NULL){
+                return response()->json(['message' => 'user belum terkonfirmasi','error'=>true], 200);
+            }
+
             $otp = mt_rand(1111,9999);
             $message = "Kode OTP Anda adalah $otp";
 
