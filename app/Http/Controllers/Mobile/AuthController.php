@@ -47,7 +47,7 @@ class AuthController extends Controller
                             Storage::delete($oldPic);
                         }
 
-                        $alumnis = Alumni::where('graduation_year',$new_alumni->graduation_year)->inRandomOrder()->limit(5)->get();
+                        $alumnis = Alumni::where('graduation_year',$new_alumni->graduation_year)->where('id','!=',$new_alumni->id)->inRandomOrder()->limit(5)->get();
 
                         if(empty($alumnis)){
                             $new_user->update([
