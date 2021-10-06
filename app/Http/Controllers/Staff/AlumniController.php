@@ -60,7 +60,9 @@ class AlumniController extends Controller
         if ($new_user) {
             $alumni = $new_user->alumni()->create($request->except('phone'));
 
-            if ($alumni) {
+            $new_user->email_verified_at = date("Y-m-d H:i:s");
+
+            if ($alumni && $new_user->update()) {
 
                 return redirect()->route('staff.alumnis.index')
                     ->with('success', 'Alumni created successfully.');
