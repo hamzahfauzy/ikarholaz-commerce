@@ -113,6 +113,8 @@ class AlumniController extends Controller
                     $phone = $worksheet->getCellByColumnAndRow(8, $row)->getValue();
                     $address = $worksheet->getCellByColumnAndRow(12, $row)->getValue();
 
+                    $phone = "+".$phone;
+
                     if ($name == '' || $graduation_year == '' || $phone == '') break;
 
                     $user = User::where('email', $phone)->first();
@@ -134,13 +136,17 @@ class AlumniController extends Controller
                             'password' => Str::random(12)
                         ]);
 
-                        $new_user->alumni()->update([
+                        $new_user->alumni()->updateOrCreate([
                             'name' => $name,
                             'graduation_year' => $graduation_year,
                             'email' => $email,
                             'NRA' => $NRA,
                             'address' => $address,
                         ]);
+
+                        $new_user->email_verified_at = date("Y-m-d H:i:s");
+
+                        $new_user->update();
                     }
                 }
 

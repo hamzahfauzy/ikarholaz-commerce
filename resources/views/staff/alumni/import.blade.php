@@ -35,10 +35,7 @@
                     <div class="card-body">
                         @csrf
 
-                        <div class="custom-file">
-                            <input type="file" name="import" class="custom-file-input" id="customFile">
-                            <label class="custom-file-label" for="customFile">Choose file</label>
-                        </div>
+                        <input type="file" name="import" class="form-control">
 
                     </div>
                 </div>
