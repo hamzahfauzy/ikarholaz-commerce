@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\UserApprove;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -41,6 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['status'];
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
@@ -49,5 +52,15 @@ class User extends Authenticatable
     function alumni()
     {
         return $this->hasOne(Alumni::class);
+    }
+
+    function user_approves()
+    {
+        return $this->hasMany(UserApprove::class);
+    }
+
+    function getStatusAttribute(){
+        $users = $this->user_approves()->where('status','!=','Diterima')->count();
+        return $users;
     }
 }

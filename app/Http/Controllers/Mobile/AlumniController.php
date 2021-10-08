@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Mobile;
 
-use App\Http\Controllers\Controller;
-use App\Models\Alumni;
-use App\Models\Skill;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Dompdf\Dompdf;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
+use App\Models\User;
+use App\Models\Skill;
+use App\Models\Alumni;
+use App\Models\UserApprove;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class AlumniController extends Controller
 {
@@ -22,17 +23,36 @@ class AlumniController extends Controller
     }
 
     
-    function markAsRead($id,$user_id){
-        $user = User::find($user_id);
+    function markAsRead(Request $request){
 
-        $user->email_verified_at = date("Y-m-d H:i:s");
+        $user = User::find($request->user_id);
 
-        if($user->update()){
+        $newUserApprove = $user->user_approves()->create([
+            'friend_id'=>$request->friend_id,
+            'status'=>$request->status
+        ]);
 
-            DB::table('notifications')->where('id',$id)->update(['read_at'=>Carbon::now()]);
+        if($newUserApprove){
+
+            $userApproves = $user->user_approves()->where('status','Diterima')->get();
+
+            if($userApproves->count() == 5){
+                $user->alumni->update([
+                    "approval_status" => "approved",
+                    "approval_by" => "friend"
+                ]);
+
+                $user->email_verified_at = date("Y-m-d H:i:s");
+
+                $user->update();
+            }
+
+            DB::table('notifications')->where('id',$request->id)->update(['read_at'=>Carbon::now()]);
     
-            return response()->json(['message' => 'success'], 200);
+            return response()->json(['message' => $request->status], 200);
+
         }
+
 
         return response()->json(['message' => 'failed'], 400);
     }

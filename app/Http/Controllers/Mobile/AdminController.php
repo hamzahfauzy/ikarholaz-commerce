@@ -10,14 +10,14 @@ class AdminController extends Controller
 {
     function getAlumni()
     {
-        $alumni = Alumni::get();
+        $alumni = Alumni::with('user')->get();
 
         return response()->json(['data' => $alumni], 200);
     }
 
     function getDetailAlumni($id)
     {
-        $alumni = Alumni::with(['skills', 'user'])->find($id);
+        $alumni = Alumni::with(['skills', 'user','user.user_approves.user.alumni'])->find($id);
 
         return response()->json(['data' => $alumni], 200);
     }
@@ -38,7 +38,9 @@ class AdminController extends Controller
             "approval_by" => "admin"
         ]);
 
-        if ($new_alumni) {
+        $alumni->user->email_verified_at = date('Y-m-d H:i:s');
+
+        if ($new_alumni && $alumni->user->update()) {
             return response()->json(['message' => "success to approve alumni"], 200);
         }
 
