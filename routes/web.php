@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Staff\AlumniController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Staff\CardController;
+use App\Http\Controllers\Staff\AlumniController;
 use App\Http\Controllers\Staff\PaymentController;
 use App\Http\Controllers\Staff\ProductController;
 use App\Http\Controllers\Staff\CategoryController;
 use App\Http\Controllers\Staff\CustomerController;
+use App\Http\Controllers\Staff\BroadcastController;
 use App\Http\Controllers\Staff\TransactionController;
 use App\Http\Controllers\Staff\ProductImageController;
 use App\Http\Controllers\Staff\ProductVariantController;
@@ -41,6 +42,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('products', ProductController::class);
     Route::resource('product-variants', ProductVariantController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentController::class);
     Route::match(['get', 'post'], 'alumnis/import', [AlumniController::class, 'import'])->name('alumnis.import');

@@ -72,6 +72,24 @@ $menu[] = [
 ];
 
 $menu[] = [
+    'label' => 'Broadcasts',
+    'icon'  => 'mdi mdi-google-pages',
+    'route' => 'staff.broadcasts.index',
+    'childs' => [
+        [
+            'label' => 'All Data',
+            'route' => 'staff.broadcasts.index',
+            'childs' => []
+        ],
+        [
+            'label' => 'Add New',
+            'route' => 'staff.broadcasts.create',
+            'childs' => []
+        ],
+    ]
+];
+
+$menu[] = [
     'label' => 'Payments',
     'icon'  => 'mdi mdi-credit-card',
     'route' => 'staff.payments.index',

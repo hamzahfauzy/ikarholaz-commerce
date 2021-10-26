@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->hasOne(Alumni::class);
     }
 
+    function broadcasts()
+    {
+        return $this->hasMany(BroadcastUser::class);
+    }
+
     function user_approves()
     {
         return $this->hasMany(UserApprove::class);

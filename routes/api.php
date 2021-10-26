@@ -40,6 +40,7 @@ Route::prefix('mobile')->group(function () {
 
     Route::prefix('alumni')->group(function () {
         Route::get('get-notifications/{id}', [AlumniController::class, 'getNotifications']);
+        Route::get('get-broadcasts/{id}', [AlumniController::class, 'getBroadcasts']);
         Route::post('mark-as-read', [AlumniController::class, 'markAsRead']);
         Route::post('edit', [AlumniController::class, 'edit']);
 

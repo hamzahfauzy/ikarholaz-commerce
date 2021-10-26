@@ -7,6 +7,7 @@ use Dompdf\Dompdf;
 use App\Models\User;
 use App\Models\Skill;
 use App\Models\Alumni;
+use App\Models\Broadcast;
 use App\Models\UserApprove;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,17 @@ class AlumniController extends Controller
         return response()->json(['data' => $user->unreadNotifications], 200);
     }
 
+    function getBroadcasts($id){
+        $user = User::find($id);
+        
+        $broadcastsNotIn = Broadcast::whereNotIn('id',$user->broadcasts->pluck('broadcast_id'))->get();
+
+        foreach($broadcastsNotIn as $bc){
+            $bc->broadcastUser()->create(['user_id'=>$user->id]);
+        }
+
+        return response()->json(['message'=>"success","data"=>$broadcastsNotIn],200);
+    }
     
     function markAsRead(Request $request){
 
