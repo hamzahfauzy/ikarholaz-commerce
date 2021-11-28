@@ -98,35 +98,26 @@ class AuthController extends Controller
 
         if ($user) {
 
-            if (strpos($user->name, 'ika_demo_user') !== false) 
-            {
-                $updatedUser = $user->update([
-                    'password' => '1234'
-                ]);
-    
-                if ($updatedUser) {
-                    return response()->json(['message' => 'success to update data'], 200);
-                }
+            
+            if($user->email_verified_at == NULL){
+                return response()->json(['message' => 'user belum terkonfirmasi','error'=>true], 200);
             }
-            else
-            {
-                if($user->email_verified_at == NULL){
-                    return response()->json(['message' => 'user belum terkonfirmasi','error'=>true], 200);
-                }
-    
-                $otp = mt_rand(1111,9999);
-                $message = "Kode OTP Anda adalah $otp";
-    
-                // WaBlast::send($request['phone'], $message);
-                $this->sendOTP($request['phone']);  
-    
-                $updatedUser = $user->update([
-                    'password' => $otp
-                ]);
-    
-                if ($updatedUser) {
-                    return response()->json(['message' => 'success to update data'], 200);
-                }
+            
+            $otp = mt_rand(1111,9999);
+
+            if (strpos($user->name, 'ika_demo_user') !== false) 
+                $otp = 1234;
+
+            $message = "Kode OTP Anda adalah $otp";
+            // WaBlast::send($request['phone'], $message);
+            $this->sendOTP($request['phone']);  
+
+            $updatedUser = $user->update([
+                'password' => $otp
+            ]);
+
+            if ($updatedUser) {
+                return response()->json(['message' => 'success to update data'], 200);
             }
 
 
