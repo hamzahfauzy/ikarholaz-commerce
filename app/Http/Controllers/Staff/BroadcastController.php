@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Staff;
 use App\Models\Broadcast;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
 
 /**
  * Class BroadcastController
@@ -45,6 +47,22 @@ class BroadcastController extends Controller
     public function store(Request $request)
     {
         request()->validate(Broadcast::$rules);
+
+        $factory = (new Factory)->withServiceAccount('ika-mboyz-firebase-adminsdk-v1dqb-ba0905467e.json');
+
+        $messaging = $factory->createMessaging();
+        $message = CloudMessage::fromArray([
+            'topic' => 'bc_notif',
+            'notification' => [
+                'title'=>$request->title,
+                'body' =>$request->message
+            ],
+            'data' => [
+                'url' => $request->url
+            ]
+        ]);
+            
+        $messaging->send($message);
 
         $broadcast = Broadcast::create($request->all());
 
