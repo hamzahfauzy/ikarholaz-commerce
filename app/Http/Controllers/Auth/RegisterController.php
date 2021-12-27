@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\Alumni;
+use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Notifications\UserNotification;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -51,8 +55,9 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['required', 'string', 'max:255', 'unique:users,email'],
+            'graduation_year' => ['required', 'string', 'max:255'],
+            'photo' => ['required', 'image'],
         ]);
     }
 
@@ -64,10 +69,82 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        // return User::create([
+        //     'name' => $data['name'],
+        //     'email' => $data['email'],
+        //     'password' => Hash::make($data['password']),
+        // ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $new_user = User::create([
+                'name' => $data['name'],
+                'email' => $data['phone'],
+                'password' => Str::random(12)
+            ]);
+
+            $new_alumni = $new_user->alumni()->create([
+                'name' => $data['name'],
+                'graduation_year' => $data['graduation_year'],
+            ]);
+
+            if ($data['photo']) {
+
+                $profile = $data['photo']->store('profiles');
+
+                if ($profile) {
+
+                    $oldPic = $new_user->alumni->profile_pic;
+
+                    if ($oldPic) {
+                        Storage::delete($oldPic);
+                    }
+
+                    $alumnis = Alumni::where('graduation_year',$new_alumni->graduation_year)->where('id','!=',$new_alumni->id)->inRandomOrder()->limit(5)->get();
+
+                    if(empty($alumnis)){
+
+                        $new_user->update([
+                            "email_verified_at" => date("Y-m-d H:i:s")
+                        ]);
+
+                        $uploaded = $new_user->alumni()->update([
+                            'profile_pic' => $profile
+                        ]);
+
+                        DB::commit();
+
+                        return $new_user;
+
+                    }else{
+
+                        $uploaded = $new_user->alumni()->update([
+                            'profile_pic' => $profile
+                        ]);
+
+                        
+                        $notifUser = User::find($new_user->id);
+
+                        foreach($alumnis as $alumni){
+                            $alumni->user->notify(new UserNotification($notifUser));
+                        }
+
+                        DB::commit();
+                        
+                        return $new_user;
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return $new_user;
+
+        }catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+        }
     }
 }
