@@ -26,6 +26,7 @@ use App\Http\Controllers\Staff\TransactionItemController;
 
 Auth::routes();
 
+Route::match(['get','post'],'otp', [App\Http\Controllers\Auth\OtpController::class, 'otp'])->name("otp");
 Route::get('kta', [App\Http\Controllers\Mobile\AlumniController::class, 'ktaDemo']);
 
 Route::get('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'showLoginForm'])->name('staff-login-form');

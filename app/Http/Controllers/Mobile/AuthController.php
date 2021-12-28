@@ -160,7 +160,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'data not found'], 403);
     }
 
-    private function sendMessage($recipient, $message)
+    function sendMessage($recipient, $message)
     {
         $account_sid = getenv("TWILIO_SID");
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
@@ -170,7 +170,7 @@ class AuthController extends Controller
                 ['from' => $twilio_number, 'body' => $message] );
     }
 
-    private function sendOTP($recipient)
+    function sendOTP($recipient)
     {
         $token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_sid = getenv("TWILIO_SID");
@@ -181,7 +181,7 @@ class AuthController extends Controller
             ->create($recipient,"sms");
     }
 
-    private function verifyOTP($recipient, $code)
+    function verifyOTP($recipient, $code)
     {
         $token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_sid = getenv("TWILIO_SID");

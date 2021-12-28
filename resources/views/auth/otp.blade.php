@@ -51,16 +51,18 @@
                                         <div class="alert alert-danger">{!! \Session::get('failed') !!}</div>
                                     @endif
 
-                                    <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+                                    <form class="form-horizontal" method="POST" action="{{ route('otp') }}">
                                         @csrf
+
+                                        <input type="hidden" name="phone" value="{{Session::get('phone')}}">
 
                                         <div class="form-group">
 
-                                            <label for="">No HP</label>
+                                            <label for="">OTP</label>
                                             
-                                            <input class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" type="text" required="" placeholder="No HP">
+                                            <input class="form-control @error('otp') is-invalid @enderror" name="otp" value="{{old('otp')}}" type="text" required="" placeholder="OTP">
 
-                                            @error('phone')
+                                            @error('otp')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
                                                 </span>
@@ -81,7 +83,7 @@
 
                                         <div class="form-group account-btn text-center m-t-10">
                                             <div class="col-12">
-                                                <button class="btn w-md btn-bordered btn-danger waves-effect waves-light" type="submit">Log In</button>
+                                                <button class="btn w-md btn-bordered btn-danger waves-effect waves-light" type="submit">Submit</button>
                                             </div>
                                         </div>
 
