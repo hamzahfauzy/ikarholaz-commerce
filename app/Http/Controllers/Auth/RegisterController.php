@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\Alumni;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\UserNotification;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -33,7 +35,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = "/register";
 
     /**
      * Create a new controller instance.
@@ -114,10 +116,6 @@ class RegisterController extends Controller
                             'profile_pic' => $profile
                         ]);
 
-                        DB::commit();
-
-                        return $new_user;
-
                     }else{
 
                         $uploaded = $new_user->alumni()->update([
@@ -130,21 +128,26 @@ class RegisterController extends Controller
                         foreach($alumnis as $alumni){
                             $alumni->user->notify(new UserNotification($notifUser));
                         }
-
-                        DB::commit();
-                        
-                        return $new_user;
                     }
                 }
             }
 
             DB::commit();
 
-            return $new_user;
+            Session::flash('success',"Success to Register!");
+
+            // return \redirect()->route('register')->with('success',"Success to Register!");
+
+            return redirect('/register');
 
         }catch (\Exception $e) {
             DB::rollback();
-            // something went wrong
+
+            Session::flash('failed',"Failed to Register!");
+
+            // return \redirect()->route('register')->with('failed',"Failed to Register!");
+
+            return redirect('/register');
         }
     }
 }

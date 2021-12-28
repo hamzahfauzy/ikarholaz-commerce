@@ -9,7 +9,7 @@
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}">
         <!-- App title -->
-        <title>Ikarholaz - Login</title>
+        <title>Ikarholaz - Register</title>
 
         <!-- App css -->
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/bootstrap.min.css')}}" />
@@ -42,6 +42,15 @@
                                     <!--<h4 class="text-uppercase font-bold m-b-0">Sign In</h4>-->
                                 </div>
                                 <div class="account-content">
+
+                                    @if (\Session::has('success'))
+                                        <div class="alert alert-success">{!! \Session::get('success') !!}</div>
+                                    @endif
+
+                                    @if (\Session::has('failed'))
+                                        <div class="alert alert-danger">{!! \Session::get('failed') !!}</div>
+                                    @endif
+
                                     <form class="form-horizontal" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                                         @csrf
 
