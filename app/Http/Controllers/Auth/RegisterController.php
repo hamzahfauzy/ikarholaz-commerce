@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Models\Alumni;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use App\Notifications\UserNotification;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Session;
@@ -61,6 +63,16 @@ class RegisterController extends Controller
             'graduation_year' => ['required', 'string', 'max:255'],
             'photo' => ['required', 'image'],
         ]);
+    }
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
     }
 
     /**
