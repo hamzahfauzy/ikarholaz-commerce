@@ -72,7 +72,7 @@
                                             <label for="">Tahun Lulus</label>
 
                                             <select name="graduation_year" class="form-control @error('graduation_year') is-invalid @enderror" id="">
-                                                @for($y=1974;$y<=date('Y')-5;$y++)
+                                                @for($y=date('Y')-5;$y>=1974;$y--)
                                                 @if($y==1978)
                                                 @continue
                                                 @endif
