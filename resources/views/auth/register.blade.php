@@ -71,7 +71,7 @@
 
                                             <label for="">Tahun Lulus</label>
 
-                                            <select name="graduation_year" class="form-control" id="">
+                                            <select name="graduation_year" class="form-control @error('graduation_year') is-invalid @enderror" id="">
                                                 @for($y=1974;$y<=date('Y')-5;$y++)
                                                 @if($y==1978)
                                                 @continue
@@ -80,8 +80,6 @@
                                                 @endfor
                                             </select>
                                             
-                                            <input class="form-control @error('graduation_year') is-invalid @enderror" name="graduation_year" value="{{old('graduation_year')}}" type="text" required="" placeholder="Tahun Lulus">
-
                                             @error('graduation_year')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
