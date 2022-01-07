@@ -69,10 +69,10 @@
                             </li>
                             <li><a href="" class="dropdown-item"><i class="ti-user m-r-5"></i> Profile</a></li>
                             <li>
-                                <form id="logout-form" action="{{ route('staff-logout') }}" method="POST" class="d-none">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
-                                <a href="{{ route('staff-logout') }}" class="dropdown-item" onclick="event.preventDefault();
+                                <a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">
                                     <i class="ti-power-off m-r-5"></i> Logout
                                 </a>
