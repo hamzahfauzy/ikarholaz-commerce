@@ -63,12 +63,11 @@
                             <img src="{{asset('assets/images/users/avatar-1.jpg')}}" alt="user-img" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right arrow-dropdown-menu arrow-menu-right user-list notify-list">
+                            @if(auth()->check())
                             <li class="text-center">
-                                <h5>Hi, John</h5>
+                                <h5>Hi, {{auth()->user()->name}}</h5>
                             </li>
-                            <li><a href="javascript:void(0)" class="dropdown-item"><i class="ti-user m-r-5"></i> Profile</a></li>
-                            <li><a href="javascript:void(0)" class="dropdown-item"><i class="ti-settings m-r-5"></i> Settings</a></li>
-                            <li><a href="javascript:void(0)" class="dropdown-item"><i class="ti-lock m-r-5"></i> Lock screen</a></li>
+                            <li><a href="" class="dropdown-item"><i class="ti-user m-r-5"></i> Profile</a></li>
                             <li>
                                 <form id="logout-form" action="{{ route('staff-logout') }}" method="POST" class="d-none">
                                     @csrf
@@ -78,6 +77,12 @@
                                     <i class="ti-power-off m-r-5"></i> Logout
                                 </a>
                             </li>
+                            @else
+                            <li class="text-center">
+                                <h5>Hi, Guest</h5>
+                            </li>
+                            <li><a href="{{route('login')}}" class="dropdown-item"><i class="ti-login m-r-5"></i> Login</a></li>
+                            @endif
 
                         </ul>
 

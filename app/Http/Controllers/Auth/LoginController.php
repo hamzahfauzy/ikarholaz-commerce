@@ -44,8 +44,8 @@ class LoginController extends Controller
     public function login(Request $request)
     {
 
-        if(substr($request['phone'],0,1) == "0"){
-            $request["phone"] = '+62' . substr($request['phone'],1);
+        if($request["phone"][0] == "0"){
+            $request["phone"] = '62' . substr($request['phone'],1);
         }
 
         $user = User::where('email', $request['phone'])->first();

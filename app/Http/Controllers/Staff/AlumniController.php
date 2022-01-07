@@ -208,6 +208,9 @@ class AlumniController extends Controller
             'approval_by' => 'admin',
         ]);
 
+        $alumni->user->email_verified_at = date('Y-m-d H:i:s');
+        $alumni->user->update();
+
         return redirect()->route('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');
     }
