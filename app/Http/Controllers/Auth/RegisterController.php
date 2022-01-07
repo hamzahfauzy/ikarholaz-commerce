@@ -94,7 +94,7 @@ class RegisterController extends Controller
         try {
 
             if($data["phone"][0] == "0"){
-                $data["phone"] = '62' . substr($data['phone'],1);
+                $data["phone"] = '+62' . substr($data['phone'],1);
             }
 
             $new_user = User::create([
