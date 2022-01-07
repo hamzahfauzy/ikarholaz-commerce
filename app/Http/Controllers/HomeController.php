@@ -32,4 +32,14 @@ class HomeController extends Controller
         $desain_products = $category ? $category->products : [];
         return view('home',compact('products','desain_products'));
     }
+
+    public function profile()
+    {
+        return view('profile');
+    }
+
+    public function editProfile()
+    {
+        return view('edit-profile');
+    }
 }

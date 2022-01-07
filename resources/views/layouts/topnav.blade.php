@@ -63,11 +63,11 @@
                             <img src="{{asset('assets/images/users/avatar-1.jpg')}}" alt="user-img" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right arrow-dropdown-menu arrow-menu-right user-list notify-list">
-                            @if(auth()->check())
+                            @if(auth()->guard('web')->check())
                             <li class="text-center">
                                 <h5>Hi, {{auth()->user()->name}}</h5>
                             </li>
-                            <li><a href="" class="dropdown-item"><i class="ti-user m-r-5"></i> Profile</a></li>
+                            <li><a href="{{route('profile')}}" class="dropdown-item"><i class="ti-user m-r-5"></i> Profile</a></li>
                             <li>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
