@@ -59,7 +59,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
 // for user
 Route::middleware(['auth:web'])->group(function () {
     Route::get('profile',[App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
-    Route::get('edit-profile',[App\Http\Controllers\HomeController::class, 'editProfile'])->name('edit-profile');
+    Route::match(['get','post'],'edit-profile',[App\Http\Controllers\HomeController::class, 'editProfile'])->name('edit-profile');
 });
 
 // for public access
