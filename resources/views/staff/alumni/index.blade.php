@@ -46,6 +46,7 @@
                                     <th>No</th>
                                     <th>Name</th>
                                     <th>NRA</th>
+                                    <th>Phone</th>
                                     <th>Graduation Year</th>
                                     <th>Email</th>
                                     <th>Status</th>
@@ -59,6 +60,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $alumni->name ?? '-' }}</td>
+                                    <td>{{ $alumni->user && $alumni->user->email ? $alumni->user->email : '-' }}</td>
                                     <td>{!! $alumni->NRA ?? '<a href="'.route('staff.alumnis.update-nra',$alumni->id).'">Update NRA</a>' !!}</td>
                                     <td>{{ $alumni->graduation_year ?? '-' }}</td>
                                     <td>{{ $alumni->email ?? '-' }}</td>
