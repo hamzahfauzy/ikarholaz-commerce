@@ -45,6 +45,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Name</th>
+                                    <th>NRA</th>
                                     <th>Graduation Year</th>
                                     <th>Email</th>
                                     <th>Status</th>
@@ -58,13 +59,14 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $alumni->name ?? '-' }}</td>
+                                    <td>{!! $alumni->NRA ?? '<a href="'.route('staff.alumnis.update-nra',$alumni->id).'">Update NRA</a>' !!}</td>
                                     <td>{{ $alumni->graduation_year ?? '-' }}</td>
                                     <td>{{ $alumni->email ?? '-' }}</td>
                                     <td>{{ $alumni->approval_status ?? '-' }}</td>
                                     <td>{{ $alumni->date_of_birth ?? '-' }}</td>
 
                                     <td>
-                                        @if ($alumni->approval_status == '')
+                                        @if ($alumni->approval_status == '' && $alumni->NRA)
                                         <form action="{{ route('staff.alumnis.approve',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to approve this item ?')}}')){ return true }else{ return false }">
                                             @csrf
                                             <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-fw fa-check"></i> {{__('Approve')}}</button>

@@ -67,12 +67,22 @@ class AuthController extends Controller
                                 'profile_pic' => $profile
                             ]);
 
+                            $message = "$new_user->name, lulus $request[graduation_year] mendaftar anggota IKARHOLAZ. Saat ini menunggu persetujuan Anda.";
+                            $admin_number = env('WA_ADMIN_NUMBER',0);
+                            if($admin_number)
+                                WaBlast::send($admin_number, $message);
+
+                            $message = "Terima kasih $new_user->name, tahun lulus $request[graduation_year], telah mendaftar sebagai anggota IKARHOLAZ. Status masih PENDING hingga diverifikasi petugas. Hubungi petugas atau reply nomer ini jika tak kunjung diaprove dalam 3 hari.";
+                            WaBlast::send($request["phone"], $message);
+
                             
                             if ($uploaded) {
                                 $notifUser = User::find($new_user->id);
 
+                                $message = "Teman seangkatan anda, $new_user->name, tahun lulus $request[graduation_year] mendaftar anggota IKARHOLAZ. Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ mBoyz";
                                 foreach($alumnis as $alumni){
                                     $alumni->user->notify(new UserNotification($notifUser));
+                                    WaBlast::send($alumni->user->email, $message);
                                 }
                                 
                                 return response()->json(['message' => 'success to create'], 200);

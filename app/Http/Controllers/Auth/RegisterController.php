@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Models\Alumni;
+use App\Models\WaBlast;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -140,9 +141,11 @@ class RegisterController extends Controller
 
                         
                         $notifUser = User::find($new_user->id);
-
+                        
+                        $message = "Teman seangkatan anda, $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ mBoyz";
                         foreach($alumnis as $alumni){
                             $alumni->user->notify(new UserNotification($notifUser));
+                            WaBlast::send($alumni->user->email, $message);
                         }
                     }
                 }
@@ -150,7 +153,14 @@ class RegisterController extends Controller
 
             DB::commit();
 
-            Session::flash('success',"Success to Register!");
+            Session::flash('success',"Pendaftaran berhasil!");
+            $message = "$new_user->name, lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Saat ini menunggu persetujuan Anda.";
+            $admin_number = env('WA_ADMIN_NUMBER',0);
+            if($admin_number)
+                WaBlast::send($admin_number, $message);
+
+            $message = "Terima kasih $new_user->name, tahun lulus $data[graduation_year], telah mendaftar sebagai anggota IKARHOLAZ. Status masih PENDING hingga diverifikasi petugas. Hubungi petugas atau reply nomer ini jika tak kunjung diaprove dalam 3 hari.";
+            WaBlast::send($data["phone"], $message);
 
             // return \redirect()->route('register')->with('success',"Success to Register!");
 
@@ -159,7 +169,7 @@ class RegisterController extends Controller
         }catch (\Exception $e) {
             DB::rollback();
 
-            Session::flash('failed',"Failed to Register!");
+            Session::flash('failed',"Pendaftaran Gagal! Nomor HP sudah terdaftar");
 
             // return \redirect()->route('register')->with('failed',"Failed to Register!");
 

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Staff;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Alumni;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Models\Alumni;
+use App\Models\WaBlast;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 /**
  * Class AlumniController
@@ -184,6 +185,16 @@ class AlumniController extends Controller
         return view('staff.alumni.edit', compact('Alumni'));
     }
 
+    public function updateNra(Request $request, Alumni $alumni)
+    {
+        if ($request->isMethod("POST")) {
+            $alumni->update(['NRA'=>$request->NRA]);
+            return redirect()->route('staff.alumnis.index')
+            ->with('success', 'NRA updated successfully');
+        }
+        return view('staff.alumni.update-nra', compact('alumni'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -210,6 +221,8 @@ class AlumniController extends Controller
 
         $alumni->user->email_verified_at = date('Y-m-d H:i:s');
         $alumni->user->update();
+
+        WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil diverifikasi. NRA anda : $alumni->NRA");
 
         return redirect()->route('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');
