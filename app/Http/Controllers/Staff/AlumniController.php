@@ -235,7 +235,10 @@ class AlumniController extends Controller
      */
     public function destroy($id)
     {
-        $Alumni = Alumni::find($id)->delete();
+        $Alumni = Alumni::find($id);
+        $user = $Alumni->user;
+        $Alumni->delete();
+        $user->delete();
 
         return redirect()->route('staff.alumnis.index')
             ->with('success', 'Alumni deleted successfully');
