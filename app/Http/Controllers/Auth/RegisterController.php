@@ -153,7 +153,7 @@ class RegisterController extends Controller
 
             DB::commit();
 
-            Session::flash('success',"Pendaftaran berhasil!");
+            Session::flash('success',"Pendaftaran diterima. Sebuah notif terkirim ke nomer anda melalui WA mengenai status pendaftaran Anda. (Mohon maaf saat ini sistem hanya bisa mengirim notifikasi ke nomer WA. Hubungi admin jika tak kunjung diaprove dalam 3 hari)");
             $message = "$new_user->name, lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Saat ini menunggu persetujuan Anda.";
             $admin_number = env('WA_ADMIN_NUMBER',0);
             if($admin_number)
