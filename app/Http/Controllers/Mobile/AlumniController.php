@@ -7,6 +7,7 @@ use Dompdf\Dompdf;
 use App\Models\User;
 use App\Models\Skill;
 use App\Models\Alumni;
+use App\Models\WaBlast;
 use App\Models\Broadcast;
 use App\Models\UserApprove;
 use Illuminate\Http\Request;
