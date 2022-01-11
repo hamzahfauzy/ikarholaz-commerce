@@ -51,6 +51,8 @@ class AlumniController extends Controller
             $num_of_alumni = Alumni::where('graduation_year',$user->alumni->graduation_year)->where('id','!=',$user->alumni->id)->limit(5)->count();
 
             if($userApproves->count() == $num_of_alumni){
+                WaBlast::send($user->email, "Selamat ".$user->alumni->name.", data anda telah berhasil diverifikasi. NRA anda : ".$user->alumni->NRA.". Silakan login untuk melengkapi data Anda atau menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ.");
+
                 $user->alumni->update([
                     "approval_status" => "approved",
                     "approval_by" => "friend"

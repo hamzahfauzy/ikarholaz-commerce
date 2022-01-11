@@ -222,7 +222,7 @@ class AlumniController extends Controller
         $alumni->user->email_verified_at = date('Y-m-d H:i:s');
         $alumni->user->update();
 
-        WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil diverifikasi. NRA anda : $alumni->NRA");
+        WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil diverifikasi. NRA anda : $alumni->NRA. Silakan login untuk melengkapi data Anda atau menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ.");
 
         return redirect()->route('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');

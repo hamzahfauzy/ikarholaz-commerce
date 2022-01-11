@@ -77,14 +77,14 @@ class AuthController extends Controller
                             if($admin_number)
                                 WaBlast::send($admin_number, $message);
 
-                            $message = "Terima kasih $new_user->name, tahun lulus $request[graduation_year], telah mendaftar sebagai anggota IKARHOLAZ. Status masih PENDING hingga diverifikasi petugas. Hubungi petugas atau reply nomer ini jika tak kunjung diaprove dalam 3 hari.";
+                            $message = "Terima kasih $new_user->name, tahun lulus $request[graduation_year], telah mendaftar sebagai anggota IKARHOLAZ. Status masih PENDING hingga diverifikasi petugas. Hubungi petugas atau reply nomer ini jika tak kunjung diaprove dalam 36 jam.";
                             WaBlast::send($request["phone"], $message);
 
                             
                             if ($uploaded) {
                                 $notifUser = User::find($new_user->id);
 
-                                $message = "Teman seangkatan anda, $new_user->name, tahun lulus $request[graduation_year] mendaftar anggota IKARHOLAZ. Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ mBoyz";
+                                $message = "Teman atas nama $new_user->name, tahun lulus $request[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ MBOYZ.";
                                 foreach($alumnis as $alumni){
                                     $alumni->user->notify(new UserNotification($notifUser));
                                     WaBlast::send($alumni->user->email, $message);

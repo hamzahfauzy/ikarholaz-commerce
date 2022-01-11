@@ -147,7 +147,7 @@ class RegisterController extends Controller
                         
                         $notifUser = User::find($new_user->id);
                         
-                        $message = "Teman seangkatan anda, $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ mBoyz";
+                        $message = "Teman atas nama $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ MBOYZ";
                         foreach($alumnis as $alumni){
                             $alumni->user->notify(new UserNotification($notifUser));
                             WaBlast::send($alumni->user->email, $message);
@@ -158,13 +158,13 @@ class RegisterController extends Controller
 
             DB::commit();
 
-            Session::flash('success',"Pendaftaran diterima. Sebuah notif terkirim ke nomer anda melalui WA mengenai status pendaftaran Anda. (Mohon maaf saat ini sistem hanya bisa mengirim notifikasi ke nomer WA. Hubungi admin jika tak kunjung diaprove dalam 3 hari)");
-            $message = "$new_user->name, lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Saat ini menunggu persetujuan Anda.";
+            Session::flash('success',"Pendaftaran diterima. Sebuah notif terkirim ke nomer anda melalui WA mengenai status pendaftaran Anda. (Mohon maaf saat ini sistem hanya bisa mengirim notifikasi ke nomer WA. Hubungi admin jika tak kunjung diaprove dalam 36 jam)");
+            $message = "$new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Saat ini menunggu persetujuan Anda.";
             $admin_number = env('WA_ADMIN_NUMBER',0);
             if($admin_number)
                 WaBlast::send($admin_number, $message);
 
-            $message = "Terima kasih $new_user->name, tahun lulus $data[graduation_year], telah mendaftar sebagai anggota IKARHOLAZ. Status masih PENDING hingga diverifikasi petugas. Hubungi petugas atau reply nomer ini jika tak kunjung diaprove dalam 3 hari.";
+            $message = "Terima kasih $new_user->name, tahun lulus $data[graduation_year], telah mendaftar sebagai anggota IKARHOLAZ. Status masih PENDING hingga diverifikasi petugas. Hubungi petugas atau reply nomer ini jika tak kunjung diaprove dalam 36 jam.";
             WaBlast::send($data["phone"], $message);
 
             // return \redirect()->route('register')->with('success',"Success to Register!");
