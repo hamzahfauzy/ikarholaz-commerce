@@ -89,7 +89,7 @@
 
                                         <div class="form-group">
 
-                                            <label for="">No HP</label>
+                                            <label for="">No WA</label>
                                             
                                             <input class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" type="text" required="" placeholder="No HP">
 

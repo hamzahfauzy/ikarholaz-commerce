@@ -104,8 +104,13 @@ class RegisterController extends Controller
                 'password' => Str::random(12)
             ]);
 
+            $tahun_lulus = substr($data['graduation_year'], 2, 2);
+            $nomor_kartu = substr(strtotime('now'), 2, 8);
+            $NRA = $tahun_lulus . '.' . $nomor_kartu;
+
             $new_alumni = $new_user->alumni()->create([
                 'name' => $data['name'],
+                'NRA' => $NRA,
                 'graduation_year' => $data['graduation_year'],
             ]);
 
