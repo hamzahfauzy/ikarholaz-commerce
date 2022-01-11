@@ -105,6 +105,10 @@ class AuthController extends Controller
 
     function login(Request $request)
     {
+        if($request["phone"][0] == "0"){
+            $request["phone"] = '+62' . substr($request['phone'],1);
+        }
+        
         if ($request['login'] == "user") {
             $user = User::where('email', $request['phone'])->first();
         } else {
