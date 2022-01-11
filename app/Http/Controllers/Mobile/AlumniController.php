@@ -48,7 +48,9 @@ class AlumniController extends Controller
 
             $userApproves = $user->user_approves()->where('status','Diterima')->get();
 
-            if($userApproves->count() == 5){
+            $num_of_alumni = Alumni::where('graduation_year',$user->alumni->graduation_year)->where('id','!=',$user->alumni->id)->limit(5)->count();
+
+            if($userApproves->count() == $num_of_alumni){
                 $user->alumni->update([
                     "approval_status" => "approved",
                     "approval_by" => "friend"
