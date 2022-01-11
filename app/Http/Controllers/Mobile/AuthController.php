@@ -28,8 +28,13 @@ class AuthController extends Controller
 
         if ($new_user) {
 
+            $tahun_lulus = substr($request['graduation_year'], 2, 2);
+            $nomor_kartu = substr(strtotime('now'), 2, 8);
+            $NRA = $tahun_lulus . '.' . $nomor_kartu;
+
             $new_alumni = $new_user->alumni()->create([
                 'name' => $request['name'],
+                'NRA' => $NRA,
                 'graduation_year' => $request['graduation_year'],
             ]);
 
