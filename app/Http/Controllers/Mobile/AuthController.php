@@ -84,7 +84,7 @@ class AuthController extends Controller
                             if ($uploaded) {
                                 $notifUser = User::find($new_user->id);
 
-                                $message = "Teman atas nama $new_user->name, tahun lulus $request[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ MBOYZ.";
+                                $message = "Teman atas nama $new_user->name, tahun lulus $request[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ MBOYZ. (https://play.google.com/store/apps/details?id=com.ikarholaz.app)";
                                 foreach($alumnis as $alumni){
                                     $alumni->user->notify(new UserNotification($notifUser));
                                     WaBlast::send($alumni->user->email, $message);
