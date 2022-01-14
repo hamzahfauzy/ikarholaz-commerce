@@ -23,7 +23,16 @@ class AlumniController extends Controller
      */
     public function index()
     {
-        $alumnis = Alumni::orderby('id', 'desc')->paginate();
+        $alumnis = new Alumni;
+        if(isset($_GET['keyword']))
+        {
+            $keyword = $_GET['keyword'];
+            $alumnis = $alumnis->where('name',$keyword);
+            $alumnis = $alumnis->orwhere('NRA',$keyword);
+            $alumnis = $alumnis->orwhere('email',$keyword);
+            $alumnis = $alumnis->orwhere('graduation_year',$keyword);
+        }
+        $alumnis = $alumnis->orderby('id', 'desc')->paginate();
 
         return view('staff.alumni.index', compact('alumnis'))
             ->with('i', (request()->input('page', 1) - 1) * $alumnis->perPage());

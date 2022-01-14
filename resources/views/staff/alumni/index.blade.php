@@ -18,7 +18,7 @@
                 {{ $message }}
             </div>
             @endif
-            
+
             <div class="card">
 
                 <div class="card-header">
@@ -40,6 +40,13 @@
                 </div>
 
                 <div class="card-body">
+                    <form action="">
+                        <div class="form-group form-inline float-right">
+                            <input type="text" class="form-control" name="keyword" placeholder="Kata Kunci Disini..." value="<?=isset($_GET['keyword']) ? $_GET['keyword'] : ''?>">
+                            &nbsp;
+                            <button class="btn btn-primary">Cari</button>
+                        </div>
+                    </form>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="thead">
