@@ -14,7 +14,13 @@
                         <span class="card-title">{{__('Show Alumni')}}</span>
                     </div>
                     <div class="float-right">
-                        <a class="btn btn-primary" href="{{ route('staff.alumnis.index') }}"> Back</a>
+                        @if ($alumni->approval_status == '' && $alumni->NRA)
+                        <form action="{{ route('staff.alumnis.approve',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to approve this item ?')}}')){ return true }else{ return false }">
+                            @csrf
+                            <button type="submit" class="btn btn-success"><i class="fa fa-fw fa-check"></i> {{__('Approve')}}</button>
+                            <a class="btn btn-primary" href="{{ route('staff.alumnis.index') }}"> Back</a>
+                        </form>
+                        @endif
                     </div>
                 </div>
 

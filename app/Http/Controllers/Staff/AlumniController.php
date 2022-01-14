@@ -224,7 +224,7 @@ class AlumniController extends Controller
 
         WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil diverifikasi. Nomor Registrasi Anggota (NRA) anda adalah $alumni->NRA. Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12");
 
-        return redirect()->route('staff.alumnis.index')
+        return redirect()->back() // ('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');
     }
 

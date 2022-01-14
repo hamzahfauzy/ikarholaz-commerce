@@ -13,12 +13,13 @@
 <div class="">
     <div class="row">
         <div class="col-sm-12">
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success">
+                {{ $message }}
+            </div>
+            @endif
+            
             <div class="card">
-                @if ($message = Session::get('success'))
-                <div class="alert alert-success">
-                    {{ $message }}
-                </div>
-                @endif
 
                 <div class="card-header">
                     <div style="display: flex; justify-content: space-between; align-items: center;">

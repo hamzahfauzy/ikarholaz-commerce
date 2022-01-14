@@ -145,6 +145,32 @@ class AuthController extends Controller
         return response()->json(['message' => 'data not found'], 403);
     }
 
+    function loginNra(Request $request)
+    {
+        $alumni = Alumni::where('NRA',$request->NRA)->first();
+        if($alumni)
+        {
+            $user = $alumni->user;
+            if($user->email_verified_at == NULL){
+                return response()->json(['message' => 'user belum terkonfirmasi','error'=>true], 200);
+            }
+
+            $otp = mt_rand(1111,9999);
+
+            $this->sendOTP($user->email);  
+
+            $updatedUser = $user->update([
+                'password' => $otp
+            ]);
+
+            if ($updatedUser) {
+                return response()->json(['message' => 'success to update data'], 200);
+            }
+        }
+
+        return response()->json(['message' => 'data not found'], 403);
+    }
+
     function otp(Request $request)
     {
         $phone = $request['phone'];
@@ -177,6 +203,26 @@ class AuthController extends Controller
         }
 
         return response()->json(['message' => 'data not found'], 403);
+    }
+
+    function verifyOtpNra(Request $request)
+    {
+        $alumni = Alumni::where('NRA',$request->NRA)->first();
+        if($alumni)
+        {
+            $user = $alumni->user;
+            $validate = $this->verifyOTP($user->email,$request->OTP);
+
+            if($validate->valid){
+                $user->update([
+                    'password' => strtotime('now')
+                ]);
+            }
+
+            return response()->json(['message' => 'success to retrieve data', 'data' => $alumni], 200);
+        }
+
+        return response()->json(['message' => 'data not found','error'=>true], 403);
     }
 
     function sendMessage($recipient, $message)

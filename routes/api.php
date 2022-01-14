@@ -33,7 +33,9 @@ Route::get('/test-wa', [BaseController::class, 'testWa']);
 
 Route::prefix('mobile')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('login-nra', [AuthController::class, 'loginNra']);
     Route::post('otp', [AuthController::class, 'otp']);
+    Route::post('verify-otp-nra', [AuthController::class, 'verifyOtpNra']);
     Route::post('register', [AuthController::class, 'register']);
 
     Route::get('kta/{id}', [AlumniController::class, 'kta']);
