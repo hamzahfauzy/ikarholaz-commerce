@@ -24,7 +24,7 @@ class AlumniController extends Controller
     public function index()
     {
         $alumnis = Alumni::join('users','users.id','=','alumnis.user_id');
-        if(isset($_GET['keyword']))
+        if(isset($_GET['keyword']) && !empty($_GET['keyword']))
         {
             $keyword = $_GET['keyword'];
             $alumnis = $alumnis->where('alumnis.name',$keyword);
