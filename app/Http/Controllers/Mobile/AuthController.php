@@ -174,19 +174,18 @@ class AuthController extends Controller
     function otp(Request $request)
     {
         $phone = $request['phone'];
-        if($phone[0] == "0"){
-            $phone = '+62' . substr($phone,1);
-        }
-
+        if($phone[0] == "0")
+            $phone = substr($phone,0);
+        elseif($phone[0] == "+")
+            $phone = substr($phone,3);
         if ($request['login'] == "user") {
-            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni'])->first();
+            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni', 'alumni.skills'])->first();
         } else {
             $user = Staff::where('email', 'LIKE', '%'.$phone.'%')->first();
         }
 
         if ($user) {
             $validate = $this->verifyOTP($request['phone'],$request['otp']);
-            $user->alumni->skills;
 
             // if (Hash::check($request['otp'], $user->password)) {
             //     $user->update([
