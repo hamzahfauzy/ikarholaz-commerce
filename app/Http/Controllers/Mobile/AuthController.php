@@ -177,15 +177,16 @@ class AuthController extends Controller
         if($phone[0] == "0"){
             $phone = '+62' . substr($phone,1);
         }
-        
+
         if ($request['login'] == "user") {
-            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni', 'alumni.skills'])->first();
+            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni'])->first();
         } else {
             $user = Staff::where('email', 'LIKE', '%'.$phone.'%')->first();
         }
 
         if ($user) {
             $validate = $this->verifyOTP($request['phone'],$request['otp']);
+            $user->alumni->skills;
 
             // if (Hash::check($request['otp'], $user->password)) {
             //     $user->update([
