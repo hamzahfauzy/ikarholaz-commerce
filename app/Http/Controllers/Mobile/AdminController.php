@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mobile;
 
+use App\Models\User;
 use App\Models\Alumni;
 use App\Models\WaBlast;
 use Illuminate\Http\Request;
@@ -51,7 +52,10 @@ class AdminController extends Controller
 
     function deleteAlumni($id)
     {
-        $alumni = Alumni::find($id)->delete();
+        $alumni = Alumni::find($id);
+        $user = User::find($alumni->user_id);
+        $alumni->delete();
+        $user->delete();
 
         if ($alumni) {
             return response()->json(['message' => "success to delete"], 200);

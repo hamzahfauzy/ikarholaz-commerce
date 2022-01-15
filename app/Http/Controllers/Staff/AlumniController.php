@@ -245,7 +245,7 @@ class AlumniController extends Controller
     public function destroy($id)
     {
         $Alumni = Alumni::find($id);
-        $user = $Alumni->user;
+        $user = User::find($Alumni->user_id);
         $Alumni->delete();
         $user->delete();
 
