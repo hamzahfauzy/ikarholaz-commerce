@@ -39,6 +39,7 @@ Route::prefix('mobile')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
 
     Route::get('kta/{id}', [AlumniController::class, 'kta']);
+    Route::get('dpt', [AlumniController::class, 'alumnidpt']);
 
     Route::prefix('alumni')->group(function () {
         Route::get('get-notifications/{id}', [AlumniController::class, 'getNotifications']);

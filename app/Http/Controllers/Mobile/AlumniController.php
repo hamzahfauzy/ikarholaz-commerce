@@ -206,4 +206,9 @@ class AlumniController extends Controller
 
         return response()->json(['message' => 'failed to update'], 409);
     }
+
+    function alumnidpt()
+    {
+        return Alumni::where('approval_status','approved')->count();
+    }
 }
