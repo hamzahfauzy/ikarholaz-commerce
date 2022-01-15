@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Mobile;
 
-use App\Http\Controllers\Controller;
 use App\Models\Alumni;
+use App\Models\WaBlast;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
@@ -41,6 +42,7 @@ class AdminController extends Controller
         $alumni->user->email_verified_at = date('Y-m-d H:i:s');
 
         if ($new_alumni && $alumni->user->update()) {
+            WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil diverifikasi. Nomor Registrasi Anggota (NRA) IKARHOLAZ anda adalah $alumni->NRA. Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12");
             return response()->json(['message' => "success to approve alumni"], 200);
         }
 
