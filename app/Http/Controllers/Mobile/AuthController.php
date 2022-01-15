@@ -174,10 +174,10 @@ class AuthController extends Controller
     function otp(Request $request)
     {
         $phone = $request['phone'];
-        if($phone[0] == "0")
-            $phone = substr($phone,0);
-        elseif($phone[0] == "+")
-            $phone = substr($phone,3);
+        if($phone[0] == "0"){
+            $phone = '+62' . substr($phone,1);
+        }
+        
         if ($request['login'] == "user") {
             $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni', 'alumni.skills'])->first();
         } else {
