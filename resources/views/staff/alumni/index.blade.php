@@ -70,7 +70,7 @@
                                     <td>{{ $alumni->name ?? '-' }}</td>
                                     <td>
                                         {!! $alumni->NRA !!}<br>
-                                        <a href="'.route('staff.alumnis.update-nra',$alumni->id).'">Update NRA</a>
+                                        <a href="{{route('staff.alumnis.update-nra',$alumni->id)}}">Update NRA</a>
                                     </td>
                                     <td>{{ $alumni->user && $alumni->user->email ? $alumni->user->email : '-' }}</td>
                                     <td>{{ $alumni->graduation_year ?? '-' }}</td>
