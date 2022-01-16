@@ -27,10 +27,10 @@ class AlumniController extends Controller
         if(isset($_GET['keyword']) && !empty($_GET['keyword']))
         {
             $keyword = $_GET['keyword'];
-            $alumnis = $alumnis->where('alumnis.name',$keyword);
-            $alumnis = $alumnis->orwhere('alumnis.NRA',$keyword);
+            $alumnis = $alumnis->where('alumnis.name','LIKE', '%'.$keyword.'%');
+            $alumnis = $alumnis->orwhere('alumnis.NRA','LIKE', '%'.$keyword.'%');
             $alumnis = $alumnis->orwhere('users.email','LIKE', '%'.$keyword.'%');
-            $alumnis = $alumnis->orwhere('alumnis.graduation_year',$keyword);
+            $alumnis = $alumnis->orwhere('alumnis.graduation_year','LIKE', '%'.$keyword.'%');
         }
         $alumnis = $alumnis->select('alumnis.*','users.email')->orderby('alumnis.id', 'desc')->paginate();
 
