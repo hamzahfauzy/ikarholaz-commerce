@@ -86,8 +86,6 @@ class HomeController extends Controller
                 }
 
             }
-
-            dd($request->all());
         }
 
         $provincies = Province::get();

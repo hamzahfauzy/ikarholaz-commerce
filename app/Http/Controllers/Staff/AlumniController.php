@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Alumni;
 use App\Models\WaBlast;
 use Illuminate\Support\Str;
+use App\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -202,9 +203,10 @@ class AlumniController extends Controller
      */
     public function edit($id)
     {
-        $Alumni = Alumni::find($id);
+        $alumni = Alumni::find($id);
+        $provincies = Province::get();
 
-        return view('staff.alumni.edit', compact('Alumni'));
+        return view('staff.alumni.edit', compact('alumni','provincies'));
     }
 
     public function updateNra(Request $request, Alumni $alumni)
@@ -224,11 +226,51 @@ class AlumniController extends Controller
      * @param  Alumni $Alumni
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Alumni $Alumni)
+    public function update(Request $request, Alumni $alumni)
     {
-        request()->validate(Alumni::$rules);
+        if($request["phone"][0] == "0"){
+            $request["phone"] = '+62' . substr($request['phone'],1);
+        }
 
-        $Alumni->update($request->all());
+        $user = $alumni->user();
+
+        $new_user = $user->update([
+            'name' => $request['name'],
+            'email' => $request['phone']
+        ]);
+
+        if ($new_user) {
+
+            $alumni = $alumni->update([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'graduation_year' => $request['graduation_year'],
+                'date_of_birth' => $request['date_of_birth'],
+                'address' => $request['address'],
+                'city' => $request['city'],
+                'province' => $request['province'],
+                'country' => $request['country'],
+                'private_email' => $request['private_email'] == 'on' ? true : false,
+                'private_phone' => $request['private_phone']  == 'on' ? true : false,
+                'private_domisili' => $request['private_domisili']  == 'on' ? true : false,
+            ]);
+
+            if ($alumni) {
+
+                if ($request['skills']) {
+                    foreach ($request['skills'] as $value) {
+                        if (isset($value['id'])) {
+                            $alumni->skills()->where('id', $value['id'])->update(['name' => $value['name']]);
+                        } else {
+                            $alumni->skills()->create($value);
+                        }
+                    }
+                }
+
+                return redirect()->route('staff.alumnis.index')->with('success', 'Alumni updated successfully');
+            }
+
+        }
 
         return redirect()->route('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');
