@@ -45,7 +45,7 @@ class AlumniController extends Controller
             }
         }
         $alumnis = $alumnis->select('alumnis.*','users.email')->orderby('alumnis.id', 'desc')->paginate();
-        $filter = $_GET['filter'];
+        $filter = $_GET['filter'] ?? ['graduation_year'=>'','approval_status' => ''];
 
         return view('staff.alumni.index', compact('alumnis','filter'))
             ->with('i', (request()->input('page', 1) - 1) * $alumnis->perPage());
