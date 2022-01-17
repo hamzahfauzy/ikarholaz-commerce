@@ -42,6 +42,19 @@
                 <div class="card-body">
                     <form action="">
                         <div class="form-group form-inline float-right">
+                            <select name="filter[graduation_year]" class="form-control" id="">
+                                <option value="">- Pilih Tahun Lulus -</option>
+                                @for($y=date('Y')-5;$y>=1900;$y--)
+                                <option value="{{$y}}" {{isset($filter['graduation_year']) && $filter['graduation_year'] == $y ? 'selected=""' : ''}}>{{$y}}</option>
+                                @endfor
+                            </select>
+                            &nbsp;
+                            <select name="filter[approval_status]" class="form-control" id="">
+                                <option value="">- Pilih Status -</option>
+                                <option value="semua" {{isset($filter['approval_status']) && $filter['approval_status'] == 'semua' ? 'selected=""' : ''}}>Semua</option>
+                                <option value="approved" {{isset($filter['approval_status']) && $filter['approval_status'] == 'approved' ? 'selected=""' : ''}}>Approved</option>
+                            </select>
+                            &nbsp;
                             <input type="text" class="form-control" name="keyword" placeholder="Kata Kunci Disini..." value="<?=isset($_GET['keyword']) ? $_GET['keyword'] : ''?>">
                             &nbsp;
                             <button class="btn btn-primary">Cari</button>
@@ -58,7 +71,7 @@
                                     <th>Graduation Year</th>
                                     <th>Email</th>
                                     <th>Status</th>
-                                    <th>Date of birth</th>
+                                    <th>Register Date</th>
 
                                     <th></th>
                                 </tr>
@@ -76,7 +89,7 @@
                                     <td>{{ $alumni->graduation_year ?? '-' }}</td>
                                     <td>{{ $alumni->email ?? '-' }}</td>
                                     <td>{{ $alumni->approval_status ?? '-' }}</td>
-                                    <td>{{ $alumni->date_of_birth ?? '-' }}</td>
+                                    <td>{{ $alumni->created_at ?? '-' }}</td>
 
                                     <td>
                                         @if ($alumni->approval_status == '' && $alumni->NRA)

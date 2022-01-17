@@ -30,11 +30,24 @@ class AlumniController extends Controller
             $alumnis = $alumnis->where('alumnis.name','LIKE', '%'.$keyword.'%');
             $alumnis = $alumnis->orwhere('alumnis.NRA','LIKE', '%'.$keyword.'%');
             $alumnis = $alumnis->orwhere('users.email','LIKE', '%'.$keyword.'%');
-            $alumnis = $alumnis->orwhere('alumnis.graduation_year','LIKE', '%'.$keyword.'%');
+        }
+
+        if(isset($_GET['filter']))
+        {
+            if(isset($_GET['filter']['graduation_year']) && !empty($_GET['filter']['graduation_year']))
+            {
+                $alumnis = $alumnis->where('alumnis.graduation_year','LIKE', '%'.$_GET['filter']['graduation_year'].'%');
+            }
+
+            if(isset($_GET['filter']['approval_status']) && !empty($_GET['filter']['approval_status']) && $_GET['filter']['approval_status'] != 'semua')
+            {
+                $alumnis = $alumnis->where('alumnis.approval_status','LIKE', '%'.$_GET['filter']['approval_status'].'%');
+            }
         }
         $alumnis = $alumnis->select('alumnis.*','users.email')->orderby('alumnis.id', 'desc')->paginate();
+        $filter = $_GET['filter'];
 
-        return view('staff.alumni.index', compact('alumnis'))
+        return view('staff.alumni.index', compact('alumnis','filter'))
             ->with('i', (request()->input('page', 1) - 1) * $alumnis->perPage());
     }
 
