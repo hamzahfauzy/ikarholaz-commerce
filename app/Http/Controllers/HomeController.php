@@ -82,6 +82,24 @@ class HomeController extends Controller
                         }
                     }
 
+                    if ($request->file('profile')) {
+
+                        $profile = $request->file('profile')->store('profiles');
+
+                        if ($profile) {
+
+                            $oldPic = $user->alumni->profile_pic;
+
+                            if ($oldPic) {
+                                Storage::delete($oldPic);
+                            }
+
+                            $uploaded = $user->alumni()->update([
+                                'profile_pic' => $profile
+                            ]);
+                        }
+                    }
+
                     return redirect()->back()->with('success', 'success to update data');
                 }
 

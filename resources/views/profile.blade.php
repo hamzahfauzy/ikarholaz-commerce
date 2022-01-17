@@ -4,6 +4,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
+<?php $alumni = auth()->user()->alumni;?>
 <div class="content-page">
     <!-- Start content -->
     <div class="content">
@@ -19,10 +20,9 @@
 
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <img src="{{Storage::url(auth()->user()->alumni->profile_pic)}}" alt="" width="100%">
+                    <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" alt="" width="100%">
                 </div>
-                <div class="col-12 col-md-9">
-                    <?php $alumni = auth()->user()->alumni ?>
+                <div class="col-12 col-md-9 m-auto">
                     <table class="table table-bordered">
                         <tr>
                             <td>NRA</td>

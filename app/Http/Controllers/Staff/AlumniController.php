@@ -10,6 +10,7 @@ use App\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class AlumniController
@@ -241,7 +242,7 @@ class AlumniController extends Controller
 
         if ($new_user) {
 
-            $alumni = $alumni->update([
+            $new_alumni = $alumni->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'graduation_year' => $request['graduation_year'],
@@ -255,7 +256,7 @@ class AlumniController extends Controller
                 'private_domisili' => $request['private_domisili']  == 'on' ? true : false,
             ]);
 
-            if ($alumni) {
+            if ($new_alumni) {
 
                 if ($request['skills']) {
                     foreach ($request['skills'] as $value) {
@@ -264,6 +265,24 @@ class AlumniController extends Controller
                         } else {
                             $alumni->skills()->create($value);
                         }
+                    }
+                }
+
+                if ($request->file('profile')) {
+
+                    $profile = $request->file('profile')->store('profiles');
+
+                    if ($profile) {
+
+                        $oldPic = $alumni->profile_pic;
+
+                        if ($oldPic) {
+                            Storage::delete($oldPic);
+                        }
+
+                        $uploaded = $alumni->update([
+                            'profile_pic' => $profile
+                        ]);
                     }
                 }
 
