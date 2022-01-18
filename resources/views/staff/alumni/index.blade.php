@@ -100,6 +100,7 @@
                                         @endif
                                         <form action="{{ route('staff.alumnis.destroy',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
                                             <a class="btn btn-sm btn-primary " href="{{ route('staff.alumnis.show',$alumni->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
+                                            <a class="btn btn-sm btn-warning " href="{{ route('staff.alumnis.edit',$alumni->id) }}"><i class="fa fa-fw fa-pen"></i> Edit</a>
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{__('Delete')}}</button>

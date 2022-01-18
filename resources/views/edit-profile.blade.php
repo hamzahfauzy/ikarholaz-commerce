@@ -25,7 +25,7 @@
                             <div class="alert alert-success">{{session('success')}}</div>
                         @endif
 
-                        <form action="{{route('edit-profile')}}" method="post">
+                        <form action="{{route('edit-profile')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" {{$alumni->private_email ? 'checked' : ''}} name="private_email" id="private_email">
@@ -38,6 +38,11 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" {{$alumni->private_domisili ? 'checked' : ''}} name="private_domisili" id="private_domisili">
                                 <label class="form-check-label" for="private_domisili">Private Domisili</label>
+                            </div>
+                            <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" width="200" class="my-2">
+                            <div class="form-group">
+                                <label for="">Photo Profile</label>
+                                <input type="file" name="profile" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">NRA</label>
