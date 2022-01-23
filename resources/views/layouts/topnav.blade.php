@@ -119,6 +119,14 @@
                     <li>
                         <a href="{{route('shop.index')}}"><i class="mdi mdi-shopping"></i>{{__('Shop')}}</a>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('nra')}}"><i class="mdi mdi-view-list"></i>{{__('List NRA')}}</a>
+                    </li>
+
+                    <li>
+                        <a href="{{route('pending')}}"><i class="mdi mdi-view-list"></i>{{__('Pending Alumni')}}</a>
+                    </li>
 
                     <li>
                         <a href="#"><i class="mdi mdi-view-list"></i>{{__('How To')}}</a>

@@ -65,6 +65,8 @@ Route::middleware(['auth:web'])->group(function () {
 
 // for public access
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nra');
+Route::get('pending', [App\Http\Controllers\HomeController::class, 'pending'])->name('pending');
 Route::post('tripay-callback', [App\Http\Controllers\CallbackController::class, 'tripay'])->name('tripay-callback');
 Route::name('shop.')->group(function () {
     Route::get('shop', [App\Http\Controllers\ShopController::class, 'index'])->name('index');

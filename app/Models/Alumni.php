@@ -22,6 +22,12 @@ class Alumni extends Model
         'date_of_birth' => 'required',
     ];
 
+    function getTanggalAttribute()
+    {
+        $tanggal = date('Y-m-d',strtotime($this->created_at));
+        return $tanggal;
+    }
+
     function user()
     {
         return $this->belongsTo(User::class);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Alumni;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Ref\District;
@@ -110,5 +111,111 @@ class HomeController extends Controller
         $alumni = auth()->user()->alumni;
 
         return view('edit-profile',compact('provincies','alumni'));
+    }
+
+    function nra()
+    {
+        if(isset($_GET['draw']))
+        {
+
+            $alumnis = (new Alumni)->select('id','name','NRA','graduation_year','city');
+            $draw   = $_GET['draw'];
+            $start  = $_GET['start'];
+            $length = $_GET['length'];
+            $search = $_GET['search']['value'];
+            $order  = $_GET['order'];
+    
+            $columns = [
+                'id',
+                'name',
+                'NRA',
+                'graduation_year',
+                'city',
+            ];
+    
+            if(!empty($search))
+            {
+                $alumnis = $alumnis->where('name','LIKE','%'.$search.'%');
+                $alumnis = $alumnis->orwhere('NRA','LIKE','%'.$search.'%');
+                $alumnis = $alumnis->orwhere('graduation_year','LIKE','%'.$search.'%');
+                $alumnis = $alumnis->orwhere('city','LIKE','%'.$search.'%');
+            }
+    
+            $total = $alumnis->count();
+            $alumnis = $alumnis->orderby($columns[$order[0]['column']], $order[0]['dir']);
+            $alumnis = $alumnis->skip($start)->take($length);
+            $alumnis = $alumnis->get();
+    
+            $results  = [];
+            foreach($alumnis as $key => $alumni)
+            {
+                $results[$key][] = $key+1;
+                $results[$key][] = $alumni->name;
+                $results[$key][] = $alumni->NRA;
+                $results[$key][] = $alumni->graduation_year;
+                $results[$key][] = $alumni->city;
+            }
+    
+            return [
+                "draw" => $draw,
+                "recordsTotal" => $total,
+                "recordsFiltered" => $total,
+                "data" => $results
+            ];
+        }
+
+        return view('nra');
+    }
+
+    function pending()
+    {
+        if(isset($_GET['draw']))
+        {
+
+            $alumnis = (new Alumni)->select('id','name','graduation_year','created_at');
+            $draw   = $_GET['draw'];
+            $start  = $_GET['start'];
+            $length = $_GET['length'];
+            $search = $_GET['search']['value'];
+            $order  = $_GET['order'];
+    
+            $columns = [
+                'id',
+                'name',
+                'graduation_year',
+                'created_at',
+            ];
+    
+            if(!empty($search))
+            {
+                $alumnis = $alumnis->where('name','LIKE','%'.$search.'%');
+                $alumnis = $alumnis->orwhere('graduation_year','LIKE','%'.$search.'%');
+                $alumnis = $alumnis->orwhere('created_at','LIKE','%'.$search.'%');
+            }
+
+            $alumnis = $alumnis->whereNull('approval_status');
+            $total   = $alumnis->count();
+            $alumnis = $alumnis->orderby($columns[$order[0]['column']], $order[0]['dir']);
+            $alumnis = $alumnis->skip($start)->take($length);
+            $alumnis = $alumnis->get();
+    
+            $results  = [];
+            foreach($alumnis as $key => $alumni)
+            {
+                $results[$key][] = $key+1;
+                $results[$key][] = $alumni->name;
+                $results[$key][] = $alumni->graduation_year;
+                $results[$key][] = $alumni->tanggal;
+            }
+    
+            return [
+                "draw" => $draw,
+                "recordsTotal" => $total,
+                "recordsFiltered" => $total,
+                "data" => $results
+            ];
+        }
+
+        return view('nra-pending');
     }
 }
