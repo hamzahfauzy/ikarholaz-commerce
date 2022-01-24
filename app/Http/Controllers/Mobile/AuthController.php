@@ -185,7 +185,7 @@ class AuthController extends Controller
         }
 
         if ($user) {
-            $validate = $this->verifyOTP($request['phone'],$request['otp']);
+            // $validate = $this->verifyOTP($request['phone'],$request['otp']);
 
             // if (Hash::check($request['otp'], $user->password)) {
             //     $user->update([
@@ -193,11 +193,11 @@ class AuthController extends Controller
             //     ]);
             // }
 
-            if($validate->valid){
-                $user->update([
-                    'password' => strtotime('now')
-                ]);
-            }
+            // if($validate->valid){
+            //     $user->update([
+            //         'password' => strtotime('now')
+            //     ]);
+            // }
 
             return response()->json(['message' => 'success to retrieve data', 'data' => $user], 200);
         }
