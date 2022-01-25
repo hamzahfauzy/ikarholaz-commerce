@@ -84,7 +84,7 @@ class AuthController extends Controller
                             if ($uploaded) {
                                 $notifUser = User::find($new_user->id);
 
-                                $message = "Teman atas nama $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ MBOYZ. Klik untuk install https://bit.ly/app-ika12";
+                                $message = "Teman atas nama $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membalas WA ini: *YA/TIDAK/RAGU-RAGU*."; // membuka aplikasi IKARHOLAZ MBOYZ. Klik untuk install https://bit.ly/app-ika12";
                                 foreach($alumnis as $alumni){
                                     $alumni->user->notify(new UserNotification($notifUser));
                                     WaBlast::send($alumni->user->email, $message);
@@ -100,7 +100,7 @@ class AuthController extends Controller
             }
         }
 
-        return response()->json(['message' => 'failed to create'], 409);
+        return response()->json(['message' => 'Data Anda Sudah Terdaftar. Terima kasih atas partisipasinya'], 409);
     }
 
     function login(Request $request)

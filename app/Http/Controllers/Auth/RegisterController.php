@@ -147,7 +147,7 @@ class RegisterController extends Controller
                         
                         $notifUser = User::find($new_user->id);
                         
-                        $message = "Teman atas nama $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membuka aplikasi IKARHOLAZ MBOYZ. Klik untuk install https://bit.ly/app-ika12";
+                        $message = "Teman atas nama $new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Benarkah dia seangkatan dengan Anda? Bantu admin memverifikasi nya dengan membalas WA ini: *YA/TIDAK/RAGU-RAGU.*"; //membuka aplikasi IKARHOLAZ MBOYZ. Klik untuk install https://bit.ly/app-ika12";
                         foreach($alumnis as $alumni){
                             $alumni->user->notify(new UserNotification($notifUser));
                             WaBlast::send($alumni->user->email, $message);
@@ -174,7 +174,7 @@ class RegisterController extends Controller
         }catch (\Exception $e) {
             DB::rollback();
 
-            Session::flash('failed',"Pendaftaran Gagal! Nomor HP sudah terdaftar");
+            Session::flash('failed',"Data Anda Sudah Terdaftar. Terima kasih atas partisipasinya");
 
             // return \redirect()->route('register')->with('failed',"Failed to Register!");
 
