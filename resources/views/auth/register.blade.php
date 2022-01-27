@@ -77,7 +77,7 @@
                                                 @if($y==1978)
                                                 @continue
                                                 @endif
-                                                <option>{{$y}}</option>
+                                                <option {{old('graduation_year') == $y ? 'selected' : ''}}>{{$y}}</option>
                                                 @endfor
                                             </select>
                                             

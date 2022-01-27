@@ -24,7 +24,10 @@
                     </div>
                 </div>
 
+                
                 <div class="card-body">
+                    
+                    <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" alt="" height="200px" class="mb-2">
 
                     <div class="form-group">
                         <strong>Name:</strong>
