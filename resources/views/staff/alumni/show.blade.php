@@ -23,43 +23,53 @@
                         @endif
                     </div>
                 </div>
-
                 
                 <div class="card-body">
                     
-                    <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" alt="" height="200px" class="mb-2">
 
-                    <div class="form-group">
-                        <strong>Name:</strong>
-                        {{ $alumni->name ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>Graduation Year:</strong>
-                        {{ $alumni->graduation_year ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>Gender:</strong>
-                        {{ $alumni->gender ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>Address:</strong>
-                        {{ $alumni->address ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>City:</strong>
-                        {{ $alumni->city ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>Province:</strong>
-                        {{ $alumni->province ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>Country:</strong>
-                        {{ $alumni->country ?? '-' }}
-                    </div>
-                    <div class="form-group">
-                        <strong>Date of birth:</strong>
-                        {{ $alumni->date_of_birth ?? '-' }}
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" alt="" width="100%">
+                        </div>
+                        <div class="col-12 col-md-9 m-auto">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td>NRA</td>
+                                    <td>:</td>
+                                    <td>{{$alumni->NRA ?? '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nama</td>
+                                    <td>:</td>
+                                    <td>{{ $alumni->name ?? '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tahun Lulus</td>
+                                    <td>:</td>
+                                    <td>{{$alumni->graduation_year ?? '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jenis Kelamin</td>
+                                    <td>:</td>
+                                    <td>{{$alumni->gender ?? '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tempat / Tanggal Lahir</td>
+                                    <td>:</td>
+                                    <td>{{($alumni->place_of_birth && $alumni->date_of_birth) ? $alumni->place_of_birth .' / '. $alumni->date_of_birth : '-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat</td>
+                                    <td>:</td>
+                                    <td>{{$alumni->address . ', ' . $alumni->city . ', ' . $alumni->province . ', ' . $alumni->country}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>:</td>
+                                    <td>{{ucwords($alumni->approval_status)}} Oleh {{$alumni->approval_by}}</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
