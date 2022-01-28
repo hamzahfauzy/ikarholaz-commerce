@@ -158,7 +158,7 @@ class RegisterController extends Controller
 
             DB::commit();
 
-            Session::flash('success',"Pendaftaran diterima. Sebuah notif terkirim ke nomer anda melalui WA mengenai status pendaftaran Anda. (Mohon maaf saat ini sistem hanya bisa mengirim notifikasi ke nomer WA. Hubungi admin jika tak kunjung diaprove dalam 36 jam)");
+            Session::flash('success',"Pendaftaran anda telah diterima. Tunggu proses verifikasi oleh petugas.  Nomer Registrasi Alumni (NRA) akan dikirim melalui WA setelah data anda terverifikasi.");
             $message = "$new_user->name, tahun lulus $data[graduation_year] mendaftar anggota IKARHOLAZ. Saat ini menunggu persetujuan Anda.";
             $admin_number = env('WA_ADMIN_NUMBER',0);
             if($admin_number)
@@ -174,7 +174,7 @@ class RegisterController extends Controller
         }catch (\Exception $e) {
             DB::rollback();
 
-            Session::flash('failed',"Data Anda Sudah Terdaftar. Terima kasih atas partisipasinya");
+            Session::flash('failed',"Anda sudah terdaftar dalam sistem. Mohon tidak mengulang pendaftaran. Hubungi admin jika ingin mengubah nomer HP atau NRA.");
 
             // return \redirect()->route('register')->with('failed',"Failed to Register!");
 
