@@ -51,11 +51,8 @@
                                         <div class="alert alert-danger">{!! \Session::get('failed') !!}</div>
                                     @endif
 
-                                    <form class="form-horizontal" method="POST" action="{{ route('otp') }}">
+                                    <form class="form-horizontal" method="POST" action="{{ route('otp') }}" onsubmit="return false">
                                         @csrf
-
-                                        <input type="hidden" name="phone" value="{{Session::get('phone')}}">
-
                                         <div class="form-group">
 
                                             <label for="">OTP</label>
@@ -83,7 +80,7 @@
 
                                         <div class="form-group account-btn text-center m-t-10">
                                             <div class="col-12">
-                                                <button class="btn w-md btn-bordered btn-danger waves-effect waves-light" type="submit">Submit</button>
+                                                <button class="btn w-md btn-bordered btn-danger waves-effect waves-light btn-otp" type="submit" onclick="handleOtp()">Submit</button>
                                             </div>
                                         </div>
 
@@ -128,6 +125,49 @@
         <!-- App js -->
         <script src="{{asset('assets/js/jquery.core.js')}}"></script>
         <script src="{{asset('assets/js/jquery.app.js')}}"></script>
+        <script src="{{asset('js/firebase.js')}}"></script>
+        <script>
+            var postedData = JSON.parse(localStorage.getItem("postData"))
+            function handleOtp()
+            {
+                var btn_otp = document.querySelector('.btn-otp')
+                btn_otp.innerHTML = "Memverifikasi OTP..."
+                var otp = document.querySelector('input[name=otp]').value
+                if (otp) {
+                    postedData.confirmationResult.confirm(otp).then( async () => {
+                        var formData = new FormData
+                        formData.append('phone',postedData.phone)
+                        formData.append('otp',otp)
+                        formData.append('token_data',postedData.token_data)
+                        fetch('{{ route('login') }}',{
+                            method:'POST',
+                            headers: {
+                                "X-CSRF-Token": document.querySelector('input[name="_token"]').value
+                            },
+                            body:formData
+                        })
+                        .then(res => res.json())
+                        .then(res => {
+                            if(res.status == 'success')
+                            {
+                                window.location = '{{url()->to('/')}}'
+                            }
+                            else
+                            {
+                                alert("OTP Tidak Valid")
+                                btn_otp.innerHTML = "Submit"
+                            }
+                        })
+                    }).catch((error) => {
+                        console.error(error)
+                        btn_otp.innerHTML = "Submit"
+                    });
+
+                } else {
+                    alert("Lengkapi otp terlebih dahulu");
+                }
+            }
+        </script>
 
     </body>
 </html>

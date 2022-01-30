@@ -113,7 +113,7 @@
                     </div>
                 </div>
             </div>
-            {!! $alumnis->links('vendor.pagination.bootstrap-4') !!}
+            {!! $alumnis->appends($_GET)->links('vendor.pagination.bootstrap-4') !!}
         </div>
     </div>
 </div>

@@ -43,12 +43,11 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('auth.poop');
+        return view('auth.login');
     }
 
     public function login(Request $request)
     {
-
         if($request["phone"][0] == "0"){
             $request["phone"] = '+62' . substr($request['phone'],1);
         }
@@ -58,35 +57,51 @@ class LoginController extends Controller
         if ($user) {
 
             if($user->email_verified_at == NULL){
-                return redirect()->route('login')->with('failed','user belum terkonfirmasi');
+                // return redirect()->route('login')->with('failed','user belum terkonfirmasi');
+                return response()->json([
+                    'status'  => 'fail',
+                    'message' => 'user belum terkonfirmasi'
+                ]);
             }
                 
-            $otp = mt_rand(1111,9999);
+            $otp = mt_rand(111111,999999);
 
             if (strpos($user->name, 'ika_demo_user') !== false) 
                 $otp = 1234;
 
-            $message = "Kode OTP Anda adalah $otp";
+            // $message = "Kode OTP Anda adalah $otp";
             // WaBlast::send($request['phone'], $message);
 
-            $authCtrlr = new AuthController();
+            // $authCtrlr = new AuthController();
 
-            $authCtrlr->sendOTP($request['phone']);  
+            // $authCtrlr->sendOTP($request['phone']);
+            
+            $password = bcrypt($otp);
 
             $updatedUser = $user->update([
-                'password' => $otp
+                'password' => $password
             ]);
 
             if ($updatedUser) {
                 // if ($this->attemptLogin($request)) {
                 //     return $this->sendLoginResponse($request);
                 // }
-                return redirect()->route('otp')->with(['phone'=>$request['phone']]);
-            }
 
+                return response()->json([
+                    'status'  => 'success',
+                    'token_data' => $password,
+                    'message' => 'user valid'
+                ]);
+                // return redirect()->route('otp')->with(['phone'=>$request['phone']]);
+            }
 
         }
 
-        return redirect()->route('login')->with('failed','data not found');
+        return response()->json([
+            'status'  => 'fail',
+            'message' => 'user tidak valid'
+        ]);
+
+        // return redirect()->route('login')->with('failed','data not found');
     }
 }
