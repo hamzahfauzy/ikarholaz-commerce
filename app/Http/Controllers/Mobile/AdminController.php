@@ -16,7 +16,7 @@ class AdminController extends Controller
         if(isset($_GET['nras']))
         {
             $nras = explode(',',$_GET['nras']);
-            $alumni = $alumni->whereNotIn('NRA',$nras);
+            $alumni = $alumni->whereNotIn('NRA',$nras)->where('approval_status','approved');
         }
 
         $alumni = $alumni->get();

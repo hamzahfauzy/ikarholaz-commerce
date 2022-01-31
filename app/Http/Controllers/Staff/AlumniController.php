@@ -261,7 +261,7 @@ class AlumniController extends Controller
             if ($new_alumni) {
 
                 if ($request['skills']) {
-                    foreach ($request['skills'] as $value) {
+                    foreach ($request['skills'] as $id => $value) {
                         if (isset($value['id'])) {
                             $alumni->skills()->where('id', $value['id'])->update(['name' => $value['name']]);
                         } else {
