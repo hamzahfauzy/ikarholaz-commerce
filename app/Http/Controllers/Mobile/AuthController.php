@@ -127,9 +127,9 @@ class AuthController extends Controller
             if (strpos($user->name, 'ika_demo_user') !== false) 
                 $otp = 1234;
 
-            $message = "Kode OTP Anda adalah $otp";
+            // $message = "Kode OTP Anda adalah $otp";
             // WaBlast::send($request['phone'], $message);
-            $this->sendOTP($request['phone']);  
+            // $this->sendOTP($request['phone']);  
 
             $updatedUser = $user->update([
                 'password' => $otp
@@ -155,16 +155,21 @@ class AuthController extends Controller
                 return response()->json(['message' => 'user belum terkonfirmasi','error'=>true], 200);
             }
 
-            $otp = mt_rand(1111,9999);
+            $otp = bcrypt(mt_rand(1111,9999));
 
-            $this->sendOTP($user->email);  
+            // $this->sendOTP($user->email);  
 
             $updatedUser = $user->update([
                 'password' => $otp
             ]);
 
             if ($updatedUser) {
-                return response()->json(['message' => 'success to update data'], 200);
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'success to update data',
+                    'phone'   => $user->email,
+                    'token_data' => $otp
+                ], 200);
             }
         }
 
@@ -179,7 +184,7 @@ class AuthController extends Controller
         elseif($phone[0] == "+")
             $phone = substr($phone,3);
         if ($request['login'] == "user") {
-            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni', 'alumni.skills'])->first();
+            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni'])->first();
         } else {
             $user = Staff::where('email', 'LIKE', '%'.$phone.'%')->first();
         }
@@ -207,11 +212,46 @@ class AuthController extends Controller
 
     function verifyOtpNra(Request $request)
     {
+        $phone = $request['phone'];
+        if($phone[0] == "0")
+            $phone = substr($phone,1);
+        elseif($phone[0] == "+")
+            $phone = substr($phone,3);
+
+        $user = User::where('email', 'LIKE', '%'.$phone.'%')->first();
+
+        if ($user) {
+            
+            // $authCtrlr = new AuthController();
+
+            // $validate = $authCtrlr->verifyOTP($request['phone'],$request['otp']);
+
+            if (Hash::check($request['token_data'], $user->password)) {
+                $user->update([
+                    'password' => strtotime('now')
+                ]);
+
+                $alumni = $user->alumni;
+
+                // Auth::guard()->login($user);
+                return response()->json(['status' => 'success', 'message' => 'success to retrieve data', 'data' => $alumni], 200);
+
+            }
+
+        }
+
+        return response()->json([
+            'status' => 'fail'
+        ]);
+    }
+
+    function verifyOtpNraOld(Request $request)
+    {
         $alumni = Alumni::where('NRA',$request->NRA)->first();
         if($alumni)
         {
             $user = $alumni->user;
-            $validate = $this->verifyOTP($user->email,$request->OTP);
+            // $validate = $this->verifyOTP($user->email,$request->OTP);
 
             if($validate->valid){
                 $user->update([

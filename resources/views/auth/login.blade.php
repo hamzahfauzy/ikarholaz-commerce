@@ -248,6 +248,8 @@
 
         function handleOtp()
         {
+            var btn_otp = document.querySelector('.btn-otp')
+            btn_otp.innerHTML = "Memverifikasi OTP..."
             var postedData = JSON.parse(localStorage.getItem("postData"))
             var otp = document.querySelector('input[name=otp]').value
             if (otp) {
@@ -267,15 +269,17 @@
                     .then(res => {
                         if(res.status == 'success')
                         {
-                            window.location = '{{url()->to('/')}}'
+                            window.location = '{{url()->to('/profile')}}'
                         }
                         else
                         {
                             alert("OTP Tidak Valid")
                         }
+                        btn_otp.innerHTML = "Submit"
                     })
                 }).catch((error) => {
                     console.error(error)
+                    btn_otp.innerHTML = "Submit"
                 });
 
             } else {

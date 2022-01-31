@@ -12,7 +12,14 @@ class AdminController extends Controller
 {
     function getAlumni()
     {
-        $alumni = Alumni::with('user')->get();
+        $alumni = (new Alumni)->with('user');
+        if(isset($_GET['nras']))
+        {
+            $nras = explode(',',$_GET['nras']);
+            $alumni = $alumni->whereNotIn('NRA',$nras);
+        }
+
+        $alumni = $alumni->get();
 
         return response()->json(['data' => $alumni], 200);
     }

@@ -84,7 +84,7 @@
                             <select name="province" id="" class="form-control" onchange="getDistrict(this.value,'#city_id')">
                                 <option value="" readonly selected>- Pilih Provinsi -</option>
                                 @foreach($provincies as $province)
-                                    <option {{ $alumni->province == $province->province ? 'selected' : '' }} value="{{$province->province}}">{{$province->province}}</option>
+                                    <option {{ $alumni->province == $province->province ? 'selected' : '' }} value="{{$province->province_id}}">{{$province->province}}</option>
                                 @endforeach
                             </select>
                         </div>
