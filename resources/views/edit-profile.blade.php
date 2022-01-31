@@ -39,7 +39,7 @@
                                 <input class="form-check-input" type="checkbox" {{$alumni->private_domisili ? 'checked' : ''}} name="private_domisili" id="private_domisili">
                                 <label class="form-check-label" for="private_domisili">Private Domisili</label>
                             </div>
-                            <img src="{{Storage::url($alumni->profile_pic)}}" width="200" class="my-2">
+                            <img src="{{Storage::url('public/'.$alumni->profile_pic)}}" width="200" class="my-2">
                             <div class="form-group">
                                 <label for="">Photo Profile</label>
                                 <input type="file" name="profile" class="form-control">
