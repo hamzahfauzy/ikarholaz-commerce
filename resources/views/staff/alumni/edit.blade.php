@@ -122,8 +122,8 @@
                             <div id="skills">
                                 @foreach($alumni->skills as $i => $skill)
                                     <div class="input-group mb-3">
-                                        <input type="hidden" name="skills[][id]" value="{{$skill->id}}">
-                                        <input class="form-control" type="text" placeholder="Pekerjaan / Keahlian ke {{$i+1}}" name="skills[][name]" value="{{$skill->name}}">
+                                        <input type="hidden" name="skills[{{$i}}][id]" value="{{$skill->id}}">
+                                        <input class="form-control" type="text" placeholder="Pekerjaan / Keahlian ke {{$i+1}}" name="skills[{{$i}}][name]" value="{{$skill->name}}">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-danger" type="button" onclick="removeSkill({{$i}},{{$skill->id}})"><i class="fas fa-times"></i></button>
                                         </div>
