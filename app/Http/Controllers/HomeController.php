@@ -120,7 +120,7 @@ class HomeController extends Controller
         if(isset($_GET['draw']))
         {
 
-            $alumnis = (new Alumni)->select('id','name','NRA','graduation_year','city');
+            $alumnis = (new Alumni)->select('id','name','NRA','graduation_year','city')->where('approval_status','approved');
             $draw   = $_GET['draw'];
             $start  = $_GET['start'];
             $length = $_GET['length'];

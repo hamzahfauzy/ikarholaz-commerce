@@ -118,7 +118,7 @@
 
                                         <div class="form-group account-btn text-center m-t-10">
                                             <div class="col-12">
-                                                <button class="btn w-md btn-bordered btn-danger waves-effect waves-light" type="submit" onclick="handleOtp()">Submit</button>
+                                                <button class="btn w-md btn-bordered btn-danger waves-effect waves-light btn-otp" type="submit" onclick="handleOtp()">Submit</button>
                                             </div>
                                         </div>
 
