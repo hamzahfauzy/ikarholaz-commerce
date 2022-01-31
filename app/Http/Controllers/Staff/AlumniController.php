@@ -228,7 +228,7 @@ class AlumniController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Alumni $alumni)
-    {
+    {   
         if($request["phone"][0] == "0"){
             $request["phone"] = '+62' . substr($request['phone'],1);
         }
@@ -245,7 +245,9 @@ class AlumniController extends Controller
             $new_alumni = $alumni->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
+                'gender' => $request['gender'],
                 'graduation_year' => $request['graduation_year'],
+                'place_of_birth' => $request['place_of_birth'],
                 'date_of_birth' => $request['date_of_birth'],
                 'address' => $request['address'],
                 'city' => $request['city'],
@@ -286,7 +288,7 @@ class AlumniController extends Controller
                     }
                 }
 
-                return redirect()->route('staff.alumnis.index')->with('success', 'Alumni updated successfully');
+                return redirect()->route('staff.alumnis.show',$alumni->id)->with('success', 'Alumni updated successfully');
             }
 
         }
@@ -310,6 +312,20 @@ class AlumniController extends Controller
 _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perbaikan selesai._");
             // Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12
             // Bila ada masalah dengan playstore gunakan versi website untuk update data keanggotaan. Klik https://bit.ly/login-ika12");
+
+        return redirect()->back() // ('staff.alumnis.index')
+            ->with('success', 'Alumni updated successfully');
+    }
+
+    public function unapprove(Request $request, Alumni $alumni)
+    {
+        $alumni->update([
+            'approval_status' => NULL,
+            'approval_by' => NULL,
+        ]);
+
+        $alumni->user->email_verified_at = NULL;
+        $alumni->user->update();
 
         return redirect()->back() // ('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');

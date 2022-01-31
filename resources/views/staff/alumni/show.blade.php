@@ -2,7 +2,16 @@
 
 @section('content')
 @include('staff.partials.breadcrumbs',[
-'breadcrumbs' => [],
+'breadcrumbs' => [
+    [
+    'label' => 'Dashboard',
+    'route' => route('staff.index')
+    ],
+    [
+    'label' => 'Alumni',
+    'route' => route('staff.alumnis.index')
+    ],
+],
 'template_title' => __('Show Alumni')
 ])
 <section class="">
@@ -28,8 +37,13 @@
                     
 
                     <div class="row">
+                        <div class="col-12">
+                            <a href="{{ route('staff.alumnis.edit',$alumni->id) }}" class="btn btn-primary">Edit Profile</a>
+                            <p></p>
+                            <br>
+                        </div>
                         <div class="col-12 col-md-3">
-                            <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" alt="" width="100%">
+                            <img src="{{Storage::url($alumni->profile_pic)}}" alt="" width="100%">
                         </div>
                         <div class="col-12 col-md-9 m-auto">
                             <table class="table table-bordered">
@@ -61,7 +75,7 @@
                                 <tr>
                                     <td>Alamat</td>
                                     <td>:</td>
-                                    <td>{{$alumni->address . ', ' . $alumni->city . ', ' . $alumni->province . ', ' . $alumni->country}}</td>
+                                    <td>{{$alumni->address . ', ' . $alumni->city . ', ' . $alumni->country}}</td>
                                 </tr>
                                 <tr>
                                     <td>Status</td>

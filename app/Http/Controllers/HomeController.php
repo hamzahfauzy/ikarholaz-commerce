@@ -60,7 +60,9 @@ class HomeController extends Controller
                 $alumni = $user->alumni()->update([
                     'name' => $request['name'],
                     'email' => $request['email'],
+                    'gender' => $request['gender'],
                     'graduation_year' => $request['graduation_year'],
+                    'place_of_birth' => $request['place_of_birth'],
                     'date_of_birth' => $request['date_of_birth'],
                     'address' => $request['address'],
                     'city' => $request['city'],
@@ -83,23 +85,23 @@ class HomeController extends Controller
                         }
                     }
 
-                    // if ($request->file('profile')) {
+                    if ($request->file('profile')) {
 
-                    //     $profile = $request->file('profile')->store('profiles');
-
-                    //     if ($profile) {
-
-                    //         $oldPic = $user->alumni->profile_pic;
-
-                    //         if ($oldPic) {
-                    //             Storage::delete($oldPic);
-                    //         }
-
-                    //         $uploaded = $user->alumni()->update([
-                    //             'profile_pic' => $profile
-                    //         ]);
-                    //     }
-                    // }
+                        $profile = $request->file('profile')->store('profiles');
+    
+                        if ($profile) {
+    
+                            $oldPic = $alumni->profile_pic;
+    
+                            if ($oldPic) {
+                                Storage::delete($oldPic);
+                            }
+    
+                            $uploaded = $alumni->update([
+                                'profile_pic' => $profile
+                            ]);
+                        }
+                    }
 
                     return redirect()->back()->with('success', 'success to update data');
                 }

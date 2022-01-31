@@ -39,69 +39,73 @@
                                 <input class="form-check-input" type="checkbox" {{$alumni->private_domisili ? 'checked' : ''}} name="private_domisili" id="private_domisili">
                                 <label class="form-check-label" for="private_domisili">Private Domisili</label>
                             </div>
-                            <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" width="200" class="my-2">
+                            <img src="{{Storage::url($alumni->profile_pic)}}" width="200" class="my-2">
                             <div class="form-group">
                                 <label for="">Photo Profile</label>
                                 <input type="file" name="profile" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">NRA</label>
-                                <input type="text" name="NRA" value="{{$alumni->NRA}}" class="form-control">
+                                <input type="text" name="NRA" value="{{old('NRA') ?? $alumni->NRA}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Nama</label>
-                                <input type="text" name="name" value="{{$alumni->user->name}}" class="form-control">
+                                <input type="text" name="name" value="{{old('name') ?? $alumni->user->name}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">No HP</label>
-                                <input type="text" name="phone" value="{{$alumni->user->email}}" class="form-control">
+                                <input type="text" name="phone" value="{{old('phone') ?? $alumni->user->email}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Email</label>
-                                <input type="text" name="email" value="{{$alumni->email}}" class="form-control">
+                                <input type="text" name="email" value="{{old('email') ?? $alumni->email}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Tahun Lulus</label>
-                                <input type="text" name="graduation_year" value="{{$alumni->graduation_year}}" class="form-control">
+                                <input type="text" name="graduation_year" value="{{old('graduation_year') ?? $alumni->graduation_year}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Jenis Kelamin</label>
                                 <select name="gender" id="" class="form-control">
                                     <option value="" readonly selected>- Pilih Jenis Kelamin -</option>
-                                    <option value="Laki-Laki">Laki-Laki</option>
-                                    <option value="Perempuan">Perempuan</option>
+                                    <option value="Laki-Laki" {{$alumni->gender == 'Laki-Laki' ? 'selected=""' : ''}}>Laki-Laki</option>
+                                    <option value="Perempuan" {{$alumni->gender == 'Perempuan' ? 'selected=""' : ''}}>Perempuan</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="">Tempat Lahir</label>
-                                <input type="text" name="place_of_birth" value="{{$alumni->place_of_birth}}" class="form-control">
+                                <input type="text" name="place_of_birth" value="{{old('place_of_birth') ?? $alumni->place_of_birth}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Tanggal Lahir</label>
-                                <input type="date" name="date_of_birth" value="{{$alumni->date_of_birth}}" class="form-control">
+                                <input type="date" name="date_of_birth" value="{{old('date_of_birth') ?? $alumni->date_of_birth}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Negara</label>
-                                <input type="text" name="country" value="{{$alumni->country}}" class="form-control">
+                                <input type="text" name="country" value="{{old('country') ?? $alumni->country}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Provinsi</label>
                                 <select name="province" id="" class="form-control" onchange="getDistrict(this.value,'#city_id')">
                                     <option value="" readonly selected>- Pilih Provinsi -</option>
                                     @foreach($provincies as $province)
-                                        <option {{ $alumni->province == $province->province ? 'selected' : '' }} value="{{$province->province_id}}">{{$province->province}}</option>
+                                        <option {{ $alumni->province == $province->province_id ? 'selected' : '' }} value="{{$province->province_id}}">{{$province->province}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="">Kabupaten / Kota</label>
                                 <select name="city" id="city_id" class="form-control">
+                                    @if($alumni->city)
+                                    <option value="{{$alumni->city}}">{{$alumni->city}}</option>
+                                    @else
                                     <option value="">- Pilih Provinsi terlebih dahulu -</option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="">Alamat</label>
-                                <textarea name="address" id="" cols="30" rows="10" class="form-control">{{$alumni->address}}</textarea>
+                                <textarea name="address" id="" cols="30" rows="10" class="form-control">{{old('address') ?? $alumni->address}}</textarea>
                             </div>
 
                             <div class="mb-3">

@@ -97,6 +97,11 @@
                                             @csrf
                                             <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-fw fa-check"></i> {{__('Approve')}}</button>
                                         </form>
+                                        @else
+                                        <form action="{{ route('staff.alumnis.unapprove',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to un approve this item ?')}}')){ return true }else{ return false }">
+                                            @csrf
+                                            <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-fw fa-times"></i> {{__('Un Approve')}}</button>
+                                        </form>
                                         @endif
                                         <form action="{{ route('staff.alumnis.destroy',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
                                             <a class="btn btn-sm btn-primary " href="{{ route('staff.alumnis.show',$alumni->id) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
