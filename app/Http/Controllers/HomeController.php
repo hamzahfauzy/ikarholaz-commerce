@@ -91,13 +91,13 @@ class HomeController extends Controller
     
                         if ($profile) {
     
-                            $oldPic = $alumni->profile_pic;
+                            $oldPic = $user->alumni->profile_pic;
     
                             if ($oldPic) {
                                 Storage::delete($oldPic);
                             }
     
-                            $uploaded = $alumni->update([
+                            $uploaded = $user->alumni()->update([
                                 'profile_pic' => $profile
                             ]);
                         }
