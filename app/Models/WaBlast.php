@@ -5,15 +5,17 @@ namespace App\Models;
 class WaBlast
 {
     
-    static function send($to, $message)
+    static function send($to, $message, $file_url = '')
     {
         $curl = curl_init();
-
-        $postfields = http_build_query([
+        $postfields = [
             'device_id' => getenv('WA_BLAST_DEVICE'),
             'number'    => $to,
             'message'   => $message
-        ]);
+        ];
+        if($file_url)
+            $postfields['file'] = $file_url;
+        $postfields = http_build_query($postfields);
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => getenv('WA_BLAST_URL')."/api/send",

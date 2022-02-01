@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\Ref\ShippingRates;
 use App\Http\Controllers\Controller;
 use App\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BaseController extends Controller
 {
@@ -71,5 +72,42 @@ class BaseController extends Controller
             
             Terima kasih.";
         return WaBlast::send("082369378823", $message);
+    }
+
+    public function sendPdf(Request $request)
+    {
+        $content = "<h2>KPU IKARHOLAZ</h2>";
+        $content .= "<table border='1' cellpadding='5' cellspacing='0'>";
+        $content .= "<tr>";
+        $content .= "<td>NAMA : ".$request->name."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td>ALUMNI : ".$request->graduation_year."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td>NRA : ".$request->NRA."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td>TELAH MEMILIH : ".$request->candidate_name."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td>TANGGAL DAN WAKTU MEMILIH : ".$request->created_at."</td>";
+        $content .= "</tr>";
+        $content .= "</table>";
+        $pdf = PDF::loadHTML($content);
+        $file_to_save = 'pdf/'.$request->NRA.'.pdf';
+        //save the pdf file on the server
+        file_put_contents($file_to_save, $pdf->output()); 
+        $message = "Terima kasih telah mengikuti PEMILU IKARHOLAZ tahun ".$request->period."
+Berikut lampiran dari surat suara anda.";
+
+        return WaBlast::send($request->phone, $message, url()->to('/').$file_to_save);
+        //print the pdf file to the screen for saving
+        // header('Content-type: application/pdf');
+        // header('Content-Disposition: inline; filename="'.$request->NRA.'.pdf"');
+        // header('Content-Transfer-Encoding: binary');
+        // header('Content-Length: ' . filesize($file_to_save));
+        // header('Accept-Ranges: bytes');
+        // readfile($file_to_save);
     }
 }
