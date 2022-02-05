@@ -15,6 +15,7 @@
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/bootstrap.min.css')}}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/icons.css')}}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}" />
+        <link rel="stylesheet" href="{{asset('plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css')}}">
 
 
         <script src="{{asset('assets/js/modernizr.min.js')}}"></script>
@@ -69,7 +70,7 @@
 
                                         <div class="form-group">
                                             <label for="">Kelas</label>
-                                            <input type="text" name="class_name" value="{{old('class_name') ?? $alumni->class_name}}" class="form-control" data-role="tagsinput">
+                                            <input type="text" name="class_name" value="{{old('class_name')}}" class="form-control" data-role="tagsinput">
                                             @error('class_name')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -184,6 +185,7 @@
         <script src="{{asset('assets/js/waves.js')}}"></script>
         <script src="{{asset('assets/js/jquery.slimscroll.js')}}"></script>
         <script src="{{asset('assets/js/jquery.scrollTo.min.js')}}"></script>
+        <script src="{{asset('plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js')}}"></script>
 
         <!-- App js -->
         <script src="{{asset('assets/js/jquery.core.js')}}"></script>
