@@ -309,9 +309,9 @@ class AlumniController extends Controller
         $alumni->user->email_verified_at = date('Y-m-d H:i:s');
         $alumni->user->update();
 
-        WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil diverifikasi. Nomor Registrasi Anggota (NRA) IKARHOLAZ anda adalah $alumni->NRA. 
+        WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil kami verifikasi. Nomor Registrasi Anggota (NRA) IKARHOLAZ anda adalah $alumni->NRA. 
 
-_Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perbaikan selesai._");
+        Pendaftaran cukup sampai tahap ini. Jika ingin melengkapi data profile silakan login dan edit profile melalui http://gerai.ikarholaz.id/login ");
             // Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12
             // Bila ada masalah dengan playstore gunakan versi website untuk update data keanggotaan. Klik https://bit.ly/login-ika12");
 

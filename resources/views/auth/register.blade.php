@@ -68,6 +68,33 @@
                                         </div>
 
                                         <div class="form-group">
+                                            <label for="">Kelas</label>
+                                            <input type="text" name="class_name" value="{{old('class_name') ?? $alumni->class_name}}" class="form-control" data-role="tagsinput">
+                                            @error('class_name')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Tahun Masuk</label>
+                                            <select name="year_in" class="form-control @error('year_in') is-invalid @enderror" id="">
+                                                <option value="">- Pilih Tahun -</option>
+                                                @for($y=date('Y')-5;$y>=1974;$y--)
+                                                @if($y==1978)
+                                                @continue
+                                                @endif
+                                                <option {{old('year_in') == $y ? 'selected' : ''}}>{{$y}}</option>
+                                                @endfor
+                                            </select>
+                                            @error('year_in')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group">
 
                                             <label for="">Tahun Lulus</label>
 
