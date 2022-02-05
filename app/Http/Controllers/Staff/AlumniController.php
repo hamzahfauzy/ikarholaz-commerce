@@ -246,7 +246,6 @@ class AlumniController extends Controller
                 'name' => $request['name'],
                 'class_name' => $request['class_name'],
                 'year_in' => $request['year_in'],
-                'year_out' => $request['year_out'],
                 'email' => $request['email'],
                 'gender' => $request['gender'],
                 'graduation_year' => $request['graduation_year'],

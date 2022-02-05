@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Tahun Lulus</label>
-                                <input type="number" name="year_out" value="{{old('year_out') ?? $alumni->year_out}}" class="form-control">
+                                <input type="text" name="graduation_year" value="{{old('graduation_year') ?? $alumni->graduation_year}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">No HP</label>
@@ -71,10 +71,6 @@
                             <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="text" name="email" value="{{old('email') ?? $alumni->email}}" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Tahun Lulus</label>
-                                <input type="text" name="graduation_year" value="{{old('graduation_year') ?? $alumni->graduation_year}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Jenis Kelamin</label>
