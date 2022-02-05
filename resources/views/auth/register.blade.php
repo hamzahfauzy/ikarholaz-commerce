@@ -90,7 +90,7 @@
 
                                         <div class="form-group">
 
-                                            <label for="">No WA</label>
+                                            <label for="">No WA (081234xxxxxxxx)</label>
                                             
                                             <input class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" type="text" required="" placeholder="No HP">
 
@@ -103,7 +103,7 @@
 
                                         <div class="form-group">
 
-                                            <label for="">Photo</label>
+                                            <label for="">Photo (Max. 2MB)</label>
                                             
                                             <input class="form-control @error('photo') is-invalid @enderror" name="photo" value="{{old('photo')}}" type="file" required="" placeholder="Photo">
 
