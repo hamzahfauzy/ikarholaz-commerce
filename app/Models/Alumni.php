@@ -20,6 +20,8 @@ class Alumni extends Model
         'province' => 'required',
         'country' => 'required',
         'date_of_birth' => 'required',
+        'year_in' => 'required',
+        'year_out' => 'required',
     ];
 
     protected $appends = ['tanggal'];

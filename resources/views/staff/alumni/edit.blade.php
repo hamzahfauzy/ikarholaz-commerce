@@ -57,6 +57,18 @@
                             <input type="text" name="name" value="{{old('name') ?? $alumni->user->name}}" class="form-control">
                         </div>
                         <div class="form-group">
+                            <label for="">Kelas</label>
+                            <input type="text" name="class_name" value="{{old('class_name') ?? $alumni->class_name}}" class="form-control" data-role="tagsinput">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tahun Masuk</label>
+                            <input type="number" name="year_in" value="{{old('year_in') ?? $alumni->year_in}}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tahun Lulus</label>
+                            <input type="number" name="year_out" value="{{old('year_out') ?? $alumni->year_out}}" class="form-control">
+                        </div>
+                        <div class="form-group">
                             <label for="">No HP</label>
                             <input type="text" name="phone" value="{{old('phone') ?? $alumni->user->email}}" class="form-control">
                         </div>
@@ -144,6 +156,8 @@
 
 
 @section('script')
+<link rel="stylesheet" href="{{asset('plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css')}}">
+<script src="{{asset('plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js')}}"></script>
 <script>
 
     async function getDistrict(province_id, target_element)
