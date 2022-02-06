@@ -101,6 +101,7 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
+        // $dompdf->set_paper([0,0,500,300]);
         $dompdf->loadHtml($html);
 
         $dompdf->render();

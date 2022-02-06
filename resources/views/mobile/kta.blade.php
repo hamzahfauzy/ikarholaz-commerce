@@ -1,7 +1,7 @@
 <style>
     @page {
         margin:0px;
-        size: 650px 400px;
+        size: 500px 300px;
     }
     #cardBg {
         width: 500px;
