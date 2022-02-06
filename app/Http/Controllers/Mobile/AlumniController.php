@@ -111,7 +111,7 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
         $imagick->readImage('assets/kta/'.$id.'.pdf');
         $imagick->writeImages('assets/kta/'.$id.'.jpg', false);
 
-        return '<img src="'.asset('assets/kta/'.$id.'.jpg').'">';
+        return '<img src="'.asset('assets/kta/'.$id.'.jpg').'" width="100%">';
 
         // return $dompdf->stream('kartu.pdf',['Attachment'=>false]);
     }
