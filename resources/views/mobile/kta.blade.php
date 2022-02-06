@@ -14,28 +14,28 @@
     span{position:absolute;font-size:10px;}
 
     #nama{
-        top:80px;
-        left:280px;
+        top:100px;
+        left:380px;
     }
 
     #ttl{
-        top:94px;
-        left:280px;
+        top:119px;
+        left:380px;
     }
 
     #alamat{
-        top:108px;
-        left:280px;
+        top:135px;
+        left:380px;
     }
 
     #kelas{
-        top:121px;
-        left:280px;
+        top:153px;
+        left:380px;
     }
 
     #lulus{
-        top:134px;
-        left:280px;
+        top:170px;
+        left:380px;
     }
 </style>
 
