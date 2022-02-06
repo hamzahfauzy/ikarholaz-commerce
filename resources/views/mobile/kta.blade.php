@@ -4,8 +4,8 @@
         size: 650px 400px;
     }
     #cardBg {
-        width: 500;
-        height: 300;
+        width: 500px;
+        height: 300px;
         background-size:cover !important;
         background-repeat:no-repeat;
         position:relative;
@@ -14,28 +14,28 @@
     span{position:absolute;font-size:10px;}
 
     #nama{
-        top:100px;
-        left:380px;
+        top:74px;
+        left:280px;
     }
 
     #ttl{
-        top:119px;
-        left:380px;
+        top:88px;
+        left:280px;
     }
 
     #alamat{
-        top:135px;
-        left:380px;
+        top:100px;
+        left:280px;
     }
 
     #kelas{
-        top:153px;
-        left:380px;
+        top:113px;
+        left:280px;
     }
 
     #lulus{
-        top:170px;
-        left:380px;
+        top:126px;
+        left:280px;
     }
 </style>
 
