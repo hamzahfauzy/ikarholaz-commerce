@@ -26,7 +26,7 @@
                     <div class="col-12 col-sm-6">
                         <div class="form-group">
                             <label for="field-3" class="control-label">No. Kartu</label>
-                            <input type="text" class="form-control" id="no_kartu_regular" name="no_kartu_fix" readonly>
+                            <input type="text" class="form-control" id="no_kartu_regular" name="no_kartu_fix" placeholder="Nomor NRA anda">
                         </div>
                     </div>
                 </div>

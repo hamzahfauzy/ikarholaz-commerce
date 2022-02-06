@@ -36,7 +36,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
-                            <h2 class="text-white">Order KTA</h2>
+                            <h2 class="text-white">Konversi ke KTA Cantik</h2>
                         </div>
                         <div class="col-12 col-sm-9 mx-auto">
                             <form action="" onsubmit="return checkKartu()">
@@ -60,7 +60,7 @@
                             <p class="text-white">
                                 Atau
                             </p>
-                            <a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" data-target="#modal-order-regular">Order Nomor Regular</a>
+                            <a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" data-target="#modal-order-regular">Order Kartu (Bisa Kustom Desain)</a>
                             <a href="{{route('shop.product-list',App\Models\Category::find(getenv('DESAIN_KARTU_KATEGORI',1))->slug)}}" class="btn btn-danger">Reorder KTA</a>
                         </div>
                     </div>
@@ -205,19 +205,19 @@ function checkKartu()
 
 function orderRegular()
 {
-    fetch('/api/get-nomor-regular/'+tahun_lulus.value)
-    .then(res => {
-        if (!res.ok) {
-            throw Error(res.statusText);
-        }
-        return res.text()
-    })
-    .then(res => {
-        no_kartu_regular.value = res
-    })
-    .catch(function(error) {
-        console.log(error);
-    })
+    // fetch('/api/get-nomor-regular/'+tahun_lulus.value)
+    // .then(res => {
+    //     if (!res.ok) {
+    //         throw Error(res.statusText);
+    //     }
+    //     return res.text()
+    // })
+    // .then(res => {
+    //     no_kartu_regular.value = res
+    // })
+    // .catch(function(error) {
+    //     console.log(error);
+    // })
 }
 
 function pilihDesain(el)
