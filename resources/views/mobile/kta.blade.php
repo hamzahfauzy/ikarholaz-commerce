@@ -37,6 +37,12 @@
         top:126px;
         left:280px;
     }
+
+    #nra{
+        top:154px;
+        left:280px;
+        font-size:12px;
+    }
 </style>
 
 
@@ -47,4 +53,5 @@
     <span id="alamat">{{$alumni->address}}</span>
     <span id="kelas">{{$alumni->class_name}}</span>
     <span id="lulus">{{$alumni->graduation_year}}</span>
+    <span id="nra">{{$alumni->NRA}}</span>
 </div>
