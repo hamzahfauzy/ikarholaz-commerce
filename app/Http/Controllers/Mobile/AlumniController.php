@@ -13,6 +13,7 @@ use App\Models\UserApprove;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 class AlumniController extends Controller
@@ -110,8 +111,6 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
         $imagick->setResolution(300, 300);
         $imagick->readImage('assets/kta/'.$id.'.pdf');
         $imagick->writeImages('assets/kta/'.$id.'.jpg', false);
-
-        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0');
 
         return '<img src="'.asset('assets/kta/'.$id.'.jpg').'" width="100%">';
 
