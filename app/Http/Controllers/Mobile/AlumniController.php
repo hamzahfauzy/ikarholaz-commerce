@@ -136,6 +136,8 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
             $alumni = $user->alumni()->update([
                 'name' => $request['name'],
                 'email' => $request['email'],
+                'class_name' => $request['class_name'],
+                'year_in' => $request['year_in'],
                 'graduation_year' => $request['graduation_year'],
                 'date_of_birth' => $request['date_of_birth'],
                 'address' => $request['address'],

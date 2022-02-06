@@ -35,6 +35,8 @@ class AuthController extends Controller
             $new_alumni = $new_user->alumni()->create([
                 'name' => $request['name'],
                 'NRA' => $NRA,
+                'class_name' => $request['class_name'],
+                'year_in' => $request['year_in'],
                 'graduation_year' => $request['graduation_year'],
             ]);
 
