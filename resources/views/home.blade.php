@@ -36,7 +36,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12">
-                            <h2 class="text-white">Konversi ke KTA Cantik</h2>
+                            <h2 class="text-white">Konversi ke NRA Cantik</h2>
                         </div>
                         <div class="col-12 col-sm-9 mx-auto">
                             <form action="" onsubmit="return checkKartu()">

@@ -43,11 +43,25 @@
         left:280px;
         font-size:12px;
     }
+
+    #profile-pic{
+        top:50px;
+        left:12px;
+        width:175px;
+        height:200px;
+        position:absolute;
+        overflow:hidden;
+        background-image:url("{{$profile_pic}}");
+        background-size:cover;
+        background-position:center;
+        z-index:1000;
+    }
 </style>
 
 
 <div id="cardBg">
     <img src="{{$bg}}" alt="" width="100%" height="100%">
+    <div id="profile-pic"></div>
     <span id="nama">{{$alumni->name}}</span>
     <span id="ttl">{{$alumni->place_of_birth}}/{{$alumni->date_of_birth}}</span>
     <span id="alamat">{{$alumni->address}}</span>

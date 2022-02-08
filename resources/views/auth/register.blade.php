@@ -81,7 +81,7 @@
                                             <label for="">Tahun Masuk</label>
                                             <select name="year_in" class="form-control @error('year_in') is-invalid @enderror" id="">
                                                 <option value="">- Pilih Tahun -</option>
-                                                @for($y=date('Y')-5;$y>=1974;$y--)
+                                                @for($y=date('Y')-5;$y>=1971;$y--)
                                                 <option {{old('year_in') == $y ? 'selected' : ''}}>{{$y}}</option>
                                                 @endfor
                                             </select>

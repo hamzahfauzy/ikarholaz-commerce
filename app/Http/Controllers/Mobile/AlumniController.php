@@ -94,9 +94,13 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
         $type = pathinfo($bg, PATHINFO_EXTENSION);
         $bg = file_get_contents($bg);
         $bg = 'data:image/' . $type . ';base64,' . base64_encode($bg);
+        
+        $profile_pic = public_path().'/storage/public/'.$alumni->profile_pic;
+        $type = pathinfo($profile_pic, PATHINFO_EXTENSION);
+        $profile_pic = file_get_contents($profile_pic);
+        $profile_pic = 'data:image/' . $type . ';base64,' . base64_encode($profile_pic);
 
-        $html = view("mobile.kta", compact('alumni','bg'))->render();
-
+        $html = view("mobile.kta", compact('alumni','bg','profile_pic'))->render();
         // reference the Dompdf namespace
 
         // instantiate and use the dompdf class
