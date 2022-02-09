@@ -98,8 +98,9 @@ class BaseController extends Controller
         $file_to_save = 'pdf/'.$request->NRA.'.pdf';
         //save the pdf file on the server
         file_put_contents($file_to_save, $pdf->output()); 
-        $message = "Terima kasih telah mengikuti PEMILU IKARHOLAZ tahun ".$request->period."
-Berikut lampiran dari surat suara anda.";
+        $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih $request->candidate_name sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda
+
+*Mohon tidak menghapus notifikasi sampai program Munas berakhir sebagai bukti valid partisipasi anda.*";
 
         return WaBlast::send($request->phone, $message, url()->to('/').$file_to_save);
         //print the pdf file to the screen for saving
