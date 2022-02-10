@@ -17,6 +17,7 @@
         <link rel="stylesheet" type="text/css" href="{{asset('front/css/bootstrap.min.css')}}" />
         <link rel="stylesheet" type="text/css" href="{{asset('front/css/icons.css')}}" />
         <link rel="stylesheet" type="text/css" href="{{asset('front/css/style.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('plugins/select2/css/select2.min.css')}}" />
 
         <script src="{{asset('front/js/modernizr.min.js')}}"></script>
 
@@ -57,6 +58,10 @@
         <!-- App js -->
         <script src="{{asset('front/js/jquery.core.js')}}"></script>
         <script src="{{asset('front/js/jquery.app.js')}}"></script>
+        <script src="{{asset('plugins/select2/js/select2.min.js')}}"></script>
+        <script>
+        $(".select2").select2()
+        </script>
         @yield('script')
     </body>
 </html>

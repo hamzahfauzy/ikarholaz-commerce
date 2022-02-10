@@ -22,16 +22,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
-                                {{--
                                 <div class="category-filter">
-                                    <select id="categoryFilter" class="form-control">
+                                    <select id="categoryFilter" class="form-control select2">
                                         <option value="">Show All</option>
                                         @for($y = date('Y')-5; $y >= 1900; $y--)
-                                        <option>{{$y}}</option>
+                                        <option value="{{$y}}">{{$y}}</option>
                                         @endfor
                                     </select>
                                 </div>
-                                --}}
                                 <table class="table table-bordered datatable">
                                     <thead>
                                         <tr>
@@ -72,16 +70,17 @@
 <style>
 .custom-filter {
     position: absolute;
-    top:20px;
+    top:10px;
 }
-/* .custom-filter-select {
+.custom-filter-select {
     position:absolute;
     top:0;
-} */
+}
 </style>
 <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('plugins/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script>
+    var ajaxUrl = "{{route('nra')}}"
     $('.datatable').dataTable({
         processing: true,
         search: {
@@ -89,10 +88,10 @@
         },
         pageLength: 50,
         serverSide: true,
-        ajax: "{{route('nra')}}"
+        ajax: ajaxUrl
     })
 
-    // var table = $('.datatable').DataTable();
+    var table = $('.datatable').DataTable();
     // $(".datatable.dataTables_filter").append($("#categoryFilter"));
     // var categoryIndex = 0;
     // $(".datatable th").each(function (i) {
@@ -111,9 +110,10 @@
     //     }
     // );
 
-    // $("#categoryFilter").change(function (e) {
-    //     table.draw();
-    // });
-    // table.draw();
+    $("#categoryFilter").change(function (e) {
+        table.ajax.url(ajaxUrl + '?year=' + $('#categoryFilter').val()).load()
+        table.draw();
+    });
+    table.draw();
 </script>
 @endsection

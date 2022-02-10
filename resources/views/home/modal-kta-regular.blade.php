@@ -12,18 +12,7 @@
                 @csrf
                 <input type="hidden" name="desain_id" value="">
                 <div class="row">
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label for="">Tahun Lulus</label>
-                            <select name="tahun_lulus" id="tahun_lulus" class="form-control" required onchange="orderRegular()">
-                            <option value="">Pilih Tahun</option>
-                                @for($i=1974;$i<=2018;$i++)
-                                <option value="{{$i}}">{{$i}}</option>
-                                @endfor
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-12">
                         <div class="form-group">
                             <label for="field-3" class="control-label">No. Kartu</label>
                             <input type="text" class="form-control" id="no_kartu_regular" name="no_kartu_fix" placeholder="Nomor NRA anda">

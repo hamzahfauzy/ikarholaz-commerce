@@ -22,6 +22,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
+                                <div class="category-filter">
+                                    <select id="categoryFilter" class="form-control select2">
+                                        <option value="">Show All</option>
+                                        @for($y = date('Y')-5; $y >= 1900; $y--)
+                                        <option value="{{$y}}">{{$y}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
                                 <table class="table table-bordered datatable">
                                     <thead>
                                         <tr>
@@ -58,14 +66,23 @@
 <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('plugins/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script>
-    $('.datatable').DataTable({
+
+    var ajaxUrl = "{{route('pending')}}"
+    $('.datatable').dataTable({
         processing: true,
         search: {
             return: true
         },
         pageLength: 50,
         serverSide: true,
-        ajax: "{{route('pending')}}"
+        ajax: ajaxUrl
     })
+
+    var table = $('.datatable').DataTable();
+    $("#categoryFilter").change(function (e) {
+        table.ajax.url(ajaxUrl + '?year=' + $('#categoryFilter').val()).load()
+        table.draw();
+    });
+    table.draw();
 </script>
 @endsection
