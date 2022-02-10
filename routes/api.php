@@ -30,6 +30,7 @@ Route::get('/get-kartu/{nomor}', [BaseController::class, 'getKartu']);
 Route::get('/get-nomor-regular/{tahun_lulus}', [BaseController::class, 'getNomorRegular']);
 Route::get('/get-price/{digit}', [BaseController::class, 'getPrice']);
 Route::get('/test-wa', [BaseController::class, 'testWa']);
+Route::get('/test-pdf', [BaseController::class, 'testPdf']);
 Route::post('/send-pdf', [BaseController::class, 'sendPdf']);
 Route::post('/download-pdf', [BaseController::class, 'downloadPdf']);
 
