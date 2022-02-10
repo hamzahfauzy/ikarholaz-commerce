@@ -85,8 +85,15 @@ class BaseController extends Controller
 
     public function sendPdf(Request $request)
     {
-        $content = "<h2 style='text-align:center'>KPU IKARHOLAZ</h2>";
-        $content .= "<table border='1' cellpadding='5' cellspacing='0'>";
+        $path = public_path('/assets/images/pemilu-bg.jpeg');
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $content = "<html><body><div style='padding-top:140px;position:realtive;width:400px;height:500px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:400px;height:500px;object-fit:contain;' />";
+        $content .= "<table border='1' cellpadding='5' cellspacing='0' width='400px' align='center'>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><h2>KPU IKARHOLAZ</h2></td>";
+        $content .= "</tr>";
         $content .= "<tr>";
         $content .= "<td style='text-align:center'>NAMA : ".$request->name."</td>";
         $content .= "</tr>";
@@ -102,7 +109,7 @@ class BaseController extends Controller
         $content .= "<tr>";
         $content .= "<td style='text-align:center'>TANGGAL DAN WAKTU MEMILIH : ".$request->created_at."</td>";
         $content .= "</tr>";
-        $content .= "</table>";
+        $content .= "</table></div></body></html>";
         $pdf = PDF::loadHTML($content);
         $file_to_save = 'pdf/'.$request->NRA.'.pdf';
         //save the pdf file on the server
@@ -112,12 +119,39 @@ class BaseController extends Controller
 *Mohon tidak menghapus notifikasi sampai program Munas berakhir sebagai bukti valid partisipasi anda.*";
 
         return WaBlast::send($request->phone, $message, url()->to('/').$file_to_save);
-        //print the pdf file to the screen for saving
-        // header('Content-type: application/pdf');
-        // header('Content-Disposition: inline; filename="'.$request->NRA.'.pdf"');
-        // header('Content-Transfer-Encoding: binary');
-        // header('Content-Length: ' . filesize($file_to_save));
-        // header('Accept-Ranges: bytes');
-        // readfile($file_to_save);
+    }
+
+    public function testPdf()
+    {
+        $path = public_path('/assets/images/pemilu-bg.jpeg');
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $content = "<html><body><div style='padding-top:140px;position:realtive;width:400px;height:500px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:400px;height:500px;object-fit:contain;' />";
+        $content .= "<table border='1' cellpadding='5' cellspacing='0' width='400px' align='center'>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><h2>KPU IKARHOLAZ</h2></td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>NAMA : Nama Pemilih</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>ALUMNI : 2010</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>NRA : 12.34678</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>TELAH MEMILIH : Kandidat</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>TANGGAL DAN WAKTU MEMILIH : Hari ini</td>";
+        $content .= "</tr>";
+        $content .= "</table></div></body></html>";
+        return $content;
+        // $pdf = PDF::loadHTML($content);
+        // $file_to_save = 'pdf/'.$request->NRA.'.pdf';
+        // //save the pdf file on the server
+        // file_put_contents($file_to_save, $pdf->output()); 
     }
 }
