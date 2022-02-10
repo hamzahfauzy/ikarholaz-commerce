@@ -117,7 +117,7 @@
 
                                             <label for="">No WA (081234xxxxxxxx)</label>
                                             
-                                            <input class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" type="text" required="" placeholder="No HP">
+                                            <input class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" type="number" required="" placeholder="No HP">
 
                                             @error('phone')
                                                 <span class="invalid-feedback" role="alert">

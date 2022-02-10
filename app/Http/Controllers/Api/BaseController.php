@@ -74,32 +74,42 @@ class BaseController extends Controller
         return WaBlast::send("082369378823", $message);
     }
 
+    public function downloadPdf(Request $request)
+    {
+        $file_to_save = 'pdf/'.$request->NRA.'.pdf';
+        return response()->json([
+            'status' => file_exists($file_to_save),
+            'file_url' => url()->to($file_to_save)
+        ], 200);
+    }
+
     public function sendPdf(Request $request)
     {
-        $content = "<h2>KPU IKARHOLAZ</h2>";
+        $content = "<h2 style='text-align:center'>KPU IKARHOLAZ</h2>";
         $content .= "<table border='1' cellpadding='5' cellspacing='0'>";
         $content .= "<tr>";
-        $content .= "<td>NAMA : ".$request->name."</td>";
+        $content .= "<td style='text-align:center'>NAMA : ".$request->name."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td>ALUMNI : ".$request->graduation_year."</td>";
+        $content .= "<td style='text-align:center'>ALUMNI : ".$request->graduation_year."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td>NRA : ".$request->NRA."</td>";
+        $content .= "<td style='text-align:center'>NRA : ".$request->NRA."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td>TELAH MEMILIH : ".$request->candidate_name."</td>";
+        $content .= "<td style='text-align:center'>TELAH MEMILIH : ".$request->candidate_name."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td>TANGGAL DAN WAKTU MEMILIH : ".$request->created_at."</td>";
+        $content .= "<td style='text-align:center'>TANGGAL DAN WAKTU MEMILIH : ".$request->created_at."</td>";
         $content .= "</tr>";
         $content .= "</table>";
         $pdf = PDF::loadHTML($content);
         $file_to_save = 'pdf/'.$request->NRA.'.pdf';
         //save the pdf file on the server
         file_put_contents($file_to_save, $pdf->output()); 
-        $message = "Terima kasih telah mengikuti PEMILU IKARHOLAZ tahun ".$request->period."
-Berikut lampiran dari surat suara anda.";
+        $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih $request->candidate_name sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda
+
+*Mohon tidak menghapus notifikasi sampai program Munas berakhir sebagai bukti valid partisipasi anda.*";
 
         return WaBlast::send($request->phone, $message, url()->to('/').$file_to_save);
         //print the pdf file to the screen for saving

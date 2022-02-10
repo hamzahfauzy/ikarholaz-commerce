@@ -31,6 +31,7 @@ Route::get('/get-nomor-regular/{tahun_lulus}', [BaseController::class, 'getNomor
 Route::get('/get-price/{digit}', [BaseController::class, 'getPrice']);
 Route::get('/test-wa', [BaseController::class, 'testWa']);
 Route::post('/send-pdf', [BaseController::class, 'sendPdf']);
+Route::post('/download-pdf', [BaseController::class, 'downloadPdf']);
 
 Route::prefix('mobile')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
