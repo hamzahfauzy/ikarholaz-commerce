@@ -137,15 +137,18 @@ class HomeController extends Controller
                 'graduation_year',
                 'city',
             ];
+
+            if(isset($_GET['year']) && !empty($_GET['year']))
+                $alumnis = $alumnis->where('graduation_year',$_GET['year']);
     
             if(!empty($search))
             {
                 $alumnis = $alumnis->where('name','LIKE','%'.$search.'%');
                 $alumnis = $alumnis->orwhere('NRA','LIKE','%'.$search.'%');
-                $alumnis = $alumnis->orwhere('graduation_year','LIKE','%'.$search.'%');
                 $alumnis = $alumnis->orwhere('city','LIKE','%'.$search.'%');
             }
-    
+            
+            
             $total = $alumnis->count();
             $alumnis = $alumnis->orderby($columns[$order[0]['column']], $order[0]['dir']);
             $alumnis = $alumnis->skip($start)->take($length);
@@ -190,6 +193,9 @@ class HomeController extends Controller
                 'graduation_year',
                 'created_at',
             ];
+
+            if(isset($_GET['year']) && !empty($_GET['year']))
+                $alumnis = $alumnis->where('graduation_year',$_GET['year']);
     
             if(!empty($search))
             {
