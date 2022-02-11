@@ -16,10 +16,15 @@ class AdminController extends Controller
         if(isset($_GET['nras']))
         {
             $nras = explode(',',$_GET['nras']);
-            $alumni = $alumni->whereNotIn('NRA',$nras)->where('approval_status','approved');
+            $alumni = $alumni->whereNotIn('NRA',$nras);
         }
 
-        $alumni = $alumni->get();
+        if(isset($_GET['id']))
+        {
+            $alumni = $alumni->whereIn('id',$_GET['id']);
+        }
+
+        $alumni = $alumni->where('approval_status','approved')->get();
 
         return response()->json(['data' => $alumni], 200);
     }
