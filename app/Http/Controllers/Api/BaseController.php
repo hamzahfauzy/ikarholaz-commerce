@@ -118,7 +118,8 @@ class BaseController extends Controller
 
 *Mohon tidak menghapus notifikasi sampai program Munas berakhir sebagai bukti valid partisipasi anda.*";
 
-        return WaBlast::sendfile($request->phone, $message, url()->to('/').$file_to_save);
+        return WaBlast::send($request->phone, $message);
+        return WaBlast::sendfile($request->phone, $message, asset($file_to_save));
     }
 
     public function testPdf()
