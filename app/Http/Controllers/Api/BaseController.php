@@ -90,6 +90,10 @@ class BaseController extends Controller
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=https%3A%2F%2Fgerai.ikarholaz.id%2Fpdf%2F".$request->NRA.".pdf&chs=180x180&choe=UTF-8&chld=L|0");
+        $base64_barcode = 'data:image/png;base64,' . base64_encode($barcode);
+
         $content = "<html><body><div style='padding-top:140px;position:realtive;width:400px;height:500px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:400px;height:500px;object-fit:contain;' />";
         $content .= "<table border='1' cellpadding='5' cellspacing='0' width='400px' align='center'>";
         $content .= "<tr>";
@@ -109,6 +113,9 @@ class BaseController extends Controller
         $content .= "</tr>";
         $content .= "<tr>";
         $content .= "<td style='text-align:center'>TANGGAL DAN WAKTU MEMILIH : ".$request->created_at."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><img src='".$base64_barcode."' width='150px' height='150px'></td>";
         $content .= "</tr>";
         $content .= "</table></div></body></html>";
         $pdf = PDF::loadHTML($content);
