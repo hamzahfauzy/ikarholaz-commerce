@@ -94,10 +94,10 @@ class BaseController extends Controller
         $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=https%3A%2F%2Fgerai.ikarholaz.id%2Fpdf%2F".$request->NRA.".pdf&chs=180x180&choe=UTF-8&chld=L|0");
         $base64_barcode = 'data:image/png;base64,' . base64_encode($barcode);
 
-        $content = "<html><body><div style='padding-top:140px;position:realtive;width:400px;height:500px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:400px;height:500px;object-fit:contain;' />";
-        $content .= "<table border='1' cellpadding='5' cellspacing='0' width='400px' align='center'>";
+        $content = "<html><body><div style='padding-top:140px;position:realtive;width:500px;height:650px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:500px;height:650px;object-fit:contain;' />";
+        $content .= "<table border='1' cellpadding='5' cellspacing='0' width='500px' align='center'>";
         $content .= "<tr>";
-        $content .= "<td style='text-align:center'><h2>KPU IKARHOLAZ</h2></td>";
+        $content .= "<td style='text-align:center'><h2>NO URUT : #".$request->no_urut."</h2></td>";
         $content .= "</tr>";
         $content .= "<tr>";
         $content .= "<td style='text-align:center'>NAMA : ".$request->name."</td>";
@@ -109,13 +109,13 @@ class BaseController extends Controller
         $content .= "<td style='text-align:center'>NRA : ".$request->NRA."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td style='text-align:center'>TELAH MEMILIH : ".$request->candidate_name."</td>";
+        $content .= "<td style='text-align:center'>MEMILIH : ".$request->candidate_name."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td style='text-align:center'>TANGGAL DAN WAKTU MEMILIH : ".$request->created_at."</td>";
+        $content .= "<td style='text-align:center'>WAKTU MEMILIH : ".$request->created_at."</td>";
         $content .= "</tr>";
         $content .= "<tr>";
-        $content .= "<td style='text-align:center'><img src='".$base64_barcode."' width='150px' height='150px'></td>";
+        $content .= "<td style='text-align:center'><img src='".$base64_barcode."' style='width:100px;height:100px;'></td>";
         $content .= "</tr>";
         $content .= "</table></div></body></html>";
         $pdf = PDF::loadHTML($content);
