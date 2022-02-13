@@ -116,12 +116,12 @@ class BaseController extends Controller
         //save the pdf file on the server
         file_put_contents($file_to_save, $pdf->output()); 
         $alumni = Alumni::where('NRA',$request->NRA)->first();
-        $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih $request->candidate_name sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda
+        $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih $request->candidate_name sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda ".asset($file_to_save)."
 
 *Mohon tidak menghapus notifikasi sampai program Munas berakhir sebagai bukti valid partisipasi anda.*";
 
-        return WaBlast::send($alumni->user->email, $message);
-        return WaBlast::sendfile($alumni->user->email, $message, asset($file_to_save));
+        // return WaBlast::send($alumni->user->email, $message);
+        return WaBlast::sent($alumni->user->email, $message);
     }
 
     public function testPdf()
