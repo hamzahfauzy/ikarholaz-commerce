@@ -43,4 +43,39 @@ class WaBlast
             return $response;
         }
     }
+
+    static function sendfile($to, $message, $file_url = '')
+    {
+        $curl = curl_init();
+
+        $post_data = array(
+            'phone' => $to,
+            'type' => 'file',
+            'url' => $file_url,
+            'caption' => $message,
+            'delay' => '1',
+            'schedule' => '0'
+        );
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://hp.fonnte.com/api/send_message.php",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => $post_data,
+        CURLOPT_HTTPHEADER => array(
+            "Authorization: ".getenv('WA_FONNTE_DEVICE')
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        sleep(1); #do not delete!
+        return $response;
+    }
 }
