@@ -97,7 +97,10 @@ class BaseController extends Controller
         $content = "<html><body><div style='padding-top:140px;position:realtive;width:500px;height:650px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:500px;height:650px;object-fit:contain;' />";
         $content .= "<table border='1' cellpadding='5' cellspacing='0' width='500px' align='center'>";
         $content .= "<tr>";
-        $content .= "<td style='text-align:center'><h2>NO URUT : #".$request->no_urut."</h2></td>";
+        $content .= "<td style='text-align:center'><h1 style='color:red'>ARSIP PRIBADI<br>SANGAT RAHASIA</h1></td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><h2>No. Bukti : #".$request->no_urut."</h2></td>";
         $content .= "</tr>";
         $content .= "<tr>";
         $content .= "<td style='text-align:center'>NAMA : ".$request->name."</td>";
@@ -123,9 +126,9 @@ class BaseController extends Controller
         //save the pdf file on the server
         file_put_contents($file_to_save, $pdf->output()); 
         $alumni = Alumni::where('NRA',$request->NRA)->first();
-        $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih $request->candidate_name sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda ".asset($file_to_save)."
+        $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih *$request->candidate_name* sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda ".asset($file_to_save)."
 
-*Mohon tidak menghapus notifikasi sampai program Munas berakhir sebagai bukti valid partisipasi anda.*";
+_Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai bukti valid partisipasi dam suara anda._";
 
         // return WaBlast::send($alumni->user->email, $message);
         return WaBlast::sent($alumni->user->email, $message);
