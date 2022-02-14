@@ -221,6 +221,13 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
 
     function alumnidpt()
     {
+        if(isset($_GET['all']))
+            return allalumni();
         return Alumni::where('approval_status','approved')->count();
+    }
+
+    function allalumni()
+    {
+        return Alumni::count();
     }
 }
