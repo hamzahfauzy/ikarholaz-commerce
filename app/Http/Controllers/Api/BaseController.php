@@ -130,7 +130,7 @@ class BaseController extends Controller
         $alumni = Alumni::where('NRA',$request->NRA)->first();
         $message = "$request->name, $request->NRA telah menggunakan hak suara dengan memilih *$request->candidate_name* sebagai ketua umum IKARHOLAZ periode 2021-2024. Berikut adalah bukti surat suara Anda ".asset($file_to_save)."
 
-_Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai bukti valid partisipasi dam suara anda._";
+_Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai bukti valid partisipasi dan suara anda._";
 
         // return WaBlast::send($alumni->user->email, $message);
         return WaBlast::sent($alumni->user->email, $message);
