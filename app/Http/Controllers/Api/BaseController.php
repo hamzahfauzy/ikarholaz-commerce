@@ -77,7 +77,8 @@ class BaseController extends Controller
 
     public function downloadPdf(Request $request)
     {
-        $file_to_save = 'pdf/'.$request->NRA.'.pdf';
+        $filename = md5(md5($request->NRA."".$request->created_at));
+        $file_to_save = 'pdf/'.$filename.'.pdf';
         return response()->json([
             'status' => file_exists($file_to_save),
             'file_url' => url()->to($file_to_save)
@@ -122,7 +123,8 @@ class BaseController extends Controller
         $content .= "</tr>";
         $content .= "</table></div></body></html>";
         $pdf = PDF::loadHTML($content);
-        $file_to_save = 'pdf/'.$request->NRA.'.pdf';
+        $filename = md5(md5($request->NRA."".$request->created_at));
+        $file_to_save = 'pdf/'.$filename.'.pdf';
         //save the pdf file on the server
         file_put_contents($file_to_save, $pdf->output()); 
         $alumni = Alumni::where('NRA',$request->NRA)->first();
