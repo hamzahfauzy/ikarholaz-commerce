@@ -117,6 +117,10 @@
                     </li>
 
                     <li>
+                        <a href="{{route('register')}}"><i class="mdi mdi-account"></i>{{__('Register')}}</a>
+                    </li>
+
+                    <li>
                         <a href="{{route('shop.index')}}"><i class="mdi mdi-shopping"></i>{{__('Shop')}}</a>
                     </li>
                     
@@ -126,6 +130,10 @@
 
                     <li>
                         <a href="{{route('pending')}}"><i class="mdi mdi-view-list"></i>{{__('Pending Alumni')}}</a>
+                    </li>
+
+                    <li>
+                        <a href="https://listing.ikarholaz.id/tentang-nra-dan-kta"><i class="mdi mdi-application"></i>{{__('NRA dan KTA')}}</a>
                     </li>
 
                     <li>
