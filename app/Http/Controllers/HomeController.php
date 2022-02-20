@@ -31,10 +31,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $products = Product::where('is_dynamic',NULL)->doesntHave('parent')->orderby('created_at','desc')->paginate(8);
+        $products = Product::where('is_dynamic',NULL)->doesntHave('parent')->whereHas('categories',function($query){
+            return $query->where('categories.slug','!=','nra');
+        })->orderby('created_at','desc')->paginate(8);
         $category = Category::find(getenv('DESAIN_KARTU_KATEGORI',1));
         $desain_products = $category ? $category->products : [];
-        return view('home',compact('products','desain_products'));
+
+        $nra_cantiks = Product::whereHas('categories',function($query){
+            return $query->where('categories.slug','nra');
+        })->where('stock','>',0)->get();
+
+        return view('home',compact('products','desain_products','nra_cantiks'));
     }
 
     public function profile()

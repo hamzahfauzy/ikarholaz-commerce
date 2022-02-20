@@ -1,30 +1,21 @@
-<div id="modal-order-kta" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div id="modal-order-custom" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title mt-0">{{__('Order KTA')}}</h4>
+                <h4 class="modal-title mt-0">{{__('Order Custom KTA')}}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" id="form-order" action="{{route('shop.checkout-kta')}}" enctype="multipart/form-data">
+                <form method="post" id="form-order-custom" action="{{route('shop.checkout-kta')}}" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="digit" value="">
-                <input type="hidden" name="no_request" value="">
-                <input type="hidden" name="product_id" value="">
                 <input type="hidden" name="desain_id" value="">
                 <div class="row">
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-12">
                         <div class="form-group">
                             <label for="field-3" class="control-label">No. Kartu</label>
-                            <input type="text" class="form-control" id="no_kartu_fix" name="no_kartu_fix" readonly>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="form-group">
-                            <label for="field-3" class="control-label">Harga</label>
-                            <input type="text" class="form-control" id="harga_fix" name="harga_fix" readonly>
+                            <input type="text" class="form-control" id="no_kartu_regular" name="no_kartu_fix" placeholder="Nomor NRA anda">
                         </div>
                     </div>
                 </div>
@@ -50,12 +41,11 @@
                         </div>
                     </div>
                 </div>
-                @include('home.list-desain')
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-info waves-effect waves-light" onclick="document.getElementById('form-order').submit()">Check Out</button>
+                <button type="button" class="btn btn-info waves-effect waves-light" onclick="document.getElementById('form-order-custom').submit()">Check Out</button>
             </div>
         </div>
     </div>
