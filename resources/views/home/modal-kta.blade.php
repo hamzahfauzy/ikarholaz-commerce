@@ -12,6 +12,7 @@
                 @csrf
                 <input type="hidden" name="digit" value="">
                 <input type="hidden" name="no_request" value="">
+                <input type="hidden" name="product_id" value="">
                 <input type="hidden" name="desain_id" value="">
                 <div class="row">
                     <div class="col-12 col-sm-6">

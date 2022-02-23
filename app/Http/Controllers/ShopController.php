@@ -351,6 +351,7 @@ WaBlast::send($request->phone_number,$message);
         // validation here
 
         $data = [];
+
         $nomor_kartu = $request->no_kartu_fix;
         $nomor_kartu = explode('.',$nomor_kartu);
         $tahun_lulus = ($nomor_kartu[0] < date('y') ? 20 : 19).$nomor_kartu[0];
@@ -374,19 +375,26 @@ WaBlast::send($request->phone_number,$message);
                 $data_desain['price'] = $desain->price;
                 $data_desain['file_url'] = $desain->thumb->file_url;
             }
-            $product = Product::create([
-                'name' => 'KTA - #'.$request->no_kartu_fix.' & Desain ('.$data_desain['price'].')',
-                'slug' => 'kta-'.$request->no_kartu_fix,
-                'base_price' => $harga+$data_desain['price'],
-                'description' => 'KTA - #'.$request->no_kartu_fix.', Nama Lengkap : '.$request->nama_lengkap.', Nama Kartu : '.$request->nama_tercetak_di_kartu.', Desain ('.$data_desain['price'].')',
-                'stock' => 0,
-                'stock_status' => 'Dynamic Product',
-                'is_dynamic' => 1
-            ]);
-            ProductImage::create([
-                'product_id' => $product->id,
-                'file_url' => $data_desain['file_url']
-            ]); 
+
+            if($request->product_id){
+                $product = Product::find($request->product_id);
+            }else{
+                $product = Product::create([
+                    'name' => 'KTA - #'.$request->no_kartu_fix.' & Desain ('.$data_desain['price'].')',
+                    'slug' => 'kta-'.$request->no_kartu_fix,
+                    'base_price' => $harga+$data_desain['price'],
+                    'description' => 'KTA - #'.$request->no_kartu_fix.', Nama Lengkap : '.$request->nama_lengkap.', Nama Kartu : '.$request->nama_tercetak_di_kartu.', Desain ('.$data_desain['price'].')',
+                    'stock' => 0,
+                    'stock_status' => 'Dynamic Product',
+                    'is_dynamic' => 1
+                ]);
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'file_url' => $data_desain['file_url']
+                ]); 
+            }
+            
             $product->set_custom_fields([
                 'nama_lengkap' => $request->nama_lengkap,
                 'nama_tercetak_di_kartu' => $request->nama_tercetak_di_kartu,

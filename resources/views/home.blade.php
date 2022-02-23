@@ -23,10 +23,36 @@
 .property-card.property-horizontal.bg-white.active {
     background-color:rgba(0,0,0,0.3)!important;
 }
+
+.btn-kta-primary{
+    background:#0099FF;
+    color:white;
+    padding:12px;
+}
+
+.btn-kta-warning{
+    background:#FE9900;
+    color:white;
+    padding:12px;
+}
+
+.btn-kta-pink{
+    background:#FE33FF;
+    color:white;
+    padding:12px;
+}
+
+.btn-kta-danger{
+    background:#FF2121;
+    color:white;
+    padding:12px;
+}
 </style>
 <!-- START carousel-->
 @include('home.modal-kta')
 @include('home.modal-kta-regular')
+@include('home.modal-kta-custom')
+@include('home.modal-nra-cantik')
 <div id="carouselExampleCaption" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner" role="listbox" style="height: calc(100vh - 113px);">
         <div style="width:100%;height:100%;position:absolute;background:rgba(0,0,0,0.5);z-index:1"></div>
@@ -35,6 +61,23 @@
             <div class="carousel-caption" style="transform: translate(-50%, -50%);top: 50%;left: 50%;width:100%;bottom:unset;padding-bottom:0px;">
                 <div class="container">
                     <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-order-regular" class="btn btn-block btn-kta-primary">ORDER KTA DESAIN TERSEDIA</a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-order-custom" class="btn btn-block btn-kta-warning">ORDER KTA DESAIN SENDIRI</a>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#modal-nra-cantik" class="btn btn-block btn-kta-pink">KONVERSI KE NRA CANTIK</a>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <a href="{{route('shop.product-list',App\Models\Category::find(getenv('DESAIN_KARTU_KATEGORI',1))->slug)}}" class="btn btn-block btn-kta-danger">REORDER KTA</a>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row">
                         <div class="col-12">
                             <h2 class="text-white">Konversi ke NRA Cantik</h2>
                         </div>
@@ -60,10 +103,14 @@
                             <p class="text-white">
                                 Atau
                             </p>
+                            <div>
+
+                            </div>
                             <a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" data-target="#modal-order-regular">Order Kartu (Bisa Kustom Desain)</a>
-                            <a href="{{route('shop.product-list',App\Models\Category::find(getenv('DESAIN_KARTU_KATEGORI',1))->slug)}}" class="btn btn-danger">Reorder KTA</a>
+                            
                         </div>
-                    </div>
+                    </div> -->
+
                 </div>
             </div>
         </div>
@@ -176,29 +223,47 @@ function checkKartu()
         )
     })
     .catch(function(error) {
-        swal({
-            title: 'Selamat!',
-            text: 'Nomor yang anda minta tersedia! Klik OK untk lanjut ke tahap berikutnya',
-            type: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#4fa7f3',
-            cancelButtonColor: '#d57171',
-            confirmButtonText: 'Ok'
-        }).then(function (result) {
-            if(result.value)
+
+        var nra_cantiks = <?=$nra_cantiks?>;
+        var found = nra_cantiks.find(nra=>nra.name == nomorkartu);
+        if(found){
+            swal({
+                title: 'Selamat!',
+                text: 'Nomor yang anda minta tersedia! Klik OK untk lanjut ke tahap berikutnya',
+                type: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#4fa7f3',
+                cancelButtonColor: '#d57171',
+                confirmButtonText: 'Ok'
+            }).then(function (result) {
+                if(result.value)
+                {
+                    // to order kta page
+                    fetch('/api/get-price/'+digit)
+                    .then(res => res.text())
+                    .then(res => {
+                        $('#modal-nra-cantik').modal('hide'); 
+                        $('#modal-order-kta').modal('show'); 
+                        $('[name=product_id]').val(found.id)
+                        $('[name=digit]').val(digit)
+                        $('[name=no_request]').val(no_request)
+                        $('#no_kartu_fix').val(nomorkartu)
+                        $('#harga_fix').val(found.base_price)
+                    })
+                }
+            })
+
+        }else{
+            swal(    
             {
-                // to order kta page
-                fetch('/api/get-price/'+digit)
-                .then(res => res.text())
-                .then(res => {
-                    $('#modal-order-kta').modal('show'); 
-                    $('[name=digit]').val(digit)
-                    $('[name=no_request]').val(no_request)
-                    $('#no_kartu_fix').val(nomorkartu)
-                    $('#harga_fix').val(res)
-                })
+                title: 'Maaf!',
+                text: 'Nomor yang anda minta tidak tersedia! Silahkan pilih nomor yang lain',
+                type: 'error',
+                confirmButtonColor: '#4fa7f3'
             }
-        })
+        )
+        }
+
         console.log(error);
     })
 }
