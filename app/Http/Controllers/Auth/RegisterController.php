@@ -7,6 +7,7 @@ use App\Models\Alumni;
 use App\Models\WaBlast;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\RegisterStatus;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -91,6 +92,16 @@ class RegisterController extends Controller
         //     'email' => $data['email'],
         //     'password' => Hash::make($data['password']),
         // ]);
+
+        if(RegisterStatus::exists())
+        {
+            $register_status = RegisterStatus::first();
+            if(!$register_status->status)
+            {
+                Session::flash('failed',"Pendaftaran sedang ditutup.");
+                return redirect('/register');
+            }
+        }
 
         DB::beginTransaction();
 

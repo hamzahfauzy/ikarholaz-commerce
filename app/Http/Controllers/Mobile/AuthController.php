@@ -6,18 +6,28 @@ use App\Models\User;
 use App\Models\Staff;
 use App\Models\Alumni;
 use App\Models\WaBlast;
-use App\Notifications\UserNotification;
+use Twilio\Rest\Client;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\RegisterStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Twilio\Rest\Client;
+use App\Notifications\UserNotification;
 
 class AuthController extends Controller
 {
 
     function register(Request $request)
     {
+        if(RegisterStatus::exists())
+        {
+            $register_status = RegisterStatus::first();
+            if(!$register_status->status)
+            {
+                return response()->json(['message' => 'Pendaftaran sedang ditutup'], 409);
+            }
+        }
+        
         $user = new User();
 
         $new_user = $user->create([
