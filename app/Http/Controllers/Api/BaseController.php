@@ -79,6 +79,8 @@ class BaseController extends Controller
     {
         $filename = md5(md5($request->NRA."".$request->created_at));
         $file_to_save = 'pdf/'.$filename.'.pdf';
+        if(!file_exists($file_to_save))
+            $this->generatePdf($request);
         return response()->json([
             'status' => file_exists($file_to_save),
             'file_url' => url()->to($file_to_save)
@@ -122,6 +124,12 @@ class BaseController extends Controller
         $content .= "<td style='text-align:center'><img src='".$base64_barcode."' style='width:100px;height:100px;'></td>";
         $content .= "</tr>";
         $content .= "</table></div></body></html>";
+
+        $pdf = PDF::loadHTML($content);
+        $filename = md5(md5($request->NRA."".$request->created_at));
+        $file_to_save = 'pdf/'.$filename.'.pdf';
+        //save the pdf file on the server
+        file_put_contents($file_to_save, $pdf->output());
         $pdf = PDF::loadHTML($content);
         $filename = md5(md5($request->NRA."".$request->created_at));
         $file_to_save = 'pdf/'.$filename.'.pdf';
@@ -168,5 +176,52 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
         // $file_to_save = 'pdf/'.$request->NRA.'.pdf';
         // //save the pdf file on the server
         // file_put_contents($file_to_save, $pdf->output()); 
+    }
+
+    function generatePdf(Request $request)
+    {
+        $path = public_path('/assets/images/pemilu-bg.jpeg');
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        
+        $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=https%3A%2F%2Fgerai.ikarholaz.id%2Fpdf%2F".$request->NRA.".pdf&chs=180x180&choe=UTF-8&chld=L|0");
+        $base64_barcode = 'data:image/png;base64,' . base64_encode($barcode);
+
+        $content = "<html><body><div style='padding-top:140px;position:realtive;width:500px;height:650px;margin:auto;'><img src=\"$base64\" style='position:absolute;top:40px;z-index:-1;width:500px;height:650px;object-fit:contain;' />";
+        $content .= "<table border='1' cellpadding='5' cellspacing='0' width='500px' align='center'>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><h1 style='color:red'>ARSIP PRIBADI<br>SANGAT RAHASIA</h1></td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><h2>No. Bukti : #".$request->no_urut."</h2></td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>NAMA : ".$request->name."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>ALUMNI : ".$request->graduation_year."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>NRA : ".$request->NRA."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>MEMILIH : ".$request->candidate_name."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'>WAKTU MEMILIH : ".$request->created_at."</td>";
+        $content .= "</tr>";
+        $content .= "<tr>";
+        $content .= "<td style='text-align:center'><img src='".$base64_barcode."' style='width:100px;height:100px;'></td>";
+        $content .= "</tr>";
+        $content .= "</table></div></body></html>";
+
+        $pdf = PDF::loadHTML($content);
+        $filename = md5(md5($request->NRA."".$request->created_at));
+        $file_to_save = 'pdf/'.$filename.'.pdf';
+        //save the pdf file on the server
+        file_put_contents($file_to_save, $pdf->output());
+
+        return $file_to_save;
     }
 }
