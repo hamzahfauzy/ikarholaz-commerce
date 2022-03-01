@@ -43,7 +43,7 @@
                             <br>
                         </div>
                         <div class="col-12 col-md-3">
-                            <img src="{{Storage::url('public/'.$alumni->profile_pic)}}" alt="" width="100%">
+                            <img src="{{Storage::url($alumni->profile_pic)}}" alt="" width="100%">
                         </div>
                         <div class="col-12 col-md-9 m-auto">
                             <table class="table table-bordered">
