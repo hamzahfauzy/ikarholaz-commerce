@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 /**
  * Class AlumniController
@@ -43,9 +45,22 @@ class AlumniController extends Controller
 
             if(isset($_GET['filter']['approval_status']) && !empty($_GET['filter']['approval_status']) && $_GET['filter']['approval_status'] != 'semua')
             {
-                $alumnis = $alumnis->where('alumnis.approval_status','LIKE', '%'.$_GET['filter']['approval_status'].'%');
+                if($_GET['filter']['approval_status'] == "approved"){
+
+                    $alumnis = $alumnis->where('alumnis.approval_status','LIKE', '%'.$_GET['filter']['approval_status'].'%');
+                }else{
+                    $alumnis = $alumnis->where('alumnis.approval_status', null);
+
+                }
             }
         }
+        
+        if(isset($_GET['export'])){
+            $data = $alumnis->select('alumnis.name','alumnis.NRA','users.email','alumnis.graduation_year','alumnis.approval_status','alumnis.created_at')->orderby('alumnis.id', 'desc')->get()->toArray();
+            $keys = array_keys($data[0]);
+            $this->export([$keys,...$data]);
+        }
+
         $alumnis = $alumnis->select('alumnis.*','users.email')->orderby('alumnis.id', 'desc')->paginate();
         $filter = $_GET['filter'] ?? ['graduation_year'=>'','approval_status' => ''];
 
@@ -106,6 +121,23 @@ class AlumniController extends Controller
         $alumni = Alumni::find($id);
 
         return view('staff.alumni.show', compact('alumni'));
+    }
+
+    public function export($data){
+        try {
+           $spreadSheet = new Spreadsheet();
+           $spreadSheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(20);
+           $spreadSheet->getActiveSheet()->fromArray($data);
+           $Excel_writer = new Xls($spreadSheet);
+           header('Content-Type: application/vnd.ms-excel');
+           header('Content-Disposition: attachment;filename="ExportDataAlumni.xls"');
+           header('Cache-Control: max-age=0');
+           ob_end_clean();
+           $Excel_writer->save('php://output');
+           exit();
+       } catch (Exception $e) {
+           return;
+       }
     }
 
     public function import(Request $request)

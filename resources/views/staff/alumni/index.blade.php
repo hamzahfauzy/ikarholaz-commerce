@@ -35,6 +35,9 @@
                             <a href="{{ route('staff.alumnis.import') }}" class="btn btn-primary btn-sm float-right mr-2" data-placement="left">
                                 {{ __('Import') }}
                             </a>
+                            <a href="{{ route('staff.alumnis.index') }}?export=true" class="btn btn-primary btn-sm float-right mr-2" data-placement="left">
+                                {{ __('Export') }}
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -53,6 +56,7 @@
                                 <option value="">- Pilih Status -</option>
                                 <option value="semua" {{isset($filter['approval_status']) && $filter['approval_status'] == 'semua' ? 'selected=""' : ''}}>Semua</option>
                                 <option value="approved" {{isset($filter['approval_status']) && $filter['approval_status'] == 'approved' ? 'selected=""' : ''}}>Approved</option>
+                                <option value="pending" {{isset($filter['approval_status']) && $filter['approval_status'] == 'pending' ? 'selected=""' : ''}}>Pending</option>
                             </select>
                             &nbsp;
                             <input type="text" class="form-control" name="keyword" placeholder="Kata Kunci Disini..." value="<?=isset($_GET['keyword']) ? $_GET['keyword'] : ''?>">
@@ -66,10 +70,10 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Name</th>
+                                    <th>Photo</th>
                                     <th>NRA</th>
                                     <th>Phone</th>
                                     <th>Graduation Year</th>
-                                    <th>Email</th>
                                     <th>Status</th>
                                     <th>Register Date</th>
 
@@ -82,12 +86,14 @@
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $alumni->name ?? '-' }}</td>
                                     <td>
+                                        <img src="{{asset('storage/public/'.$alumni->profile_pic)}}" height="100" class="my-2" alt="Foto Profil">
+                                    </td>
+                                    <td>
                                         {!! $alumni->NRA !!}<br>
                                         <a href="{{route('staff.alumnis.update-nra',$alumni->id)}}">Update NRA</a>
                                     </td>
                                     <td>{{ $alumni->user && $alumni->user->email ? $alumni->user->email : '-' }}</td>
                                     <td>{{ $alumni->graduation_year ?? '-' }}</td>
-                                    <td>{{ $alumni->email ?? '-' }}</td>
                                     <td>{{ $alumni->approval_status ?? '-' }}</td>
                                     <td>{{ $alumni->created_at ?? '-' }}</td>
 
