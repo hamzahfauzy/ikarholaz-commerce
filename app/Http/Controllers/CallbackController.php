@@ -27,14 +27,15 @@ class CallbackController extends Controller
         else
             $tiket = $contact->tiket;
 
-        $wa = new Fonnte;
-        $message = "Terima kasih $contact->nama_pendaftar ($contact->alamat) telah melakukan pembayaran PPDB Malhikdua melalui $contact->tipe_pembayaran";
-        $message .= "\nBerikut adalah tiket pengisian formulir anda : $tiket";
-        $message .= "\nGunakan tiket ini untuk mengisi/mengedit formulir PPDB hingga lengkap.";
-        $message .= "\nFormulir PPDB di ".route('login')." (ONLINE)";
-        $message .= "\nManfaatkan tombol SAVE untuk menyimpan isian formulir.";
-        $message .= "\nJika sudah, klik tombol VERIFIKASI BERKAS/PENDAFTARAN untuk diperiksa petugas.";
-        $wa->send_text("62".$contact->no_wa,$message);
+        $message = "Terima kasih telah melakukan pembayaran sebesar Rp.$contact->biaya_pembayaran atas tagihan [kode transaksi].";
+        $message .= "\nInfo pengiriman:";
+        $message .= "\nNama: $contact->nama_pendaftar";
+        $message .= "\nNomor HP: $contact->no_wa";
+        $message .= "\nAlamat pengiriman: $contact->alamat";
+        $message .= "\nCek kembali alamat pengiriman, jika ada kesalahan lakukan revisi alamat dengan membalas notifikasi ini.";
+
+        $message .= "\n*Transaksi akan diproses mengikuti ketentuan atas produk yang dibeli.";
+        WaBlast::send("+62".$contact->no_wa,$message);
 
         return $tiket;
     }

@@ -324,19 +324,37 @@ class ShopController extends Controller
 
             if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
 
-            $message = "Halo $user->name
+            // $message = "Halo $user->name
 
-Berikut ini adalah data order kamu
-Order ID: #$transaction->id
-Rincian transaksi
-$order_items_string
+            // Berikut ini adalah data order kamu
+            // Order ID: #$transaction->id
+            // Rincian transaksi
+            // $order_items_string
+                        
+            // Total: ".number_format($all_total_price+$payment['total_fee']['flat'])."
+                        
+            // Silahkan melakukan pembayaran melalui $request->payment_method dengan kode pembayaran $response_data[pay_code]
+                        
+            // Terima kasih.";
+
+            $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
+
+            Kode Transaksi: $transaction->id
+            Nama Anda: $customer->first_name $customer->last_name
+            Email: $customer->email
+            Nomor HP: $customer->phone_number
+            Alamat pengiriman: $customer->address
+
+            Rincian transaksi
+            $order_items_string
+
+            TOTAL : ".number_format($all_total_price+$payment['total_fee']['flat'])."
+
+            Silahkan lakukan pembayaran sesuai metode yang dipilih. 
+
+            *Khusus transfer manual/cash lakukan konfirmasi dengan mereplay notifikasi ini.";
             
-Total: ".number_format($all_total_price+$payment['total_fee']['flat'])."
-            
-Silahkan melakukan pembayaran melalui $request->payment_method dengan kode pembayaran $response_data[pay_code]
-            
-Terima kasih.";
-WaBlast::send($request->phone_number,$message);
+            WaBlast::send($customer->phone_number,$message);
             endif;
 
             return redirect()->to($response_data['checkout_url']);
