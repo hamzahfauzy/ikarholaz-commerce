@@ -103,6 +103,7 @@ async function getPaymentChannel()
     var response = await request.json()
     all_payment_methods = response
     payment_method.innerHTML = "<option value=''>- Pilih Metode Pembayaran -</option>"
+    payment_method.innerHTML += "<option value='cash'>Cash</option>"
     response.data.forEach(val => {
         if(val.active)
         {

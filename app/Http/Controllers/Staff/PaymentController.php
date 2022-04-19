@@ -78,6 +78,16 @@ class PaymentController extends Controller
         return view('staff.payment.edit', compact('payment'));
     }
 
+    public function approve(Payment $payment)
+    {
+        $payment->update([
+            'status'=>"PAID"
+        ]);
+
+        return redirect()->route('staff.payments.index')
+            ->with('success', 'Payment approved successfully');
+    }
+
     /**
      * Update the specified resource in storage.
      *

@@ -46,6 +46,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentController::class);
+    Route::post('payments/{payment}/approve',[PaymentController::class, 'approve'])->name('payments.approve');
     Route::match(['get', 'post'], 'alumnis/import', [AlumniController::class, 'import'])->name('alumnis.import');
     Route::match(['get', 'post'], 'alumnis/update-nra/{alumni}', [AlumniController::class,'updateNra'])->name('alumnis.update-nra');
     Route::post('alumnis/approve/{alumni}', [AlumniController::class, 'approve'])->name('alumnis.approve');
