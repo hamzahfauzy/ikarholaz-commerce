@@ -112,12 +112,14 @@ class ShopController extends Controller
         $order_items = [];
         $shipping_rates = ShippingRates::init($request->dest_id,cart()->get_weight(),$request->courier)->get();
         $dest = District::province($request->province_id)->find($request->dest_id);
-        $tripay = new Tripay(getenv('TRIPAY_PRIVATE_KEY'), getenv('TRIPAY_API_KEY'));
-        $payments = $tripay->curlAPI($tripay->URL_channelMp,'','GET');
-        $payments = $payments['data'];
-
-        $key = array_search($request->payment_method, array_column($payments, 'code'));
-        $payment = $payments[$key];
+        
+        if($request->payment_method != 'cash'){
+            $tripay = new Tripay(getenv('TRIPAY_PRIVATE_KEY'), getenv('TRIPAY_API_KEY'));
+            $payments = $tripay->curlAPI($tripay->URL_channelMp,'','GET');
+            $payments = $payments['data'];
+            $key = array_search($request->payment_method, array_column($payments, 'code'));
+            $payment = $payments[$key];
+        }
 
         $all_total_price = 0; // $payment['total_fee']['flat'];
         // $order_items[] = [
@@ -135,13 +137,14 @@ class ShopController extends Controller
         ];
 
         $order_items_string .= "Ongkir : ".number_format($shipping_rates[$request->service]->cost[0]->value)."\n";
-        $order_items_string .= "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+        
+        if($request->payment_method != 'cash') $order_items_string .= "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
 
         $data = [];
         $data['request'] = $request->all();
         $data['dest'] = $dest;
         $data['shipping'] = $shipping_rates[$request->service];
-        $data['payment'] = $payment;
+        $data['payment'] = $payment ?? "cash";
 
         DB::beginTransaction();
         try {
@@ -278,44 +281,59 @@ class ShopController extends Controller
 
             $all_total_price += $shipping_rates[$request->service]->cost[0]->value;
 
-            $privateKey = getenv('TRIPAY_PRIVATE_KEY');
-            $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
-            $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
-            
-            $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
-            $data = [
-                'method'            => $request->payment_method,
-                'merchant_ref'      => $merchantRef,
-                'amount'            => $all_total_price,
-                'customer_name'     => $user->name,
-                'customer_email'    => $user->email,
-                'customer_phone'    => $customer->phone_number,
-                'callback_url'      => route('tripay-callback'),
-                'order_items'       => $order_items,
-                'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
-            ];
+            if($request->payment_method != 'cash'){
+                $privateKey = getenv('TRIPAY_PRIVATE_KEY');
+                $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
+                $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
+                
+                $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
 
-            $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
-            $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
-            if($response['success'] == false)
-            {
-                return [$response,$data];
-                return redirect()->back()->withInput();
+                $data = [
+                    'method'            => $request->payment_method,
+                    'merchant_ref'      => $merchantRef,
+                    'amount'            => $all_total_price,
+                    'customer_name'     => $user->name,
+                    'customer_email'    => $user->email,
+                    'customer_phone'    => $customer->phone_number,
+                    'callback_url'      => route('tripay-callback'),
+                    'order_items'       => $order_items,
+                    'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
+                ];
+    
+                $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
+                $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
+                if($response['success'] == false)
+                {
+                    return [$response,$data];
+                    return redirect()->back()->withInput();
+                }
+                $response_data = $response['data'];
+                $payments = [
+                    'transaction_id' => $transaction->id,
+                    'total' => $all_total_price,
+                    'admin_fee' => $payment['total_fee']['flat'],
+                    'checkout_url' => $response_data['checkout_url'],
+                    'payment_type' => $request->payment_method,
+                    'merchant_ref'      => $merchantRef,
+                    'status' => $response_data['status'],
+                    'payment_reference' => $response_data['reference'],
+                    'payment_code' => $response_data['pay_code'],
+                    'expired_time' => $response_data['expired_time'],
+                ];
+            }else{
+                $payments = [
+                    'transaction_id' => $transaction->id,
+                    'total' => $all_total_price,
+                    'admin_fee' => 0,
+                    'checkout_url' => "",
+                    'payment_type' => $request->payment_method,
+                    'merchant_ref'      => $request->payment_method,
+                    'status' => "UNPAID",
+                    'payment_reference' => "",
+                    'payment_code' => "",
+                    'expired_time' => "",
+                ];
             }
-            $response_data = $response['data'];
-
-            $payments = [
-                'transaction_id' => $transaction->id,
-                'total' => $all_total_price,
-                'admin_fee' => $payment['total_fee']['flat'],
-                'checkout_url' => $response_data['checkout_url'],
-                'payment_type' => $request->payment_method,
-                'merchant_ref'      => $merchantRef,
-                'status' => $response_data['status'],
-                'payment_reference' => $response_data['reference'],
-                'payment_code' => $response_data['pay_code'],
-                'expired_time' => $response_data['expired_time'],
-            ];
 
             Payment::create($payments);
             cart()->clear();
@@ -337,6 +355,10 @@ class ShopController extends Controller
                         
             // Terima kasih.";
 
+            $total = $all_total_price;
+
+            if($request->payment_method != 'cash') $total += $payment['total_fee']['flat'];
+
             $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
 
             Kode Transaksi: $transaction->id
@@ -348,7 +370,7 @@ class ShopController extends Controller
             Rincian transaksi
             $order_items_string
 
-            TOTAL : ".number_format($all_total_price+$payment['total_fee']['flat'])."
+            TOTAL : ".number_format($total)."
 
             Silahkan lakukan pembayaran sesuai metode yang dipilih. 
 
@@ -357,7 +379,11 @@ class ShopController extends Controller
             WaBlast::send($customer->phone_number,$message);
             endif;
 
-            return redirect()->to($response_data['checkout_url']);
+            if($request->payment_method != 'cash'){
+                return redirect()->to($response_data['checkout_url']);
+            }else{
+                return redirect()->back();
+            }
         } catch (\Throwable $th) {
             DB::rollback();
             throw $th;

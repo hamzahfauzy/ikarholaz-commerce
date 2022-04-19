@@ -14,6 +14,12 @@
                             <span class="card-title">{{__('Show Payment')}}</span>
                         </div>
                         <div class="float-right">
+                            @if($payment->status == "UNPAID")
+                            <form action="{{route('staff.payments.approve',$payment)}}" method="post" class="d-inline">
+                                @csrf
+                                <button class="btn btn-success" href="{{ route('staff.payments.index') }}"> Approve</button>
+                            </form>
+                            @endif
                             <a class="btn btn-primary" href="{{ route('staff.payments.index') }}"> Back</a>
                         </div>
                     </div>
