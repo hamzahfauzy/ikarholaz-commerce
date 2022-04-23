@@ -7,6 +7,17 @@ class WaBlast
     
     static function send($to, $message, $file_url = '')
     {
+        Message::create([
+            'to' => $to,
+            'content' => $message,
+            'attachment' => $file_url,
+        ]);
+
+        return "Message on queue";
+    }
+
+    static function doSend($to, $message, $file_url = '')
+    {
         $curl = curl_init();
         $postfields = [
             'device_id' => getenv('WA_BLAST_DEVICE'),
