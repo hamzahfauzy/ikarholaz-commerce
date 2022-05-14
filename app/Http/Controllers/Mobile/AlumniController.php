@@ -8,8 +8,14 @@ use App\Models\User;
 use App\Models\Skill;
 use App\Models\Alumni;
 use App\Models\WaBlast;
+use App\Models\Business;
+use App\Models\Interest;
+use App\Models\Training;
 use App\Models\Broadcast;
+use App\Models\Community;
+use App\Models\Profession;
 use App\Models\UserApprove;
+use App\Models\Appreciation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -186,6 +192,73 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
 
         return response()->json(['message' => "failed to delete"], 409);
     }
+
+    function deleteBusiness($id)
+    {
+        $Business = Business::find($id)->delete();
+
+        if ($Business) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteCommunity($id)
+    {
+        $Community = Community::find($id)->delete();
+
+        if ($Community) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteProfession($id)
+    {
+        $Profession = Profession::find($id)->delete();
+
+        if ($Profession) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteTraining($id)
+    {
+        $Training = Training::find($id)->delete();
+
+        if ($Training) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteAppreciation($id)
+    {
+        $Appreciation = Appreciation::find($id)->delete();
+
+        if ($Appreciation) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteInterest($id)
+    {
+        $Interest = Interest::find($id)->delete();
+
+        if ($Interest) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+    
 
     function uploadProfile(Request $request)
     {

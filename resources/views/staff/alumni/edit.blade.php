@@ -642,9 +642,9 @@
 
         updateBusinessesEl()
 
-    //   if(id){
-    //     await fetch("/api/mobile/alumni/delete-business/"+id)
-    //   }
+        if(id){
+            await fetch("/api/mobile/alumni/delete-business/"+id)
+        }
 
     }
 
@@ -731,9 +731,9 @@
 
         updateCommunitiesEl()
 
-    //   if(id){
-    //     await fetch("/api/mobile/alumni/delete-business/"+id)
-    //   }
+        if(id){
+            await fetch("/api/mobile/alumni/delete-community/"+id)
+        }
 
     }
 
@@ -804,9 +804,9 @@
 
         updateProfessionsEl()
 
-    //   if(id){
-    //     await fetch("/api/mobile/alumni/delete-business/"+id)
-    //   }
+        if(id){
+            await fetch("/api/mobile/alumni/delete-profession/"+id)
+        }
 
     }
 
@@ -865,9 +865,9 @@
 
         updateTrainingsEl()
 
-    //   if(id){
-    //     await fetch("/api/mobile/alumni/delete-business/"+id)
-    //   }
+        if(id){
+            await fetch("/api/mobile/alumni/delete-training/"+id)
+        }
 
     }
 
@@ -926,9 +926,9 @@
 
         updateAppreciationsEl()
 
-    //   if(id){
-    //     await fetch("/api/mobile/alumni/delete-business/"+id)
-    //   }
+      if(id){
+        await fetch("/api/mobile/alumni/delete-appreciation/"+id)
+      }
 
     }
 
@@ -978,9 +978,9 @@
 
         updateInterestsEl()
 
-    //   if(id){
-    //     await fetch("/api/mobile/alumni/delete-business/"+id)
-    //   }
+      if(id){
+        await fetch("/api/mobile/alumni/delete-interest/"+id)
+      }
 
     }
 
