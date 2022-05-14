@@ -337,6 +337,39 @@ class AlumniController extends Controller
                     }
                 }
 
+                if ($request['trainings']) {
+
+                    foreach ($request['trainings'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->trainings()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->trainings()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['appreciations']) {
+
+                    foreach ($request['appreciations'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->appreciations()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->appreciations()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['interests']) {
+
+                    foreach ($request['interests'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->interests()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->interests()->create($value);
+                        }
+                    }
+                }
+
                 if ($request->file('profile')) {
 
                     $profile = $request->file('profile')->store('profiles');

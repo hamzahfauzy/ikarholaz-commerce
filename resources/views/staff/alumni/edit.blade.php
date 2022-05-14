@@ -343,6 +343,121 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-3">
+                                <label>Pelatihan</label>
+                                <button class="btn btn-primary btn-sm" type="button" onclick="addTraining()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div id="trainings">
+                                @foreach($alumni->trainings as $i => $training) 
+                                    <div class="card card-body mb-3">
+                                        <input type="hidden" name="trainings[{{$i}}][id]" value="{{$training->id}}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p>Pelatihan ke {{$i+1}}</p>
+                                            <div>
+                                                <button class="btn btn-success" type="button" data-target="#training-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
+                                                <button class="btn btn-outline-danger" type="button" onclick="removeTraining({{$i}},{{$training->id}})"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="collapse" id="training-{{$i}}">
+                                            <div class="form-group">
+                                                <label for="">Nama</label>
+                                                <input class="form-control" type="text" placeholder="Nama" name="trainings[{{$i}}][name]" value="{{$training->name}}" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Pemberi pelatihan</label>
+                                                <input class="form-control" type="text" placeholder="Pemberi pelatihan" name="trainings[{{$i}}][pemberi_pelatihan]" value="{{$training->pemberi_pelatihan}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Tahun</label>
+                                                <input class="form-control" type="text" placeholder="Tahun" name="trainings[{{$i}}][tahun]" value="{{$training->tahun}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Keterangan</label>
+                                                <input class="form-control" type="text" placeholder="Keterangan" name="trainings[{{$i}}][keterangan]" value="{{$training->keterangan}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-3">
+                                <label>Penghargaan</label>
+                                <button class="btn btn-primary btn-sm" type="button" onclick="addAppreciation()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div id="appreciations">
+                                @foreach($alumni->appreciations as $i => $appreciation) 
+                                    <div class="card card-body mb-3">
+                                        <input type="hidden" name="appreciations[{{$i}}][id]" value="{{$appreciation->id}}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p>Penghargaan ke {{$i+1}}</p>
+                                            <div>
+                                                <button class="btn btn-success" type="button" data-target="#appreciation-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
+                                                <button class="btn btn-outline-danger" type="button" onclick="removeAppreciation({{$i}},{{$appreciation->id}})"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="collapse" id="appreciation-{{$i}}">
+                                            <div class="form-group">
+                                                <label for="">Nama</label>
+                                                <input class="form-control" type="text" placeholder="Nama" name="appreciations[{{$i}}][name]" value="{{$appreciation->name}}" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Pemberi penghargaan</label>
+                                                <input class="form-control" type="text" placeholder="Pemberi penghargaan" name="appreciations[{{$i}}][pemberi_penghargaan]" value="{{$appreciation->pemberi_penghargaan}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Tahun</label>
+                                                <input class="form-control" type="text" placeholder="Tahun" name="appreciations[{{$i}}][tahun]" value="{{$appreciation->tahun}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Keterangan</label>
+                                                <input class="form-control" type="text" placeholder="Keterangan" name="appreciations[{{$i}}][keterangan]" value="{{$appreciation->keterangan}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-3">
+                                <label>Minat</label>
+                                <button class="btn btn-primary btn-sm" type="button" onclick="addInterest()">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div id="interests">
+                                @foreach($alumni->interests as $i => $interest) 
+                                    <div class="card card-body mb-3">
+                                        <input type="hidden" name="interests[{{$i}}][id]" value="{{$interest->id}}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p>Minat ke {{$i+1}}</p>
+                                            <div>
+                                                <button class="btn btn-success" type="button" data-target="#interest-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
+                                                <button class="btn btn-outline-danger" type="button" onclick="removeInterest({{$i}},{{$interest->id}})"><i class="fas fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <div class="collapse" id="interest-{{$i}}">
+                                            <div class="form-group">
+                                                <label for="">Bidang</label>
+                                                <input class="form-control" type="text" placeholder="Bidang" name="interests[{{$i}}][bidang]" value="{{$interest->bidang}}" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Gaji</label>
+                                                <input class="form-control" type="text" placeholder="Gaji" name="interests[{{$i}}][gaji]" value="{{$interest->gaji}}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <button class="btn btn-primary">Submit</button>
 
                     </form>
@@ -664,6 +779,180 @@
         els.removeChild(els.childNodes[i])
 
         updateProfessionsEl()
+
+    //   if(id){
+    //     await fetch("/api/mobile/alumni/delete-business/"+id)
+    //   }
+
+    }
+
+    
+    function updateTrainingsEl (){
+        let els = document.querySelector("#trainings")
+
+        for (let i = 0; i < els.children.length; i++) {
+            const element = els.children[i];
+            
+            element.querySelector("input").placeholder = `Pelatihan ke ${i+1}`
+            element.querySelector("button").setAttribute('onclick',`removeTraining(${i+1})`)
+        }
+    }
+
+    function addTraining(){
+        let els = document.querySelector("#trainings")
+        els.innerHTML += `
+            <div class="card card-body mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p>Pelatihan ke ${els.childElementCount+1}</p>
+                    <div>
+                        <button class="btn btn-success" type="button" data-target="#training-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
+                        <button class="btn btn-outline-danger" type="button" onclick="removeTraining(${els.childElementCount})"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="collapse" id="training-${els.childElementCount}">
+                    <div class="form-group">
+                        <label for="">Nama</label>
+                        <input class="form-control" type="text" placeholder="Nama" name="trainings[${els.childElementCount}][name]" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Pemberi pelatihan</label>
+                        <input class="form-control" type="text" placeholder="Pemberi pelatihan" name="trainings[${els.childElementCount}][pemberi_pelatihan]" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Tahun</label>
+                        <input class="form-control" type="text" placeholder="Tahun" name="trainings[${els.childElementCount}][tahun]" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Keterangan</label>
+                        <input class="form-control" type="text" placeholder="Keterangan" name="trainings[${els.childElementCount}][keterangan]" value="">
+                    </div>
+                </div>
+            </div>
+                                    
+                                    
+        `
+    }
+
+    async function removeTraining(i,id = false){
+
+        let els = document.querySelector("#trainings")
+
+        els.removeChild(els.childNodes[i])
+
+        updateTrainingsEl()
+
+    //   if(id){
+    //     await fetch("/api/mobile/alumni/delete-business/"+id)
+    //   }
+
+    }
+
+
+    function updateAppreciationsEl (){
+        let els = document.querySelector("#appreciations")
+
+        for (let i = 0; i < els.children.length; i++) {
+            const element = els.children[i];
+            
+            element.querySelector("input").placeholder = `Penghargaan ke ${i+1}`
+            element.querySelector("button").setAttribute('onclick',`removeAppreciacion(${i+1})`)
+        }
+    }
+
+    function addAppreciation(){
+        let els = document.querySelector("#appreciations")
+        els.innerHTML += `
+            <div class="card card-body mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p>Penghargaan ke ${els.childElementCount+1}</p>
+                    <div>
+                        <button class="btn btn-success" type="button" data-target="#appreciation-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
+                        <button class="btn btn-outline-danger" type="button" onclick="removeAppreciation(${els.childElementCount})"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="collapse" id="appreciation-${els.childElementCount}">
+                    <div class="form-group">
+                        <label for="">Nama</label>
+                        <input class="form-control" type="text" placeholder="Nama" name="appreciations[${els.childElementCount}][name]" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Pemberi penghargaan</label>
+                        <input class="form-control" type="text" placeholder="Pemberi penghargaan" name="appreciations[${els.childElementCount}][pemberi_penghargaan]" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Tahun</label>
+                        <input class="form-control" type="text" placeholder="Tahun" name="appreciations[${els.childElementCount}][tahun]" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Keterangan</label>
+                        <input class="form-control" type="text" placeholder="Keterangan" name="appreciations[${els.childElementCount}][keterangan]" value="">
+                    </div>
+                </div>
+            </div>
+                                    
+                                    
+        `
+    }
+
+    async function removeAppreciation(i,id = false){
+
+        let els = document.querySelector("#appreciations")
+
+        els.removeChild(els.childNodes[i])
+
+        updateAppreciationsEl()
+
+    //   if(id){
+    //     await fetch("/api/mobile/alumni/delete-business/"+id)
+    //   }
+
+    }
+
+    function updateInterestsEl (){
+        let els = document.querySelector("#interests")
+
+        for (let i = 0; i < els.children.length; i++) {
+            const element = els.children[i];
+            
+            element.querySelector("input").placeholder = `Minat ke ${i+1}`
+            element.querySelector("button").setAttribute('onclick',`removeInterest(${i+1})`)
+        }
+    }
+
+    function addInterest(){
+        let els = document.querySelector("#interests")
+        els.innerHTML += `
+            <div class="card card-body mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p>Minat ke ${els.childElementCount+1}</p>
+                    <div>
+                        <button class="btn btn-success" type="button" data-target="#interest-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
+                        <button class="btn btn-outline-danger" type="button" onclick="removeInterest(${els.childElementCount})"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="collapse" id="interest-${els.childElementCount}">
+                    <div class="form-group">
+                        <label for="">Bidang</label>
+                        <input class="form-control" type="text" placeholder="Bidang" name="interests[${els.childElementCount}][bidang]" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Gaji</label>
+                        <input class="form-control" type="text" placeholder="Gaji" name="interests[${els.childElementCount}][gaji]" value="" required>
+                    </div>
+                </div>
+            </div>
+                                    
+                                    
+        `
+    }
+
+    async function removeInterest(i,id = false){
+
+        let els = document.querySelector("#interests")
+
+        els.removeChild(els.childNodes[i])
+
+        updateInterestsEl()
 
     //   if(id){
     //     await fetch("/api/mobile/alumni/delete-business/"+id)
