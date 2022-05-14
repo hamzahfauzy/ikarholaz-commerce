@@ -417,6 +417,27 @@ class AlumniController extends Controller
             ->with('success', 'Alumni updated successfully');
     }
 
+    public function updateStatus(Request $request, Alumni $alumni)
+    {
+        $alumni->update([
+            'approval_status' => $request->status,
+            'approval_by' => 'admin',
+        ]);
+
+        if($request->status == "approve"){
+            $alumni->user->email_verified_at = date('Y-m-d H:i:s');
+            $alumni->user->update();
+            WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil kami verifikasi. Nomor Registrasi Anggota (NRA) IKARHOLAZ anda adalah $alumni->NRA. 
+    
+            Pendaftaran cukup sampai tahap ini. Jika ingin melengkapi data profile silakan login dan edit profile melalui http://gerai.ikarholaz.id/login ");
+                // Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12
+                // Bila ada masalah dengan playstore gunakan versi website untuk update data keanggotaan. Klik https://bit.ly/login-ika12");
+        }
+
+        return redirect()->back() // ('staff.alumnis.index')
+            ->with('success', 'Alumni updated successfully');
+    }
+
     public function unapprove(Request $request, Alumni $alumni)
     {
         $alumni->update([

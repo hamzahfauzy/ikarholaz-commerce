@@ -28,13 +28,34 @@
                     <div class="float-left">
                         <span class="card-title">{{__('Show Alumni')}}</span>
                     </div>
-                    <div class="float-right">
+                    <div class="float-right d-flex justify-content-between">
                         @if ($alumni->approval_status == '' && $alumni->NRA)
-                        <form action="{{ route('staff.alumnis.approve',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to approve this item ?')}}')){ return true }else{ return false }">
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
                             @csrf
+                            <input type="hidden" name="status" value="approve">
                             <button type="submit" class="btn btn-success"><i class="fa fa-fw fa-check"></i> {{__('Approve')}}</button>
-                            <a class="btn btn-primary" href="{{ route('staff.alumnis.index') }}"> Back</a>
                         </form>
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
+                            @csrf
+                            <input type="hidden" name="status" value="pra anggota">
+                            <button type="submit" class="btn btn-info">{{__('Pra Anggota')}}</button>
+                        </form>
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
+                            @csrf
+                            <input type="hidden" name="status" value="pending">
+                            <button type="submit" class="btn btn-warning">{{__('Pending')}}</button>
+                        </form>
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
+                            @csrf
+                            <input type="hidden" name="status" value="denied">
+                            <button type="submit" class="btn btn-danger">{{__('Denied')}}</button>
+                        </form>
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
+                            @csrf
+                            <input type="hidden" name="status" value="died">
+                            <button type="submit" class="btn btn-dark">{{__('Died')}}</button>
+                        </form>
+                        <a class="btn btn-primary" href="{{ route('staff.alumnis.index') }}"> Back</a>
                         @endif
                     </div>
                 </div>

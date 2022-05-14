@@ -60,13 +60,37 @@
                             <label for="">Kelas</label>
                             <input type="text" name="class_name" value="{{old('class_name') ?? $alumni->class_name}}" class="form-control" data-role="tagsinput">
                         </div>
-                        <div class="form-group">
+                       <div class="form-group">
                             <label for="">Tahun Masuk</label>
-                            <input type="number" name="year_in" value="{{old('year_in') ?? $alumni->year_in}}" class="form-control">
+                            <select name="year_in" class="form-control @error('year_in') is-invalid @enderror" id="">
+                                <option value="">- Pilih Tahun -</option>
+                                @for($y=date('Y')-2;$y>=1971;$y--)
+                                <option {{old('year_in') == $y || $alumni->year_in == $y ? 'selected' : ''}}>{{$y}}</option>
+                                @endfor
+                            </select>
+                            @error('year_in')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="">Tahun Lulus</label>
-                            <input type="text" name="graduation_year" value="{{old('graduation_year') ?? $alumni->graduation_year}}" class="form-control">
+                            <select name="graduation_year" class="form-control @error('graduation_year') is-invalid @enderror" id="">
+                                <option value="">- Pilih Tahun -</option>
+                                @for($y=date('Y');$y>=1974;$y--)
+                                @if($y==1978)
+                                @continue
+                                @endif
+                                <option {{old('graduation_year') == $y || $alumni->graduation_year == $y ? 'selected' : ''}}>{{$y}}</option>
+                                @endfor
+                            </select>
+                            
+                            @error('graduation_year')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="form-group">
                             <label for="">No HP</label>
