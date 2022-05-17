@@ -51,6 +51,12 @@ Route::prefix('mobile')->group(function () {
         Route::post('edit', [AlumniController::class, 'edit']);
 
         Route::get('delete-skill/{id}', [AlumniController::class, 'deleteSkill']);
+        Route::get('delete-business/{id}', [AlumniController::class, 'deleteBusiness']);
+        Route::get('delete-community/{id}', [AlumniController::class, 'deleteCommunity']);
+        Route::get('delete-profession/{id}', [AlumniController::class, 'deleteProfession']);
+        Route::get('delete-training/{id}', [AlumniController::class, 'deleteTraining']);
+        Route::get('delete-appreciation/{id}', [AlumniController::class, 'deleteAppreciation']);
+        Route::get('delete-interest/{id}', [AlumniController::class, 'deleteInterest']);
         Route::post('upload-profile', [AlumniController::class, 'uploadProfile']);
     });
 

@@ -8,8 +8,14 @@ use App\Models\User;
 use App\Models\Skill;
 use App\Models\Alumni;
 use App\Models\WaBlast;
+use App\Models\Business;
+use App\Models\Interest;
+use App\Models\Training;
 use App\Models\Broadcast;
+use App\Models\Community;
+use App\Models\Profession;
 use App\Models\UserApprove;
+use App\Models\Appreciation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -130,7 +136,7 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
 
     function edit(Request $request)
     {
-        $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills'])->first();
+        $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills','alumni.businesses','alumni.communities','alumni.professions','alumni.trainings','alumni.appreciations','alumni.interests'])->first();
 
         $new_user = $user->update([
             'name' => $request['name'],
@@ -167,7 +173,85 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
                     }
                 }
 
-                $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills'])->first();
+                if ($request['businesses']) {
+                    
+                    foreach ($request['businesses'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->businesses()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->businesses()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['communities']) {
+
+                    foreach ($request['communities'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->communities()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->communities()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['professions']) {
+
+                    foreach ($request['professions'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->professions()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->professions()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['trainings']) {
+
+                    foreach ($request['trainings'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->trainings()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->trainings()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['appreciations']) {
+
+                    foreach ($request['appreciations'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->appreciations()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->appreciations()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['interests']) {
+
+                    foreach ($request['interests'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->interests()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->interests()->create($value);
+                        }
+                    }
+                }
+
+                $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills','alumni.businesses','alumni.communities','alumni.professions','alumni.trainings','alumni.appreciations','alumni.interests'])->first();
 
                 return response()->json(['message' => 'success to update', 'data' => $user], 200);
             }
@@ -186,6 +270,73 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
 
         return response()->json(['message' => "failed to delete"], 409);
     }
+
+    function deleteBusiness($id)
+    {
+        $Business = Business::find($id)->delete();
+
+        if ($Business) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteCommunity($id)
+    {
+        $Community = Community::find($id)->delete();
+
+        if ($Community) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteProfession($id)
+    {
+        $Profession = Profession::find($id)->delete();
+
+        if ($Profession) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteTraining($id)
+    {
+        $Training = Training::find($id)->delete();
+
+        if ($Training) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteAppreciation($id)
+    {
+        $Appreciation = Appreciation::find($id)->delete();
+
+        if ($Appreciation) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+
+    function deleteInterest($id)
+    {
+        $Interest = Interest::find($id)->delete();
+
+        if ($Interest) {
+            return response()->json(['message' => "success to delete"], 200);
+        }
+
+        return response()->json(['message' => "failed to delete"], 409);
+    }
+    
 
     function uploadProfile(Request $request)
     {

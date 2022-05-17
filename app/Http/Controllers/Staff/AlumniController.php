@@ -304,6 +304,72 @@ class AlumniController extends Controller
                     }
                 }
 
+                if ($request['businesses']) {
+
+                    foreach ($request['businesses'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->businesses()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->businesses()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['communities']) {
+
+                    foreach ($request['communities'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->communities()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->communities()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['professions']) {
+
+                    foreach ($request['professions'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->professions()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->professions()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['trainings']) {
+
+                    foreach ($request['trainings'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->trainings()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->trainings()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['appreciations']) {
+
+                    foreach ($request['appreciations'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->appreciations()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->appreciations()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['interests']) {
+
+                    foreach ($request['interests'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            $alumni->interests()->where('id', $value['id'])->update($value);
+                        } else {
+                            $alumni->interests()->create($value);
+                        }
+                    }
+                }
+
                 if ($request->file('profile')) {
 
                     $profile = $request->file('profile')->store('profiles');
@@ -346,6 +412,27 @@ class AlumniController extends Controller
         Pendaftaran cukup sampai tahap ini. Jika ingin melengkapi data profile silakan login dan edit profile melalui http://gerai.ikarholaz.id/login ");
             // Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12
             // Bila ada masalah dengan playstore gunakan versi website untuk update data keanggotaan. Klik https://bit.ly/login-ika12");
+
+        return redirect()->back() // ('staff.alumnis.index')
+            ->with('success', 'Alumni updated successfully');
+    }
+
+    public function updateStatus(Request $request, Alumni $alumni)
+    {
+        $alumni->update([
+            'approval_status' => $request->status,
+            'approval_by' => 'admin',
+        ]);
+
+        if($request->status == "approve"){
+            $alumni->user->email_verified_at = date('Y-m-d H:i:s');
+            $alumni->user->update();
+            WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil kami verifikasi. Nomor Registrasi Anggota (NRA) IKARHOLAZ anda adalah $alumni->NRA. 
+    
+            Pendaftaran cukup sampai tahap ini. Jika ingin melengkapi data profile silakan login dan edit profile melalui http://gerai.ikarholaz.id/login ");
+                // Silakan login untuk melengkapi data pendukung, juga menikmati fitur-fitur aplikasi IKARHOLAZ MBOYZ. Klik https://bit.ly/app-ika12
+                // Bila ada masalah dengan playstore gunakan versi website untuk update data keanggotaan. Klik https://bit.ly/login-ika12");
+        }
 
         return redirect()->back() // ('staff.alumnis.index')
             ->with('success', 'Alumni updated successfully');

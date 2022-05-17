@@ -47,7 +47,7 @@
                         <div class="form-group form-inline float-right">
                             <select name="filter[graduation_year]" class="form-control" id="">
                                 <option value="">- Pilih Tahun Lulus -</option>
-                                @for($y=date('Y')-5;$y>=1900;$y--)
+                                @for($y=date('Y')-5;$y>=1974;$y--)
                                 <option value="{{$y}}" {{isset($filter['graduation_year']) && $filter['graduation_year'] == $y ? 'selected=""' : ''}}>{{$y}}</option>
                                 @endfor
                             </select>

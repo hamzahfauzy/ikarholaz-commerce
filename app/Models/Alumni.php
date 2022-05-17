@@ -41,4 +41,34 @@ class Alumni extends Model
     {
         return $this->hasMany(Skill::class);
     }
+
+    function businesses()
+    {
+        return $this->hasMany(Business::class);
+    }
+
+    function communities()
+    {
+        return $this->hasMany(Community::class);
+    }
+
+    function professions()
+    {
+        return $this->hasMany(Profession::class);
+    }
+
+    function trainings()
+    {
+        return $this->hasMany(Training::class);
+    }
+
+    function appreciations()
+    {
+        return $this->hasMany(Appreciation::class);
+    }
+
+    function interests()
+    {
+        return $this->hasMany(Interest::class);
+    }
 }

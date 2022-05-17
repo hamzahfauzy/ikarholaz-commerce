@@ -196,7 +196,7 @@ class AuthController extends Controller
         elseif($phone[0] == "+")
             $phone = substr($phone,3);
         if ($request['login'] == "user") {
-            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni'])->first();
+            $user = User::where('email', 'LIKE', '%'.$phone.'%')->with(['alumni','alumni.skills','alumni.businesses','alumni.communities','alumni.professions','alumni.trainings','alumni.appreciations','alumni.interests'])->first();
         } else {
             $user = Staff::where('email', 'LIKE', '%'.$phone.'%')->first();
         }
