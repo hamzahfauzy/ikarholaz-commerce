@@ -136,7 +136,7 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
 
     function edit(Request $request)
     {
-        $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills'])->first();
+        $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills','alumni.businesses','alumni.communities','alumni.professions','alumni.trainings','alumni.appreciations','alumni.interests'])->first();
 
         $new_user = $user->update([
             'name' => $request['name'],
@@ -173,7 +173,85 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
                     }
                 }
 
-                $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills'])->first();
+                if ($request['businesses']) {
+                    
+                    foreach ($request['businesses'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->businesses()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->businesses()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['communities']) {
+
+                    foreach ($request['communities'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->communities()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->communities()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['professions']) {
+
+                    foreach ($request['professions'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->professions()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->professions()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['trainings']) {
+
+                    foreach ($request['trainings'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->trainings()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->trainings()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['appreciations']) {
+
+                    foreach ($request['appreciations'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->appreciations()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->appreciations()->create($value);
+                        }
+                    }
+                }
+
+                if ($request['interests']) {
+
+                    foreach ($request['interests'] as $id => $value) {
+                        if (isset($value['id'])) {
+                            unset($value['created_at']);
+                            unset($value['updated_at']);
+                            $user->alumni->interests()->where('id', $value['id'])->update($value);
+                        } else {
+                            $user->alumni->interests()->create($value);
+                        }
+                    }
+                }
+
+                $user = User::where('email', $request['phone'])->with(['alumni', 'alumni.skills','alumni.businesses','alumni.communities','alumni.professions','alumni.trainings','alumni.appreciations','alumni.interests'])->first();
 
                 return response()->json(['message' => 'success to update', 'data' => $user], 200);
             }
