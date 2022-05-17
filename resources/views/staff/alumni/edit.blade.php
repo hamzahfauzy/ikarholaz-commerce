@@ -176,7 +176,7 @@
                                     <div class="card card-body mb-3">
                                         <input type="hidden" name="businesses[{{$i}}][id]" value="{{$business->id}}">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <p>Usaha / Bisnis ke {{$i+1}}</p>
+                                            <p class="title">Usaha / Bisnis ke {{$i+1}}</p>
                                             <div>
                                                 <button class="btn btn-success" type="button" data-target="#business-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                                                 <button class="btn btn-outline-danger" type="button" onclick="removeBusiness({{$i}},{{$business->id}})"><i class="fas fa-times"></i></button>
@@ -189,23 +189,48 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Sektor</label>
-                                                <input class="form-control" type="text" placeholder="Sektor" name="businesses[{{$i}}][sektor]" value="{{$business->sektor}}">
+                                                <select name="businesses[{{$i}}][sektor]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Sektor -</option>
+                                                    @foreach($sektors as $sektor)
+                                                        <option {{$sektor == $business->sektor ? "selected" : ""}} value="{{$sektor}}">{{$sektor}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Badan Hukum</label>
-                                                <input class="form-control" type="text" placeholder="Badan Hukum" name="businesses[{{$i}}][badan_hukum]" value="{{$business->badan_hukum}}">
+                                                <select name="businesses[{{$i}}][badan_hukum]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Badan Hukum -</option>
+                                                    @foreach($badan_hukums as $badan_hukum)
+                                                        <option {{$badan_hukum == $business->badan_hukum ? "selected" : ""}} value="{{$badan_hukum}}">{{$badan_hukum}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Kepemilikan</label>
-                                                <input class="form-control" type="text" placeholder="Kepemilikan" name="businesses[{{$i}}][kepemilikan]" value="{{$business->kepemilikan}}">
+                                                <select name="businesses[{{$i}}][kepemilikan]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Kepemilikan -</option>
+                                                    <option {{"Keluarga" == $business->kepemilikan ? "selected" : ""}} value="Keluarga">Keluarga</option>
+                                                    <option {{"Pribadi" == $business->kepemilikan ? "selected" : ""}} value="Pribadi">Pribadi</option>
+                                                    <option {{"Kongsi" == $business->kepemilikan ? "selected" : ""}} value="Kongsi">Kongsi</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Status kepemilikan</label>
-                                                <input class="form-control" type="text" placeholder="Status kepemilikan" name="businesses[{{$i}}][status_kepemilikan]" value="{{$business->status_kepemilikan}}">
+                                                <select name="businesses[{{$i}}][status_kepemilikan]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Status Kepemilikan -</option>
+                                                    <option {{"Milik" == $business->status_kepemilikan ? "selected" : ""}} value="Milik">Milik</option>
+                                                    <option {{"Sewa" == $business->status_kepemilikan ? "selected" : ""}} value="Sewa">Sewa</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Skala</label>
-                                                <input class="form-control" type="text" placeholder="Skala" name="businesses[{{$i}}][skala]" value="{{$business->skala}}">
+                                                <select name="businesses[{{$i}}][skala]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Skala -</option>
+                                                    <option {{"Mikro" == $business->skala ? "selected" : ""}} value="Mikro">Mikro</option>
+                                                    <option {{"Kecil" == $business->skala ? "selected" : ""}} value="Kecil">Kecil</option>
+                                                    <option {{"Menengah" == $business->skala ? "selected" : ""}} value="Menengah">Menengah</option>
+                                                    <option {{"Besar" == $business->skala ? "selected" : ""}} value="Besar">Besar</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Berdiri Sejak</label>
@@ -236,8 +261,13 @@
                                                 <input class="form-control" type="text" placeholder="Jumlah SDM / Karyawan" name="businesses[{{$i}}][jumlah_sdm]" value="{{$business->jumlah_sdm}}">
                                             </div>
                                             <div class="form-group">
-                                                <label for="">Ujin Usaha</label>
-                                                <input class="form-control" type="text" placeholder="Ujin Usaha" name="businesses[{{$i}}][ijin_usaha]" value="{{$business->ijin_usaha}}">
+                                                <label for="">Ijin Usaha</label>
+                                                <select name="businesses[{{$i}}][ijin_usaha]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Ijin Usaha -</option>
+                                                    @foreach($ijin_usahas as $ijin_usaha)
+                                                        <option {{$ijin_usaha == $business->ijin_usaha ? "selected" : ""}} value="{{$ijin_usaha}}">{{$ijin_usaha}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +287,7 @@
                                     <div class="card card-body mb-3">
                                         <input type="hidden" name="communities[{{$i}}][id]" value="{{$community->id}}">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <p>Komunitas ke {{$i+1}}</p>
+                                            <p class="title">Komunitas ke {{$i+1}}</p>
                                             <div>
                                                 <button class="btn btn-success" type="button" data-target="#community-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                                                 <button class="btn btn-outline-danger" type="button" onclick="removeCommunity({{$i}},{{$community->id}})"><i class="fas fa-times"></i></button>
@@ -270,11 +300,21 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Bidang</label>
-                                                <input class="form-control" type="text" placeholder="Bidang" name="communities[{{$i}}][bidang]" value="{{$community->bidang}}">
+                                                <select name="communities[{{$i}}][bidang]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Bidang -</option>
+                                                    @foreach($communities as $bidang)
+                                                        <option {{$bidang == $community->bidang ? "selected" : ""}} value="{{$bidang}}">{{$bidang}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Cakupan</label>
-                                                <input class="form-control" type="text" placeholder="Cakupan" name="communities[{{$i}}][cakupan]" value="{{$community->cakupan}}">
+                                                <select name="communities[{{$i}}][cakupan]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Cakupan -</option>
+                                                    <option {{"Lokal" == $community->cakupan ? "selected" : ""}} value="Lokal">Lokal</option>
+                                                    <option {{"Nasional" == $community->cakupan ? "selected" : ""}} value="Nasional">Nasional</option>
+                                                    <option {{"Internasional" == $community->cakupan ? "selected" : ""}} value="Internasional">Internasional</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Kantor</label>
@@ -290,7 +330,13 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Keaktifan</label>
-                                                <input class="form-control" type="text" placeholder="Keaktifan" name="communities[{{$i}}][keaktifan]" value="{{$community->keaktifan}}">
+                                                <select name="communities[{{$i}}][keaktifan]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Keaktifan -</option>
+                                                    <option {{"Founder" == $community->keaktifan ? "selected" : ""}} value="Founder">Founder</option>
+                                                    <option {{"Pembina" == $community->keaktifan ? "selected" : ""}} value="Pembina">Pembina</option>
+                                                    <option {{"Pengurus" == $community->keaktifan ? "selected" : ""}} value="Pengurus">Pengurus</option>
+                                                    <option {{"Anggota" == $community->keaktifan ? "selected" : ""}} value="Anggota">Anggota</option>
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">No Telepon</label>
@@ -326,7 +372,7 @@
                                     <div class="card card-body mb-3">
                                         <input type="hidden" name="professions[{{$i}}][id]" value="{{$profession->id}}">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <p>Pekerjaan / Profesi ke {{$i+1}}</p>
+                                            <p class="title">Pekerjaan / Profesi ke {{$i+1}}</p>
                                             <div>
                                                 <button class="btn btn-success" type="button" data-target="#profession-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                                                 <button class="btn btn-outline-danger" type="button" onclick="removeProfession({{$i}},{{$profession->id}})"><i class="fas fa-times"></i></button>
@@ -343,7 +389,12 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Bidang</label>
-                                                <input class="form-control" type="text" placeholder="Bidang" name="professions[{{$i}}][bidang]" value="{{$profession->bidang}}">
+                                                <select name="professions[{{$i}}][bidang]" class="form-control">
+                                                    <option value="-" selected readonly>- Pilih Bidang -</option>
+                                                    @foreach($professions as $bidang)
+                                                        <option {{$bidang == $profession->bidang ? "selected" : ""}} value="{{$bidang}}">{{$bidang}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Mulai dari</label>
@@ -379,7 +430,7 @@
                                     <div class="card card-body mb-3">
                                         <input type="hidden" name="trainings[{{$i}}][id]" value="{{$training->id}}">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <p>Pelatihan ke {{$i+1}}</p>
+                                            <p class="title">Pelatihan ke {{$i+1}}</p>
                                             <div>
                                                 <button class="btn btn-success" type="button" data-target="#training-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                                                 <button class="btn btn-outline-danger" type="button" onclick="removeTraining({{$i}},{{$training->id}})"><i class="fas fa-times"></i></button>
@@ -420,7 +471,7 @@
                                     <div class="card card-body mb-3">
                                         <input type="hidden" name="appreciations[{{$i}}][id]" value="{{$appreciation->id}}">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <p>Penghargaan ke {{$i+1}}</p>
+                                            <p class="title">Penghargaan ke {{$i+1}}</p>
                                             <div>
                                                 <button class="btn btn-success" type="button" data-target="#appreciation-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                                                 <button class="btn btn-outline-danger" type="button" onclick="removeAppreciation({{$i}},{{$appreciation->id}})"><i class="fas fa-times"></i></button>
@@ -461,7 +512,7 @@
                                     <div class="card card-body mb-3">
                                         <input type="hidden" name="interests[{{$i}}][id]" value="{{$interest->id}}">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <p>Minat ke {{$i+1}}</p>
+                                            <p class="title">Minat ke {{$i+1}}</p>
                                             <div>
                                                 <button class="btn btn-success" type="button" data-target="#interest-{{$i}}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                                                 <button class="btn btn-outline-danger" type="button" onclick="removeInterest({{$i}},{{$interest->id}})"><i class="fas fa-times"></i></button>
@@ -552,11 +603,12 @@
     function updateBusinessesEl (){
         let els = document.querySelector("#businesses")
 
-        for (let i = 0; i < els.children.length; i++) {
+        for (let i = 0; i < els.childElementCount; i++) {
             const element = els.children[i];
-            
+
+            element.querySelector(".title").innerHTML = `Usaha / Bisnis ke ${i+1}`
             element.querySelector("input").placeholder = `Usaha / Bisnis ke ${i+1}`
-            element.querySelector("button").setAttribute('onclick',`removeBusiness(${i+1})`)
+            element.querySelector("button").setAttribute('onclick',`removeBusiness(${i})`)
         }
     }
 
@@ -565,7 +617,7 @@
         els.innerHTML += `
             <div class="card card-body mb-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p>Usaha / Bisnis ke ${els.childElementCount+1}</p>
+                    <p class="title">Usaha / Bisnis ke ${els.childElementCount+1}</p>
                     <div>
                         <button class="btn btn-success" type="button" data-target="#business-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                         <button class="btn btn-outline-danger" type="button" onclick="removeBusiness(${els.childElementCount})"><i class="fas fa-times"></i></button>
@@ -578,23 +630,48 @@
                     </div>
                     <div class="form-group">
                         <label for="">Sektor</label>
-                        <input class="form-control" type="text" placeholder="Sektor" name="businesses[${els.childElementCount}][sektor]" value="">
+                        <select name="businesses[${els.childElementCount}][sektor]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Sektor -</option>
+                            @foreach($sektors as $sektor)
+                                <option value="{{$sektor}}">{{$sektor}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Badan Hukum</label>
-                        <input class="form-control" type="text" placeholder="Badan Hukum" name="businesses[${els.childElementCount}][badan_hukum]" value="">
+                        <select name="businesses[${els.childElementCount}][badan_hukum]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Badan Hukum -</option>
+                            @foreach($badan_hukums as $badan_hukum)
+                                <option value="{{$badan_hukum}}">{{$badan_hukum}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Kepemilikan</label>
-                        <input class="form-control" type="text" placeholder="Kepemilikan" name="businesses[${els.childElementCount}][kepemilikan]" value="">
+                        <select name="businesses[${els.childElementCount}][kepemilikan]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Kepemilikan -</option>
+                            <option value="Keluarga">Keluarga</option>
+                            <option value="Pribadi">Pribadi</option>
+                            <option value="Kongsi">Kongsi</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Status kepemilikan</label>
-                        <input class="form-control" type="text" placeholder="Status kepemilikan" name="businesses[${els.childElementCount}][status_kepemilikan]" value="">
+                        <select name="businesses[${els.childElementCount}][status_kepemilikan]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Status Kepemilikan -</option>
+                            <option value="Milik">Milik</option>
+                            <option value="Sewa">Sewa</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Skala</label>
-                        <input class="form-control" type="text" placeholder="Skala" name="businesses[${els.childElementCount}][skala]" value="">
+                        <select name="businesses[${els.childElementCount}][skala]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Skala -</option>
+                            <option value="Mikro">Mikro</option>
+                            <option value="Kecil">Kecil</option>
+                            <option value="Menengah">Menengah</option>
+                            <option value="Besar">Besar</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Berdiri Sejak</label>
@@ -625,8 +702,13 @@
                         <input class="form-control" type="text" placeholder="Jumlah SDM / Karyawan" name="businesses[${els.childElementCount}][jumlah_sdm]" value="">
                     </div>
                     <div class="form-group">
-                        <label for="">Ujin Usaha</label>
-                        <input class="form-control" type="text" placeholder="Ujin Usaha" name="businesses[${els.childElementCount}][ijin_usaha]" value="">
+                        <label for="">Ijin Usaha</label>
+                        <select name="businesses[${els.childElementCount}][ijin_usaha]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Ijin Usaha -</option>
+                            @foreach($ijin_usahas as $ijin_usaha)
+                                <option value="{{$ijin_usaha}}">{{$ijin_usaha}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -654,8 +736,9 @@
         for (let i = 0; i < els.children.length; i++) {
             const element = els.children[i];
             
+            element.querySelector(".title").innerHTML = `Komunitas ke ${i+1}`
             element.querySelector("input").placeholder = `Komunitas ke ${i+1}`
-            element.querySelector("button").setAttribute('onclick',`removeCommunity(${i+1})`)
+            element.querySelector("button").setAttribute('onclick',`removeCommunity(${i})`)
         }
     }
 
@@ -664,7 +747,7 @@
         els.innerHTML += `
             <div class="card card-body mb-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p>Komunitas ke ${els.childElementCount+1}</p>
+                    <p class="title">Komunitas ke ${els.childElementCount+1}</p>
                     <div>
                         <button class="btn btn-success" type="button" data-target="#community-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                         <button class="btn btn-outline-danger" type="button" onclick="removeCommunity(${els.childElementCount})"><i class="fas fa-times"></i></button>
@@ -677,11 +760,21 @@
                     </div>
                     <div class="form-group">
                         <label for="">Bidang</label>
-                        <input class="form-control" type="text" placeholder="Bidang" name="communities[${els.childElementCount}][bidang]" value="">
+                        <select name="communities[${els.childElementCount}][bidang]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Bidang -</option>
+                            @foreach($communities as $bidang)
+                                <option value="{{$bidang}}">{{$bidang}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Cakupan</label>
-                        <input class="form-control" type="text" placeholder="Cakupan" name="communities[${els.childElementCount}][cakupan]" value="">
+                        <select name="communities[${els.childElementCount}][cakupan]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Cakupan -</option>
+                            <option value="Lokal">Lokal</option>
+                            <option value="Nasional">Nasional</option>
+                            <option value="Internasional">Internasional</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Kantor</label>
@@ -694,6 +787,16 @@
                     <div class="form-group">
                         <label for="">Pencapaian</label>
                         <input class="form-control" type="text" placeholder="Pencapaian" name="communities[${els.childElementCount}][pencapaian]" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Keaktifan</label>
+                        <select name="communities[${els.childElementCount}][keaktifan]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Keaktifan -</option>
+                            <option value="Founder">Founder</option>
+                            <option value="Pembina">Pembina</option>
+                            <option value="Pengurus">Pengurus</option>
+                            <option value="Anggota">Anggota</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Keaktifan</label>
@@ -744,8 +847,9 @@
         for (let i = 0; i < els.children.length; i++) {
             const element = els.children[i];
             
+            element.querySelector(".title").innerHTML = `Pekerjaan / Profesi ke ${i+1}`
             element.querySelector("input").placeholder = `Pekerjaan / Profesi ke ${i+1}`
-            element.querySelector("button").setAttribute('onclick',`removeProfession(${i+1})`)
+            element.querySelector("button").setAttribute('onclick',`removeProfession(${i})`)
         }
     }
 
@@ -754,7 +858,7 @@
         els.innerHTML += `
             <div class="card card-body mb-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p>Pekerjaan / Profesi ke ${els.childElementCount+1}</p>
+                    <p class="title">Pekerjaan / Profesi ke ${els.childElementCount+1}</p>
                     <div>
                         <button class="btn btn-success" type="button" data-target="#profession-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                         <button class="btn btn-outline-danger" type="button" onclick="removeProfession(${els.childElementCount})"><i class="fas fa-times"></i></button>
@@ -771,7 +875,12 @@
                     </div>
                     <div class="form-group">
                         <label for="">Bidang</label>
-                        <input class="form-control" type="text" placeholder="Bidang" name="professions[${els.childElementCount}][bidang]" value="">
+                        <select name="professions[${els.childElementCount}][bidang]" class="form-control">
+                            <option value="-" selected readonly>- Pilih Bidang -</option>
+                            @foreach($professions as $bidang)
+                                <option value="{{$bidang}}">{{$bidang}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Mulai dari</label>
@@ -817,8 +926,9 @@
         for (let i = 0; i < els.children.length; i++) {
             const element = els.children[i];
             
+            element.querySelector(".title").innerHTML = `Pelatihan ke ${i+1}`
             element.querySelector("input").placeholder = `Pelatihan ke ${i+1}`
-            element.querySelector("button").setAttribute('onclick',`removeTraining(${i+1})`)
+            element.querySelector("button").setAttribute('onclick',`removeTraining(${i})`)
         }
     }
 
@@ -827,7 +937,7 @@
         els.innerHTML += `
             <div class="card card-body mb-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p>Pelatihan ke ${els.childElementCount+1}</p>
+                    <p class="title">Pelatihan ke ${els.childElementCount+1}</p>
                     <div>
                         <button class="btn btn-success" type="button" data-target="#training-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                         <button class="btn btn-outline-danger" type="button" onclick="removeTraining(${els.childElementCount})"><i class="fas fa-times"></i></button>
@@ -878,8 +988,9 @@
         for (let i = 0; i < els.children.length; i++) {
             const element = els.children[i];
             
+            element.querySelector(".title").innerHTML = `Penghargaan ke ${i+1}`
             element.querySelector("input").placeholder = `Penghargaan ke ${i+1}`
-            element.querySelector("button").setAttribute('onclick',`removeAppreciacion(${i+1})`)
+            element.querySelector("button").setAttribute('onclick',`removeAppreciacion(${i})`)
         }
     }
 
@@ -888,7 +999,7 @@
         els.innerHTML += `
             <div class="card card-body mb-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p>Penghargaan ke ${els.childElementCount+1}</p>
+                    <p class="title">Penghargaan ke ${els.childElementCount+1}</p>
                     <div>
                         <button class="btn btn-success" type="button" data-target="#appreciation-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                         <button class="btn btn-outline-danger" type="button" onclick="removeAppreciation(${els.childElementCount})"><i class="fas fa-times"></i></button>
@@ -938,8 +1049,9 @@
         for (let i = 0; i < els.children.length; i++) {
             const element = els.children[i];
             
+            element.querySelector(".title").innerHTML = `Minat ke ${i+1}`
             element.querySelector("input").placeholder = `Minat ke ${i+1}`
-            element.querySelector("button").setAttribute('onclick',`removeInterest(${i+1})`)
+            element.querySelector("button").setAttribute('onclick',`removeInterest(${i})`)
         }
     }
 
@@ -948,7 +1060,7 @@
         els.innerHTML += `
             <div class="card card-body mb-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <p>Minat ke ${els.childElementCount+1}</p>
+                    <p class="title">Minat ke ${els.childElementCount+1}</p>
                     <div>
                         <button class="btn btn-success" type="button" data-target="#interest-${els.childElementCount}" data-toggle="collapse"><i class="fas fa-arrow-down"></i></button>
                         <button class="btn btn-outline-danger" type="button" onclick="removeInterest(${els.childElementCount})"><i class="fas fa-times"></i></button>
