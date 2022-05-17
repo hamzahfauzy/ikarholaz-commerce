@@ -23,6 +23,7 @@ use App\Http\Controllers\Mobile\AuthController;
 // });
 
 Route::get('/get-provinces', [BaseController::class, 'getProvinces']);
+Route::get('/get-fields/{fields}', [BaseController::class, 'getFields']);
 Route::get('/get-district/{province_id}', [BaseController::class, 'getDistrict']);
 Route::get('/get-service/{courier}', [BaseController::class, 'getService']);
 Route::get('/get-payment-channel', [BaseController::class, 'paymentChannel']);
