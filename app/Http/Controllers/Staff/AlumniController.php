@@ -238,8 +238,13 @@ class AlumniController extends Controller
     {
         $alumni = Alumni::find($id);
         $provincies = Province::get();
+        $sektors = json_decode(file_get_contents('sektors.json'));
+        $communities = json_decode(file_get_contents('communities.json'));
+        $professions = json_decode(file_get_contents('professions.json'));
+        $badan_hukums = json_decode(file_get_contents('badan_hukums.json'));
+        $ijin_usahas = json_decode(file_get_contents('ijin_usahas.json'));
 
-        return view('staff.alumni.edit', compact('alumni','provincies'));
+        return view('staff.alumni.edit', compact('alumni','provincies','sektors','communities','professions','badan_hukums','ijin_usahas'));
     }
 
     public function updateNra(Request $request, Alumni $alumni)

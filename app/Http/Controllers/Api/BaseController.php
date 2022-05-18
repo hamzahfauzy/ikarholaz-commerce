@@ -22,6 +22,24 @@ class BaseController extends Controller
     {
         return Province::get();
     }
+    
+    function getFields($fields)
+    {    
+        switch($fields){
+            case "sektors":
+                return file_get_contents('sektors.json');
+            case "communities":
+                return file_get_contents('communities.json');
+            case "professions":
+                return file_get_contents('professions.json');
+            case "badan_hukums":
+                return file_get_contents('badan_hukums.json');
+            case "ijin_usahas":
+                return file_get_contents('ijin_usahas.json');
+            default:
+                return null;
+        }
+    }
 
     function getDistrict($province_id)
     {
