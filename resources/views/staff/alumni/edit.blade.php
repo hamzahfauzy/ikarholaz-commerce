@@ -239,8 +239,26 @@
                                             <div class="form-group">
                                                 <label for="">Pencapaian</label>
                                                 <input class="form-control" type="text" placeholder="Pencapaian" name="businesses[{{$i}}][pencapaian]" value="{{$business->pencapaian}}">
+                                            </div> 
+                                            <div class="form-group">
+                                                <label for="">Provinsi</label>
+                                                <select name="businesses[{{$i}}][province]" class="form-control" onchange="getDistrict(this.value,'.city',{{$i}})">
+                                                    <option value="" readonly selected>- Pilih Provinsi -</option>
+                                                    @foreach($provincies as $province)
+                                                        <option {{ $business->province == $province->province_id ? 'selected' : '' }} value="{{$province->province_id}}">{{$province->province}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            
+                                            <div class="form-group">
+                                                <label for="">Kabupaten / Kota</label>
+                                                <select name="businesses[{{$i}}][city]" class="city form-control">
+                                                    @if($business->city)
+                                                    <option value="{{$business->city}}">{{$business->city}}</option>
+                                                    @else
+                                                    <option value="">- Pilih Provinsi terlebih dahulu -</option>
+                                                    @endif
+                                                </select>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="">Alamat</label>
                                                 <input class="form-control" type="text" placeholder="Alamat" name="businesses[{{$i}}][alamat]" value="{{$business->alamat}}">
@@ -591,19 +609,34 @@
     }
     initialize()
 
-    async function getDistrict(province_id, target_element)
+    async function getDistrict(province_id, target_element,index = false)
     {
-        document.querySelector(target_element).innerHTML = "<option value=''>Loading...</option>"
-        var request = await fetch('/api/get-district/'+province_id)
-        var response = await request.json()
-        all_district = response
-        document.querySelector(target_element).innerHTML = "<option value=''>- Pilih Kabupaten / Kota -</option>"
-        response.forEach(val => {
-            var option = document.createElement("option");
-            option.text = val.city_name;
-            option.value = val.city_name;
-            document.querySelector(target_element).appendChild(option);
-        })
+        if(index){
+            var elm = document.querySelectorAll(target_element)[index]
+            elm.innerHTML = "<option value=''>Loading...</option>"
+            var request = await fetch('/api/get-district/'+province_id)
+            var response = await request.json()
+            all_district = response
+            elm.innerHTML = "<option value=''>- Pilih Kabupaten / Kota -</option>"
+            response.forEach(val => {
+                var option = document.createElement("option");
+                option.text = val.city_name;
+                option.value = val.city_name;
+                elm.appendChild(option);
+            })
+        }else{
+            document.querySelector(target_element).innerHTML = "<option value=''>Loading...</option>"
+            var request = await fetch('/api/get-district/'+province_id)
+            var response = await request.json()
+            all_district = response
+            document.querySelector(target_element).innerHTML = "<option value=''>- Pilih Kabupaten / Kota -</option>"
+            response.forEach(val => {
+                var option = document.createElement("option");
+                option.text = val.city_name;
+                option.value = val.city_name;
+                document.querySelector(target_element).appendChild(option);
+            })
+        }
     }
 
     function updateSkillsEl (){
@@ -722,6 +755,25 @@
                     <div class="form-group">
                         <label for="">Pencapaian</label>
                         <input class="form-control" type="text" placeholder="Pencapaian" name="businesses[${els.childElementCount}][pencapaian]" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Provinsi</label>
+                        <select name="businesses[${els.childElementCount}][province]" class="form-control" onchange="getDistrict(this.value,'.city',${els.childElementCount})">
+                            <option value="" readonly selected>- Pilih Provinsi -</option>
+                            @foreach($provincies as $province)
+                                <option value="{{$province->province_id}}">{{$province->province}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Kabupaten / Kota</label>
+                        <select name="businesses[${els.childElementCount}][city]" class="city form-control">
+                            @if($business->city)
+                            <option value="{{$business->city}}">{{$business->city}}</option>
+                            @else
+                            <option value="">- Pilih Provinsi terlebih dahulu -</option>
+                            @endif
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="">Alamat</label>
