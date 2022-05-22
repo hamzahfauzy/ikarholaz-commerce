@@ -34,6 +34,6 @@
     <input type="text" class="form-control" name="postal_code" required="" value="{{old('postal_code')}}">
 </div>
 <div class="form-group">
-    <label for="">{{__('Whatsapp Number')}}</label>
+    <label for="">{{__('Whatsapp Number').' Ex. 08123xxxx'}}</label>
     <input type="text" class="form-control" name="phone_number" required="" value="{{old('phone_number')}}">
 </div>

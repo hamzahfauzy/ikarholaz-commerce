@@ -70,6 +70,7 @@
                                         </tr>
                                         @endforeach
                                     @endforeach
+                                        @if($transactionItems[0]->transaction->shipping)
                                         <tr>
                                             <td></td>
                                             <td>
@@ -103,6 +104,7 @@
                                             <td>{{$transactionItems[0]->transaction->shipping->resi_number}}</td>
                                             <td></td>
                                         </tr>
+                                        @endif
                                         @endif
                                         <tr>
                                             <td></td>
