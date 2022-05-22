@@ -105,8 +105,8 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
                 
     Pesanan kakak segera kami proses ya
     Terima kasih.";
-                    WaBlast::send($payment->transaction->customer->phone_number,$message);
                 }
+                WaBlast::send($payment->transaction->customer->phone_number,$message);
             }
             
             return ['success'=>true];
