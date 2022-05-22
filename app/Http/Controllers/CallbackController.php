@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\WaBlast;
 use App\Models\Ref\Tripay;
 use Illuminate\Http\Request;
 
