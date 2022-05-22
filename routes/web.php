@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Staff\CardController;
+use App\Http\Controllers\Staff\EventController;
 use App\Http\Controllers\Staff\AlumniController;
 use App\Http\Controllers\Staff\PaymentController;
 use App\Http\Controllers\Staff\ProductController;
@@ -43,6 +44,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('products', ProductController::class);
     Route::resource('product-variants', ProductVariantController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::resource('events', EventController::class);
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentController::class);

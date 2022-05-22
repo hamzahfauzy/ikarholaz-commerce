@@ -239,10 +239,34 @@
                                             <div class="form-group">
                                                 <label for="">Pencapaian</label>
                                                 <input class="form-control" type="text" placeholder="Pencapaian" name="businesses[{{$i}}][pencapaian]" value="{{$business->pencapaian}}">
+                                            </div> 
+                                            <div class="form-group">
+                                                <label for="">Provinsi</label>
+                                                <select name="businesses[{{$i}}][province]" class="form-control" onchange="getDistrict(this.value,'.city',{{$i}})">
+                                                    <option value="" readonly selected>- Pilih Provinsi -</option>
+                                                    @foreach($provincies as $province)
+                                                        <option {{ $business->province == $province->province_id ? 'selected' : '' }} value="{{$province->province_id}}">{{$province->province}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Kabupaten / Kota</label>
+                                                <select name="businesses[{{$i}}][city]" class="city form-control">
+                                                    @if($business->city)
+                                                    <option value="{{$business->city}}">{{$business->city}}</option>
+                                                    @else
+                                                    <option value="">- Pilih Provinsi terlebih dahulu -</option>
+                                                    @endif
+                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Alamat</label>
                                                 <input class="form-control" type="text" placeholder="Alamat" name="businesses[{{$i}}][alamat]" value="{{$business->alamat}}">
+                                            </div>
+                                            <div class="form-group maps">
+                                                <input type="hidden" name="businesses[{{$i}}][lat]" class="lat" value="{{$business->lat}}">
+                                                <input type="hidden" name="businesses[{{$i}}][long]" class="long" value="{{$business->long}}">
+                                                <div class="map" style="width: auto; height: 400px;"></div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">No Telepon</label>
@@ -543,25 +567,76 @@
 </section>
 @endsection
 
-
 @section('script')
 <link rel="stylesheet" href="{{asset('plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css')}}">
 <script src="{{asset('plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js')}}"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3_euJs5nXQ2yIloYBgvNTroQa2i9SfUM"></script>
 <script>
 
-    async function getDistrict(province_id, target_element)
-    {
-        document.querySelector(target_element).innerHTML = "<option value=''>Loading...</option>"
-        var request = await fetch('/api/get-district/'+province_id)
-        var response = await request.json()
-        all_district = response
-        document.querySelector(target_element).innerHTML = "<option value=''>- Pilih Kabupaten / Kota -</option>"
-        response.forEach(val => {
-            var option = document.createElement("option");
-            option.text = val.city_name;
-            option.value = val.city_name;
-            document.querySelector(target_element).appendChild(option);
+    function initialize() {
+        // Creating map object
+        var maps = document.querySelectorAll('.maps')
+        maps.forEach(mapEl=>{
+            var lat = mapEl.querySelector(".lat")
+            var long = mapEl.querySelector(".long")
+
+            var cLat = lat.value ?? -6.200000
+            var cLong = long.value ?? 106.816666
+
+            var map = new google.maps.Map(mapEl.querySelector(".map"), {
+                zoom: 12,
+                center: new google.maps.LatLng(cLat, cLong),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            // creates a draggable marker to the given coords
+            var vMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(cLat, cLong),
+                draggable: true
+            });
+            // adds a listener to the marker
+            // gets the coords when drag event ends
+            // then updates the input with the new coords
+            google.maps.event.addListener(vMarker, 'dragend', function (evt) {
+                lat.value = evt.latLng.lat().toFixed(6);
+                long.value = evt.latLng.lng().toFixed(6);
+                map.panTo(evt.latLng);
+            });
+            // centers the map on markers coords
+            map.setCenter(vMarker.position);
+            // adds the marker on the map
+            vMarker.setMap(map);
         })
+    }
+    initialize()
+
+    async function getDistrict(province_id, target_element,index = false)
+    {
+        if(index){
+            var elm = document.querySelectorAll(target_element)[index]
+            elm.innerHTML = "<option value=''>Loading...</option>"
+            var request = await fetch('/api/get-district/'+province_id)
+            var response = await request.json()
+            all_district = response
+            elm.innerHTML = "<option value=''>- Pilih Kabupaten / Kota -</option>"
+            response.forEach(val => {
+                var option = document.createElement("option");
+                option.text = val.city_name;
+                option.value = val.city_name;
+                elm.appendChild(option);
+            })
+        }else{
+            document.querySelector(target_element).innerHTML = "<option value=''>Loading...</option>"
+            var request = await fetch('/api/get-district/'+province_id)
+            var response = await request.json()
+            all_district = response
+            document.querySelector(target_element).innerHTML = "<option value=''>- Pilih Kabupaten / Kota -</option>"
+            response.forEach(val => {
+                var option = document.createElement("option");
+                option.text = val.city_name;
+                option.value = val.city_name;
+                document.querySelector(target_element).appendChild(option);
+            })
+        }
     }
 
     function updateSkillsEl (){
@@ -682,8 +757,32 @@
                         <input class="form-control" type="text" placeholder="Pencapaian" name="businesses[${els.childElementCount}][pencapaian]" value="">
                     </div>
                     <div class="form-group">
+                        <label for="">Provinsi</label>
+                        <select name="businesses[${els.childElementCount}][province]" class="form-control" onchange="getDistrict(this.value,'.city',${els.childElementCount})">
+                            <option value="" readonly selected>- Pilih Provinsi -</option>
+                            @foreach($provincies as $province)
+                                <option value="{{$province->province_id}}">{{$province->province}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Kabupaten / Kota</label>
+                        <select name="businesses[${els.childElementCount}][city]" class="city form-control">
+                            @if($business->city)
+                            <option value="{{$business->city}}">{{$business->city}}</option>
+                            @else
+                            <option value="">- Pilih Provinsi terlebih dahulu -</option>
+                            @endif
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="">Alamat</label>
                         <input class="form-control" type="text" placeholder="Alamat" name="businesses[${els.childElementCount}][alamat]" value="">
+                    </div>
+                    <div class="form-group maps">
+                        <input type="hidden" name="businesses[${els.childElementCount}][lat]" class="lat">
+                        <input type="hidden" name="businesses[${els.childElementCount}][long]" class="long">
+                        <div class="map" style="width: auto; height: 400px;"></div>
                     </div>
                     <div class="form-group">
                         <label for="">No Telepon</label>
@@ -713,7 +812,7 @@
                 </div>
             </div>
         `
-
+        initialize()
     }
 
     async function removeBusiness(i,id = false){
