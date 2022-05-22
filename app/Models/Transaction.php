@@ -96,7 +96,7 @@ class Transaction extends Model
     public function getTotalAttribute()
     {
         $item_total = $this->transactionItems()->sum('total');
-        $shipping   = $this->shipping->service_rates;
+        $shipping   = $this->shipping->service_rates ?? 0;
         $payment    = $this->payment->admin_fee;
         return $item_total+$shipping+$payment;
     }

@@ -42,7 +42,7 @@ class SendMessage extends Command
         $messages = Message::where('status','pending')->limit(10)->get();
         foreach($messages as $message)
         {
-            $response = WaBlast::doSend($message->to, $message->content, $message->attachment);
+            $response = WaBlast::fonnteSend($message->to, $message->content, $message->attachment);
             $message->status = 'finish';
             $message->response = $response;
             $message->save();

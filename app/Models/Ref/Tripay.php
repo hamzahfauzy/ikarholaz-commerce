@@ -44,6 +44,13 @@ class Tripay
         } else {
             $this->api_PKey = $privateKey;
             $this->api_Key = $apiKey;
+            $tripay_env = config('reference.tripay_env');
+            if($tripay_env == 'sandbox')
+            {
+                $this->URL_channelMp = $this->URL_channelMs;
+                $this->URL_channelPp = $this->URL_channelPs;
+                $this->URL_transMp = $this->URL_transMs;
+            }
         }
     }
 

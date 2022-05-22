@@ -133,8 +133,8 @@ function recalculateSubtotal()
     donasi = parseInt(donasi)
     var payment_method = document.querySelector("#payment_method").value
     var subtotal = document.querySelector('#total').dataset.total
-    var shipping_service = document.querySelector('#service').value
-    var shipping_rates = all_services[shipping_service].cost[0].value
+    var shipping_service = document.querySelector('#service') ? document.querySelector('#service').value : 0
+    var shipping_rates = shipping_service ? all_services[shipping_service].cost[0].value : 0
     var payment_channel = all_payment_methods.data.find(e => e.code == payment_method)
     var payment_fee = payment_channel.total_fee.flat
     var total = parseInt(subtotal)+parseInt(shipping_rates)+parseInt(payment_fee)+donasi
@@ -167,7 +167,7 @@ async function placeOrder()
 }
 
 
-$('.nomorkartu').change(e => {
+$('.nomor_kartu').change(e => {
     var nomorkartu = $(e.target).val()
     if(nomorkartu == "")
     {
@@ -189,5 +189,9 @@ $('.nomorkartu').change(e => {
         console.log(error);
     })
 })
+
+@if(cart()->all_lists()->first()->categories->contains(config('reference.event_kategori')))
+getPaymentChannel()
+@endif
 </script>
 @endsection

@@ -148,18 +148,30 @@ class Product extends Model
         return $custom_field_values;
     }
 
-    function set_custom_fields($data)
+    function set_custom_fields($data, $target = 'App\Models\Product')
     {
         foreach($data as $key => $value)
         {
-            $custom_field = CustomField::where('class_target','App\Models\Product')->where('field_key',$key);
+            $custom_field = CustomField::where('class_target',$target)->where('field_key',$key);
             if(!$custom_field->exists()) continue;
             $custom_field = $custom_field->first();
-            CustomFieldValue::create([
-                'custom_field_id' => $custom_field->id,
-                'pk_id' => $this->id,
-                'field_value' => $value
-            ]);
+            $cf = CustomFieldValue::where('custom_field_id',$custom_field->id)->where('pk_id',$this->id);
+            if($cf->exists())
+            {
+                $cf->update([
+                    'custom_field_id' => $custom_field->id,
+                    'pk_id' => $this->id,
+                    'field_value' => $value
+                ]);
+            }
+            else
+            {
+                CustomFieldValue::create([
+                    'custom_field_id' => $custom_field->id,
+                    'pk_id' => $this->id,
+                    'field_value' => $value
+                ]);
+            }
         }
     }
 }

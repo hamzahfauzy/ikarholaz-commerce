@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Event;
 use App\Models\Price;
 use App\Models\Payment;
 use App\Models\Product;
@@ -110,7 +111,7 @@ class ShopController extends Controller
 
         $order_items_string = "";
         $order_items = [];
-        $shipping_rates = ShippingRates::init($request->dest_id,cart()->get_weight(),$request->courier)->get();
+        $shipping_rates = $request->courier ? ShippingRates::init($request->dest_id,cart()->get_weight(),$request->courier)->get() : 0;
         $dest = District::province($request->province_id)->find($request->dest_id);
         
         if($request->payment_method != 'cash'){
@@ -121,29 +122,23 @@ class ShopController extends Controller
             $payment = $payments[$key];
         }
 
-        $all_total_price = 0; // $payment['total_fee']['flat'];
-        // $order_items[] = [
-        //     'sku'       => 'payment-fee',
-        //     'name'      => 'payment-fee',
-        //     'price'     => $payment['total_fee']['flat'],
-        //     'quantity'  => 1
-        // ];
+        $all_total_price = 0; 
 
         $order_items[] = [
             'sku'       => 'ongkir',
             'name'      => 'Ongkir',
-            'price'     => $shipping_rates[$request->service]->cost[0]->value,
+            'price'     => $shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : 0,
             'quantity'  => 1
         ];
 
-        $order_items_string .= "Ongkir : ".number_format($shipping_rates[$request->service]->cost[0]->value)."\n";
+        $order_items_string .= "Ongkir : ".number_format($shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : $shipping_rates)."\n";
         
         if($request->payment_method != 'cash') $order_items_string .= "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
 
         $data = [];
         $data['request'] = $request->all();
         $data['dest'] = $dest;
-        $data['shipping'] = $shipping_rates[$request->service];
+        $data['shipping'] = $shipping_rates ? $shipping_rates[$request->service] : $shipping_rates;
         $data['payment'] = $payment ?? "cash";
 
         DB::beginTransaction();
@@ -263,23 +258,27 @@ class ShopController extends Controller
                 $all_total_price += (int) $request->donasi;
             }
 
-            Shipping::create([
-                'transaction_id' => $transaction->id,
-                'fullname' => $user->name,
-                'province_id' => $request->province_id,
-                'province_name' => $dest->province,
-                'district_id' => $request->dest_id,
-                'district_name' => $dest->type.' '.$dest->city_name,
-                'address' => $request->address,
-                'postal_code' => $request->postal_code,
-                'courir_name' => $request->courier,
-                'courir_id' => 0,
-                'service_name' => $shipping_rates[$request->service]->service,
-                'service_id' => $request->service,
-                'service_rates' => $shipping_rates[$request->service]->cost[0]->value,
-            ]);
+            if($shipping_rates)
+            {
+                Shipping::create([
+                    'transaction_id' => $transaction->id,
+                    'fullname' => $user->name,
+                    'province_id' => $request->province_id,
+                    'province_name' => $dest->province,
+                    'district_id' => $request->dest_id,
+                    'district_name' => $dest->type.' '.$dest->city_name,
+                    'address' => $request->address,
+                    'postal_code' => $request->postal_code,
+                    'courir_name' => $request->courier,
+                    'courir_id' => 0,
+                    'service_name' => $shipping_rates ? $shipping_rates[$request->service]->service : '',
+                    'service_id' => $request->service ?? 0,
+                    'service_rates' => $shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : 0,
+                ]);
+            }
 
-            $all_total_price += $shipping_rates[$request->service]->cost[0]->value;
+
+            $all_total_price += $shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : 0;
 
             if($request->payment_method != 'cash'){
                 $privateKey = getenv('TRIPAY_PRIVATE_KEY');
@@ -342,39 +341,86 @@ class ShopController extends Controller
 
             if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
 
-            // $message = "Halo $user->name
-
-            // Berikut ini adalah data order kamu
-            // Order ID: #$transaction->id
-            // Rincian transaksi
-            // $order_items_string
-                        
-            // Total: ".number_format($all_total_price+$payment['total_fee']['flat'])."
-                        
-            // Silahkan melakukan pembayaran melalui $request->payment_method dengan kode pembayaran $response_data[pay_code]
-                        
-            // Terima kasih.";
-
             $total = $all_total_price;
 
             if($request->payment_method != 'cash') $total += $payment['total_fee']['flat'];
 
-            $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
+            if($cart->categories->contains(config('reference.event_kategori')))
+            {
+                $item = $transaction->transactionItems[0];
+                $product = $item->product;
+                $custom_fields = \App\Models\CustomField::where('class_target','App\Models\EventProduct')->get();
+                $cf = [];
+                foreach($custom_fields as $key => $value)
+                {
+                    $cf[$value->field_key] = $value->get_value($product->id)->field_value;
+                }
+                
+                $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
+                $participants = [];
+                foreach($participant_custom_fields as $key => $value)
+                {
+                    $cf_values = $value->customFieldValues()->where('pk_id',$item->id)->get();
+                    foreach($cf_values as $cf_value)
+                    {
+                        $participants[$key][] = $cf_value->field_value;
+                    }
+                }
 
-            Kode Transaksi: $transaction->id
-            Nama Anda: $customer->first_name $customer->last_name
-            Email: $customer->email
-            Nomor HP: $customer->phone_number
-            Alamat pengiriman: $customer->address
+                $flip = array_map(null, ...$participants);
+                $part = "";
+                foreach($flip as $ps)
+                {
+                    $part .= implode(',',$ps);
+                    $part .= "\n";
+                }
 
-            Rincian transaksi
-            $order_items_string
+                $message = "Hai kak $customer->first_name $customer->last_name,
+Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
+    
+Kode Transaksi: $transaction->id
+Nama Pemesan: $customer->first_name $customer->last_name
+Acara: $product->name
+Tempat: $cf[venue]
+Waktu: $cf[waktu]
+    
+Daftar peserta
+$part
+    
+Biaya : Rp. ".number_format($total)."
+    
+Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
 
-            TOTAL : ".number_format($total)."
+Terima kasih,
+Salam hangat
+_Mimin Gerai_
 
-            Silahkan lakukan pembayaran sesuai metode yang dipilih. 
+---------
+Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
 
-            *Khusus transfer manual/cash lakukan konfirmasi dengan mereplay notifikasi ini.";
+*GERAI IKARHOLAZ*
+_part of Sistem Informasi Rholaz (SIR) 2022_";
+            }
+            else
+            {
+
+                $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
+    
+Kode Transaksi: $transaction->id
+Nama Anda: $customer->first_name $customer->last_name
+Email: $customer->email
+Nomor HP: $customer->phone_number
+Alamat pengiriman: $customer->address
+    
+Rincian transaksi
+$order_items_string
+    
+TOTAL : ".number_format($total)."
+    
+Silahkan lakukan pembayaran sesuai metode yang dipilih. 
+    
+*Khusus transfer manual/cash lakukan konfirmasi dengan mereplay notifikasi ini.";
+            }
             
             WaBlast::send($customer->phone_number,$message);
             endif;
@@ -392,18 +438,12 @@ class ShopController extends Controller
 
     function checkoutKta(Request $request)
     {
-        // validation here
-
         $data = [];
-
         $nomor_kartu = $request->no_kartu_fix;
         $nomor_kartu = explode('.',$nomor_kartu);
         $tahun_lulus = ($nomor_kartu[0] < date('y') ? 20 : 19).$nomor_kartu[0];
         $harga = isset($request->digit) ? Price::get($request->digit) : 0;
-        // $data['request'] = $request->all();
-        // $data['harga'] = Price::get($request->digit);
-        // $data['tahun_lulus'] = ($nomor_kartu[0] < 18 ? 20 : 19).$nomor_kartu[0];
-        // return $data;
+        
         DB::beginTransaction();
         try {
             $data_desain = [];
