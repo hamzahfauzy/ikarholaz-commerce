@@ -51,7 +51,7 @@ class CallbackController extends Controller
         if($callback->status)
         {
             $merchantRef = $callback->reference;
-            $payment = Payment::where("merchant_ref",$merchantRef)->firstOrFail();
+            $payment = Payment::where("payment_reference",$merchantRef)->firstOrFail();
             $data = [
                 'status' => $callback->status,
             ];
