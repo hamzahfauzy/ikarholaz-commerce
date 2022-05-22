@@ -142,6 +142,11 @@ class ProductController extends Controller
                     ]); 
             }
 
+            if($request->custom_fields)
+            {
+                $product->set_custom_fields((array) $request->custom_fields, $request->custom_field_target);
+            }
+
 
             DB::commit();
             return redirect()->route('staff.products.edit',$product->id)

@@ -69,6 +69,8 @@ class Cart
             });
         if(in_array(getenv('DESAIN_KARTU_KATEGORI'),$categories->toArray()))
             return CustomField::where('class_target','App\\Models\\TransactionItem')->get();
+        if(in_array(config('reference.event_kategori'),$categories->toArray()))
+            return CustomField::where('class_target','App\\Models\\Event')->get();
         return [];
     }
 
