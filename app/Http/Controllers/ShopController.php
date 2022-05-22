@@ -379,6 +379,7 @@ class ShopController extends Controller
 Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
     
 Kode Transaksi: $transaction->id
+Metode Pembayaran: $request->payment_method ".($request->payment_method == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payments['payment_code'])."
 Nama Pemesan: $customer->first_name $customer->last_name
 Acara: $product->name
 Tempat: $cf[venue]
@@ -407,6 +408,7 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
                 $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
     
 Kode Transaksi: $transaction->id
+Metode Pembayaran: $request->payment_method ".($request->payment_method == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payments['payment_code'])."
 Nama Anda: $customer->first_name $customer->last_name
 Email: $customer->email
 Nomor HP: $customer->phone_number

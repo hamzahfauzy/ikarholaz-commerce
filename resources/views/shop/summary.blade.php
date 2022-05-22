@@ -16,7 +16,21 @@
         <td colspan="2">
         @foreach(cart()->custom_fields($cart) as $cf)
             <div class="form-group">
+                @if($cf->field_key == 'NRA')
+                <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($cf->field_key)}}">
+                @elseif($cf->field_key == 'tahun_lulus')
+                <select name="cart_item[{{$cart->id}}][{{$cf->id}}][]" id="" class="form-control {{$cf->field_key}}" required>
+                    <option value="">Pilih Tahun</option>
+                    @for($i=1974;$i<=2021;$i++)
+                    @if($i == 1978)
+                    @continue
+                    @endif
+                    <option value="{{$i}}">{{$i}}</option>
+                    @endfor
+                </select>
+                @else
                 <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($cf->field_key)}}" required>
+                @endif
                 <small></small>
             </div>
         @endforeach
