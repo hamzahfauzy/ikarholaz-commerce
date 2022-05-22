@@ -59,7 +59,7 @@ class CallbackController extends Controller
             if($callback->status == "PAID")
             {
                 $transaction = $payment->transaction;
-                $items = $transaction->transaction_items;
+                $items = $transaction->transactionItems;
                 foreach($items as $item)
                 {
                     if($item->product->custom_fields)
@@ -78,7 +78,7 @@ class CallbackController extends Controller
                     }
                 }
 
-                $product = $items[0];
+                $product = $items[0]->product;
                 $customer = $transaction->customer;
                 if($product->categories->contains(config('reference.event_kategori')))
                 {
