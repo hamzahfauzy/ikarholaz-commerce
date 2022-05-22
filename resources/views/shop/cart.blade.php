@@ -51,7 +51,7 @@
                                         @csrf
                                         <input type="hidden" name="id" value="{{$cart->id}}">
                                         <div class="form-inline">
-                                            <input type="number" class="form-control" name="qty" value="{{cart()->get($cart->id)}}">
+                                            <input type="number" class="form-control" name="qty" value="{{cart()->get($cart->id)}}" @if($cart->categories->contains(config('reference.event_kategori'))) max="5" @endif>
                                             <button class="btn btn-primary">Update</button>
                                         </div>
                                     </form>

@@ -5,20 +5,26 @@
     <tr>
         <td><a href="{{route('shop.cart-remove',$cart->id)}}"><i class="fa fa-times"></i></a></td>
         <td>
-        <a href="{{route('shop.product-detail',$cart->parent?$cart->parent->parent->slug:$cart->slug)}}">{{$cart->parent?$cart->parent->parent->name.' - ':''}}{{$cart->name}}</a><br>
-        <b>{{$cart->price_formated}} x {{cart()->get($cart->id)}}</b>
-        @foreach(cart()->custom_fields($cart) as $cf)
-        @for($i=0;$i<cart()->get($cart->id);$i++)
-        <div class="form-group">
-            <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control nomorkartu" placeholder="{{$cf->field_key}}" required>
-            <small></small>
-        </div>
-        @endfor
-        @endforeach
+            <a href="{{route('shop.product-detail',$cart->parent?$cart->parent->parent->slug:$cart->slug)}}">{{$cart->parent?$cart->parent->parent->name.' - ':''}}{{$cart->name}}</a><br>
+            <b>{{$cart->price_formated}} x {{cart()->get($cart->id)}}</b>
         </td>
         <td>{{number_format(cart()->subtotal($cart->id))}}</td>
     </tr>
+    @for($i=0;$i<cart()->get($cart->id);$i++)
+    <tr>
+        <td>{{($i+1)}}</td>
+        <td colspan="2">
+        @foreach(cart()->custom_fields($cart) as $cf)
+            <div class="form-group">
+                <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($cf->field_key)}}" required>
+                <small></small>
+            </div>
+        @endforeach
+        </td>
+    </tr>
+    @endfor
     @endforeach
+    @if(!$cart->categories->contains(config('reference.event_kategori')))
     <tr>
         <td></td>
         <td>Kurir</td>
@@ -40,6 +46,7 @@
             </select>
         </td>
     </tr>
+    @endif
     <tr>
         <td></td>
         <td>Metode Pembayaran</td>

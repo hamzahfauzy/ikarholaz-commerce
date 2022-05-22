@@ -55,7 +55,7 @@
 											<td>{{ $transaction->status }}</td>
 											<td>{{ $transaction->created_at->format('j F Y') }}</td>
 											<td>
-                                            {{ $transaction->shipping->resi_number != NULL ? $transaction->shipping->resi_number : 'Belum ada nomor resi' }}
+                                            {{ $transaction->shipping ? ($transaction->shipping->resi_number != NULL ? $transaction->shipping->resi_number : 'Belum ada nomor resi') : '-' }}
                                             </td>
 
                                             <td>
