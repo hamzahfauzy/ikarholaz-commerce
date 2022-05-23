@@ -21,15 +21,20 @@
                 @elseif($cf->field_key == 'tahun_lulus')
                 <select name="cart_item[{{$cart->id}}][{{$cf->id}}][]" id="" class="form-control {{$cf->field_key}}" required>
                     <option value="">Pilih Tahun</option>
-                    @for($i=1974;$i<=2021;$i++)
-                    @if($i == 1978)
+                    @for($j=1974;$j<=2021;$j++)
+                    @if($j == 1978)
                     @continue
                     @endif
-                    <option value="{{$i}}">{{$i}}</option>
+                    <option value="{{$j}}">{{$j}}</option>
                     @endfor
+                    <option value="0">Bukan Alumni</option>
                 </select>
                 @else
-                <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($cf->field_key)}}" required>
+                @php($label=$cf->field_key)
+                @if($cart->id == config('reference.event_kategori') && $cf->field_key == 'nama')
+                @php($label="Nama Peserta")
+                @endif
+                <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($label)}}" required>
                 @endif
                 <small></small>
             </div>
