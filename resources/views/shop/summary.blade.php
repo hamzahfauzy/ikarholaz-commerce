@@ -33,7 +33,7 @@
                 </select>
                 @else
                 @php($label=$cf->field_key)
-                @if($cart->id == config('reference.event_kategori') && $cf->field_key == 'nama')
+                @if($cart->categories->contains(config('reference.event_kategori')) && $cf->field_key == 'nama')
                 @php($label="Nama Peserta")
                 @endif
                 <label for="">{{$label}}</label>
