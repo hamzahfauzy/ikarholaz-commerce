@@ -116,6 +116,19 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function resend(Transaction $transaction)
+    {
+        $product  = $transaction->transactionItems[0]->product;
+        $customer = $transaction->customer;
+        $payment  = $transaction->payment;
+
+        $notifAction = new NotifAction;
+        $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
+
+        return redirect()->route('staff.transactions.index')
+            ->with('success', 'Notification resend successfully');
+    }
+
     public function approve(Transaction $transaction)
     {
         $this->patchStatus($transaction, 'PAID');

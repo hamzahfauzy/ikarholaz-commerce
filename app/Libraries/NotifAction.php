@@ -93,10 +93,12 @@ Silahkan lakukan pembayaran sesuai metode yang dipilih.
     {
         if($product->categories->contains(config('reference.event_kategori')))
         {
+            $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
+
             $message = "Hai kak $customer->full_name,
 Terima kasih telah melakukan pembayaran untuk kode booking *#$transaction->id* sebesar Rp. $transaction->total_formated melalui $payment->payment_type.
 
-Silakan download E-TIKET nya melalui {link PDF}. 
+Silakan download E-TIKET nya melalui ".url()->to($pdf_url)." 
 Sampai ketemu di lokasi ya kak! Mimin pake baju pink.
 
 Terima kasih,
