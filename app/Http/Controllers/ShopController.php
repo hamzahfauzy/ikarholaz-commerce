@@ -350,7 +350,7 @@ class ShopController extends Controller
                 ];
             }
 
-            $payment = Payment::create($payments);
+            $_payment = Payment::create($payments);
             cart()->clear();
 
             DB::commit();
@@ -359,10 +359,10 @@ class ShopController extends Controller
 
                 $total = $all_total_price;
 
-                if($request->payment_method != 'cash') $total += $payment['total_fee']['flat'];
+                if($request->payment_method != 'cash') $total += $payments['total_fee']['flat'];
 
                 $notifAction = new NotifAction;
-                $notifAction->checkoutSuccess($cart, $transaction, $total, $customer, $payment, $order_items_string);
+                $notifAction->checkoutSuccess($cart, $transaction, $total, $customer, $_payment, $order_items_string);
 
             endif;
 
