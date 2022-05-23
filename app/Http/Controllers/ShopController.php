@@ -19,6 +19,7 @@ use App\Models\ProductImage;
 use App\Models\Ref\District;
 use App\Models\Ref\Province;
 use Illuminate\Http\Request;
+use App\Libraries\NotifAction;
 use App\Models\TransactionItem;
 use App\Models\CustomFieldValue;
 use App\Models\Ref\ShippingRates;
@@ -183,6 +184,21 @@ class ShopController extends Controller
                     'total'          => $cart->price*cart()->get($cart->id)
                 ]);
 
+                $singleProduct = Product::find($cart->id);
+                if(
+                    (
+                        $singleProduct->stock_status == 0 || 
+                        empty($singleProduct->stock_status)
+                    ) 
+                    && 
+                    $singleProduct->stock >= cart()->get($cart->id)
+                )
+                {
+                    $singleProduct->update([
+                        'stock' => $singleProduct->stock - cart()->get($cart->id)
+                    ]);
+                }
+
                 $all_total_price += $cart->price*cart()->get($cart->id);
 
                 $order_items[] = [
@@ -334,108 +350,30 @@ class ShopController extends Controller
                 ];
             }
 
-            Payment::create($payments);
+            $payment = Payment::create($payments);
             cart()->clear();
 
             DB::commit();
 
             if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
 
-            $total = $all_total_price;
+                $total = $all_total_price;
 
-            if($request->payment_method != 'cash') $total += $payment['total_fee']['flat'];
+                if($request->payment_method != 'cash') $total += $payment['total_fee']['flat'];
 
-            if($cart->categories->contains(config('reference.event_kategori')))
-            {
-                $item = $transaction->transactionItems[0];
-                $product = $item->product;
-                $custom_fields = \App\Models\CustomField::where('class_target','App\Models\EventProduct')->get();
-                $cf = [];
-                foreach($custom_fields as $key => $value)
-                {
-                    $cf[$value->field_key] = $value->get_value($product->id)->field_value;
-                }
-                
-                $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
-                $participants = [];
-                foreach($participant_custom_fields as $key => $value)
-                {
-                    $cf_values = $value->customFieldValues()->where('pk_id',$item->id)->get();
-                    foreach($cf_values as $cf_value)
-                    {
-                        $participants[$key][] = $cf_value->field_value;
-                    }
-                }
+                $notifAction = new NotifAction;
+                $notifAction->checkoutSuccess($cart, $transaction, $total, $customer, $payment, $order_items_string);
 
-                $flip = array_map(null, ...$participants);
-                $part = "";
-                foreach($flip as $ps)
-                {
-                    $part .= implode(',',$ps);
-                    $part .= "\n";
-                }
-
-                $message = "Hai kak $customer->first_name $customer->last_name,
-Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
-    
-Kode Transaksi: $transaction->id
-Metode Pembayaran: $request->payment_method ".($request->payment_method == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payments['payment_code'])."
-Nama Pemesan: $customer->first_name $customer->last_name
-Acara: $product->name
-Tempat: $cf[venue]
-Waktu: $cf[waktu]
-    
-Daftar peserta
-$part
-    
-Biaya : Rp. ".number_format($total)."
-    
-Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
-
-Terima kasih,
-Salam hangat
-_Mimin Gerai_
-
----------
-Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
-
-*GERAI IKARHOLAZ*
-_part of Sistem Informasi Rholaz (SIR) 2022_";
-            }
-            else
-            {
-
-                $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
-    
-Kode Transaksi: $transaction->id
-Metode Pembayaran: $request->payment_method ".($request->payment_method == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payments['payment_code'])."
-Nama Anda: $customer->first_name $customer->last_name
-Email: $customer->email
-Nomor HP: $customer->phone_number
-Alamat pengiriman: $customer->address
-    
-Rincian transaksi
-$order_items_string
-    
-TOTAL : ".number_format($total)."
-    
-Silahkan lakukan pembayaran sesuai metode yang dipilih. 
-    
-*Khusus transfer manual/cash lakukan konfirmasi dengan mereplay notifikasi ini.";
-            }
-            
-            WaBlast::send($customer->phone_number,$message);
             endif;
 
             if($request->payment_method != 'cash'){
                 return redirect()->to($response_data['checkout_url']);
-            }else{
-                return redirect()->back();
             }
         } catch (\Throwable $th) {
             DB::rollback();
             throw $th;
         }
+        return redirect()->route('shop.thankyou');
     }
 
     function checkoutKta(Request $request)

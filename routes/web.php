@@ -44,6 +44,8 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('products', ProductController::class);
     Route::resource('product-variants', ProductVariantController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::get('transactions/{transaction}/approve', [TransactionController::class,'approve'])->name('transactions.approve');
+    Route::get('transactions/{transaction}/cancel', [TransactionController::class,'cancel'])->name('transactions.cancel');
     Route::resource('events', EventController::class);
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
@@ -74,6 +76,9 @@ Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nr
 Route::get('pending', [App\Http\Controllers\HomeController::class, 'pending'])->name('pending');
 Route::post('tripay-callback', [App\Http\Controllers\CallbackController::class, 'tripay'])->name('tripay-callback');
 Route::name('shop.')->group(function () {
+    Route::get('thankyou', function(){
+        return view('shop.thankyou');
+    })->name('thankyou');
     Route::get('shop', [App\Http\Controllers\ShopController::class, 'index'])->name('index');
     Route::get('order-kta', [App\Http\Controllers\ShopController::class, 'orderKta'])->name('order-kta');
     Route::post('checkout-kta', [App\Http\Controllers\ShopController::class, 'checkoutKta'])->name('checkout-kta');
