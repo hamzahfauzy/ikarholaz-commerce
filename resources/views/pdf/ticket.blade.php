@@ -12,7 +12,7 @@
     margin-top: 0px;
     margin-left: 0px;
     padding-top:80px;
-    font-size:18px;
+    font-size:12px;
 }
 </style>
     <div id="bg">
