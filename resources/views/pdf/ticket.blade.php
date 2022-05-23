@@ -11,15 +11,15 @@
 #bg{
     margin-top: 0px;
     margin-left: 0px;
-    padding-top:130px;
+    padding-top:80px;
     font-size:18px;
 }
 </style>
     <div id="bg">
-        <img src="{{$bg}}" style='position:absolute;top:40px;z-index:-1;width:500px;height:650px;object-fit:contain;' />
+        <img src="{{$bg}}" style='position:absolute;top:0px;z-index:-1;width:500px;height:650px;object-fit:contain;' />
         <div style="width:100%;text-align:center">
-            <h4 style="margin:0px;padding:0px;">e-TICKET</h4><br>
-            <img src="{{$qrcode}}" style="width:100px;height:100px;margin:0px;">
+            <b>e-TICKET</b><br>
+            <img src="{{$qrcode}}" style="width:125px;height:125px;margin:0px;">
         </div>
         <div  style="width:100%;text-align:center;margin-bottom:20px;">KODE BOOKING : <b>{{$transaction->id}}</b></div>
         <div  style="width:100%;text-align:center;margin-bottom:15px">{{$product->name}}</div>
