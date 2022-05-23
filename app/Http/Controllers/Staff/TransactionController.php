@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Libraries\NotifAction;
 use App\Http\Controllers\Controller;
 
 /**
@@ -106,5 +107,49 @@ class TransactionController extends Controller
 
         return redirect()->route('staff.transactions.index')
             ->with('success', 'Transaction deleted successfully');
+    }
+
+    public function patchStatus(Transaction $transaction, $status)
+    {
+        $transaction->update([
+            'status' => $status
+        ]);
+    }
+
+    public function approve(Transaction $transaction)
+    {
+        $this->patchStatus($transaction, 'PAID');
+
+        $product  = $transaction->transactionItems[0]->product;
+        $customer = $transaction->customer;
+        $payment  = $transaction->payment;
+
+        $payment->update([
+            'status' => 'PAID'
+        ]);
+
+        $notifAction = new NotifAction;
+        $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
+
+        return redirect()->route('staff.transactions.index')
+            ->with('success', 'Transaction approved successfully');
+    }
+
+    public function cancel(Transaction $transaction)
+    {
+        $this->patchStatus($transaction, 'CANCELED');
+
+        foreach($transaction->transactionItems as $item)
+        {
+            $product = $item->product;
+            if($product->is_dynamic) continue;
+
+            $product->update([
+                'stock' => $product->stock + $item->amount
+            ]);
+        }
+
+        return redirect()->route('staff.transactions.index')
+            ->with('success', 'Transaction canceled successfully');
     }
 }

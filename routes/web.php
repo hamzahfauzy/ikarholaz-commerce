@@ -44,6 +44,8 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('products', ProductController::class);
     Route::resource('product-variants', ProductVariantController::class);
     Route::resource('transactions', TransactionController::class);
+    Route::get('transactions/{transaction}/approve', [TransactionController::class,'approve'])->name('transactions.approve');
+    Route::get('transactions/{transaction}/cancel', [TransactionController::class,'cancel'])->name('transactions.cancel');
     Route::resource('events', EventController::class);
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);

@@ -6,6 +6,7 @@ use App\Models\Payment;
 use App\Models\WaBlast;
 use App\Models\Ref\Tripay;
 use Illuminate\Http\Request;
+use App\Libraries\NotifAction;
 
 class CallbackController extends Controller
 {
@@ -81,33 +82,9 @@ class CallbackController extends Controller
 
                 $product = $items[0]->product;
                 $customer = $transaction->customer;
-                if($product->categories->contains(config('reference.event_kategori')))
-                {
-                    $message = "Hai kak $customer->first_name $customer->last_name,
-Terima kasih telah melakukan pembayaran untuk kode booking *#$transaction->id* sebesar Rp. $transaction->total_formated melalui $payment->payment_type.
 
-Silakan download E-TIKET nya melalui {link PDF}. 
-Sampai ketemu di lokasi ya kak! Mimin pake baju pink.
-
-Terima kasih,
-Salam hangat
-_Mimin Gerai_
-
----------
-Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
-
-*GERAI IKARHOLAZ*
-_part of Sistem Informasi Rholaz (SIR) 2022_";
-                }
-                else
-                {
-                    $message = "Terima Kasih Kak ".$payment->transaction->customer->full_name."
-    Pembayaran atas tagihan #$payement->transaction_id sebesar ".$payment->total_formated." telah kami terima.
-                
-    Pesanan kakak segera kami proses ya
-    Terima kasih.";
-                }
-                WaBlast::send($payment->transaction->customer->phone_number,$message);
+                $notifAction = new NotifAction;
+                $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
             }
             
             return ['success'=>true];

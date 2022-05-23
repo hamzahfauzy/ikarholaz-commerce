@@ -60,6 +60,10 @@
 
                                             <td>
                                                 <form action="{{ route('staff.transactions.destroy',$transaction->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
+                                                    @if($transaction->status == 'checkout')
+                                                    <a class="btn btn-sm btn-success " href="{{ route('staff.transactions.approve',$transaction->id) }}" onclick="if(confirm('Apakah anda yakin akan menyetujui transaksi ini ?')){ return true }else{ return false }"><i class="fa fa-fw fa-check"></i> Approve</a>
+                                                    <a class="btn btn-sm btn-warning " href="{{ route('staff.transactions.cancel',$transaction->id) }}" onclick="if(confirm('Apakah anda yakin akan membatalkan transaksi ini ?')){ return true }else{ return false }"><i class="fa fa-fw fa-times"></i> Cancel</a>
+                                                    @endif
                                                     <a class="btn btn-sm btn-primary " href="{{ route('staff.transaction-items.index',['transaction_id'=>$transaction->id]) }}"><i class="fa fa-fw fa-eye"></i> Show</a>
                                                     @csrf
                                                     @method('DELETE')
