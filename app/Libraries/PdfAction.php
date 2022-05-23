@@ -37,7 +37,7 @@ class PdfAction
         $no = 1;
         foreach($flip as $ps)
         {
-            $part .= $no.'. '.$ps[0];
+            $part .= $no.'. '.$ps[0].', '.$ps[1];
             $part .= "\n";
 
             $qr_content .= $transaction->id.';'.$ps[0].';'.$ps[1].PHP_EOL;
