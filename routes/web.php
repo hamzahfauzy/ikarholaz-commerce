@@ -30,6 +30,7 @@ Auth::routes();
 Route::match(['get','post'],'otp', [App\Http\Controllers\Auth\OtpController::class, 'otp'])->name("otp");
 Route::get('kta', [App\Http\Controllers\Mobile\AlumniController::class, 'ktaDemo']);
 
+Route::get('preview-tiket', [App\Http\Controllers\HomeController::class, 'previewTicket']);
 Route::get('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'showLoginForm'])->name('staff-login-form');
 Route::post('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'login'])->name('staff-login');
 Route::post('staff-logout', [App\Http\Controllers\Auth\StaffLoginController::class, 'logout'])->name('staff-logout');
