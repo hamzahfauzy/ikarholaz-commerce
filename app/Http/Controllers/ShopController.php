@@ -183,6 +183,21 @@ class ShopController extends Controller
                     'total'          => $cart->price*cart()->get($cart->id)
                 ]);
 
+                $singleProduct = Product::find($cart->id);
+                if(
+                    (
+                        $product->stock_status == 0 || 
+                        empty($product->stock_status)
+                    ) 
+                    && 
+                    $product->stock >= cart()->get($cart->id)
+                )
+                {
+                    $singleProduct->update([
+                        'stock' => $singleProduct->stock - cart()->get($cart->id)
+                    ]);
+                }
+
                 $all_total_price += $cart->price*cart()->get($cart->id);
 
                 $order_items[] = [
@@ -429,13 +444,12 @@ Silahkan lakukan pembayaran sesuai metode yang dipilih.
 
             if($request->payment_method != 'cash'){
                 return redirect()->to($response_data['checkout_url']);
-            }else{
-                return redirect()->back();
             }
         } catch (\Throwable $th) {
             DB::rollback();
-            throw $th;
+            // throw $th;
         }
+        return redirect()->route('shop.thankyou');
     }
 
     function checkoutKta(Request $request)
