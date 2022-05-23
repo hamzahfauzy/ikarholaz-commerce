@@ -218,6 +218,7 @@ class ShopController extends Controller
                     {
                         foreach($cf_value as $value)
                         {
+                            if(empty($value)) $value = "-";
                             CustomFieldValue::create([
                                 'custom_field_id' => $cf_id,
                                 'pk_id' => $transaction_item->id,
