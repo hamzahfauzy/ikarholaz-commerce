@@ -137,7 +137,7 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="mdi mdi-view-list"></i>{{__('How To')}}</a>
+                        <a href="{{route('events.index')}}"><i class="mdi mdi-view-list"></i>{{__('Event')}}</a>
                     </li>
                 </ul>
                 <!-- End navigation menu -->
