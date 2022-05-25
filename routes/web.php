@@ -76,6 +76,10 @@ Route::middleware(['auth:web'])->group(function () {
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nra');
 Route::get('pending', [App\Http\Controllers\HomeController::class, 'pending'])->name('pending');
+Route::name('events.')->prefix('events')->group(function () {
+    Route::get('/', [App\Http\Controllers\EventController::class, 'index'])->name('index');
+    Route::get('{id}', [App\Http\Controllers\EventController::class, 'show'])->name('show');
+});
 Route::post('tripay-callback', [App\Http\Controllers\CallbackController::class, 'tripay'])->name('tripay-callback');
 Route::name('shop.')->group(function () {
     Route::get('thankyou', function(){
