@@ -46,7 +46,7 @@
                                             <td>{{$item->transaction->id}}</td>
                                             <td>{{$item->transaction->created_at->format('d-m-Y H:i')}}</td>
                                             <td>{{$item->total_formated}}</td>
-                                            <td>{{$item->transaction->transactionItems[1] ? $item->transaction->transactionItems[1]->total_formated : 0}}</td>
+                                            <td>{{isset($item->transaction->transactionItems[1]) ? $item->transaction->transactionItems[1]->total_formated : 0}}</td>
                                             <td>{{$item->transaction->customer->full_name}}</td>
                                         </tr>
                                         @endforeach
