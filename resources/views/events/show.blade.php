@@ -33,11 +33,13 @@
                                             <th>Biaya Tiket</th>
                                             <th>Nominal Donasi</th>
                                             <th>Nama Pemesan</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php($no=1)
                                         @foreach($transactionItems as $key => $item)
+                                        @php($ticket_url=App\Libraries\PdfAction::ticketUrl($item->transaction_id))
                                         @foreach($item->participants as $participant)
                                         <tr>
                                             <td>{{$no++}}</td>
@@ -48,6 +50,7 @@
                                             <td>{{$item->total_formated}}</td>
                                             <td>{{isset($item->transaction->transactionItems[1]) ? $item->transaction->transactionItems[1]->total_formated : 0}}</td>
                                             <td>{{$item->transaction->customer->full_name}}</td>
+                                            <td><a href="{{url()->to($ticket_url)}}" target="_blank" class="btn btn-success">Download E-Ticket</a></td>
                                         </tr>
                                         @endforeach
                                         @endforeach
