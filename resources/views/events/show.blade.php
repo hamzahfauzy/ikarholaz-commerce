@@ -30,8 +30,6 @@
                                             <th>Tahun Lulus</th>
                                             <th>Kode Booking</th>
                                             <th>Tanggal Order</th>
-                                            <th>Biaya Tiket</th>
-                                            <th>Nominal Donasi</th>
                                             <th>Nama Pemesan</th>
                                             <th></th>
                                         </tr>
@@ -47,8 +45,6 @@
                                             <td>{{$participant[1]}}</td>
                                             <td>{{$item->transaction->id}}</td>
                                             <td>{{$item->transaction->created_at->format('d-m-Y H:i')}}</td>
-                                            <td>{{$item->total_formated}}</td>
-                                            <td>{{isset($item->transaction->transactionItems[1]) ? $item->transaction->transactionItems[1]->total_formated : 0}}</td>
                                             <td>{{$item->transaction->customer->full_name}}</td>
                                             <td><a href="{{url()->to($ticket_url)}}" target="_blank" class="btn btn-success">Download E-Ticket</a></td>
                                         </tr>
