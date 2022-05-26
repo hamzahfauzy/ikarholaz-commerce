@@ -23,7 +23,9 @@
                     </p>
                     <div class="m-t-20 text-center">
                         <a href="{{route('shop.product-detail',$product->slug)}}" class="btn btn-primary waves-effect waves-light">{{__('View Detail')}}</a>
+                        @if($product->is_available)
                         <a href="{{route('shop.add_to_cart',$product->slug)}}" class="btn btn-success waves-effect waves-light">{{__('Add To Cart')}}</a>
+                        @endif
                     </div>
 
                 </div>
