@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Card;
 use App\Models\Cart;
+use App\Models\Event;
 use App\Models\Price;
 use App\Models\Alumni;
+use App\Models\Jolali;
 use App\Models\WaBlast;
 use App\Models\Ref\Tripay;
 use App\Models\Ref\District;
@@ -21,6 +23,14 @@ class BaseController extends Controller
     function getProvinces()
     {
         return Province::get();
+    }
+
+    function getAgenda(){
+        return Event::take(3)->get();
+    }
+
+    function getJolali(){
+        return Jolali::take(3)->get();
     }
     
     function getFields($fields)

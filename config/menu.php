@@ -79,6 +79,13 @@ $menu[] = [
 ];
 
 $menu[] = [
+    'label' => 'Jolali',
+    'icon'  => 'mdi mdi-google-pages',
+    'route' => 'staff.jolalis.index',
+    'childs' => []
+];
+
+$menu[] = [
     'label' => 'Broadcasts',
     'icon'  => 'mdi mdi-google-pages',
     'route' => 'staff.broadcasts.index',
