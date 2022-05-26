@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Staff\CardController;
 use App\Http\Controllers\Staff\EventController;
 use App\Http\Controllers\Staff\AlumniController;
+use App\Http\Controllers\Staff\JolaliController;
 use App\Http\Controllers\Staff\PaymentController;
 use App\Http\Controllers\Staff\ProductController;
 use App\Http\Controllers\Staff\CategoryController;
@@ -49,6 +50,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::get('transactions/{transaction}/approve', [TransactionController::class,'approve'])->name('transactions.approve');
     Route::get('transactions/{transaction}/cancel', [TransactionController::class,'cancel'])->name('transactions.cancel');
     Route::resource('events', EventController::class);
+    Route::resource('jolalis', JolaliController::class);
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentController::class);

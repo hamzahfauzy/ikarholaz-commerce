@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\AdminController;
 use App\Http\Controllers\Mobile\AlumniController;
-use App\Http\Controllers\Mobile\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::get('/test-wa', [BaseController::class, 'testWa']);
 Route::get('/test-pdf', [BaseController::class, 'testPdf']);
 Route::post('/send-pdf', [BaseController::class, 'sendPdf']);
 Route::post('/download-pdf', [BaseController::class, 'downloadPdf']);
+Route::get('/get-agenda', [BaseController::class, 'getAgenda']);
+Route::get('/get-jolali', [BaseController::class, 'getJolali']);
 
 Route::prefix('mobile')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -41,7 +44,7 @@ Route::prefix('mobile')->group(function () {
     Route::post('otp', [AuthController::class, 'otp']);
     Route::post('verify-otp-nra', [AuthController::class, 'verifyOtpNra']);
     Route::post('register', [AuthController::class, 'register']);
-
+    
     Route::get('kta/{id}', [AlumniController::class, 'kta']);
     Route::get('dpt', [AlumniController::class, 'alumnidpt']);
 
