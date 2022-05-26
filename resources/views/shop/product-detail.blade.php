@@ -72,8 +72,10 @@
                                         <input class="vertical-spin" type="text" value="1" name="qty">
                                     </div>
                                     <div class="col-12 col-sm-6">
+                                        @if($product->is_available)
                                         <button class="btn btn-primary" name="action" value="checkout">{{__('Checkout')}}</button>
                                         <button class="btn btn-warning" name="action" value="add_to_cart">{{__('Add To Cart')}}</button>
+                                        @endif
                                     </div>
                                 </div>
                             </form>

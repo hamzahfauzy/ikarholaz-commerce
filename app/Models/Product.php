@@ -67,6 +67,11 @@ class Product extends Model
         return $this->stock_status ? $this->stock_status : $this->stock;
     }
 
+    public function getIsAvailableAttribute()
+    {
+        return ($this->stock_status && $this->stock_status == 'Tersedia') || $this->stock;
+    }
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
