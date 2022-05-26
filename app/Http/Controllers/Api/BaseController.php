@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Event;
 use App\Models\Price;
 use App\Models\Alumni;
+use App\Models\Jolali;
 use App\Models\WaBlast;
 use App\Models\Ref\Tripay;
 use App\Models\Ref\District;
@@ -26,6 +27,10 @@ class BaseController extends Controller
 
     function getAgenda(){
         return Event::take(3)->get();
+    }
+
+    function getJolali(){
+        return Jolali::take(3)->get();
     }
     
     function getFields($fields)

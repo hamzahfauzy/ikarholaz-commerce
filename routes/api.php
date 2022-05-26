@@ -36,6 +36,7 @@ Route::get('/test-pdf', [BaseController::class, 'testPdf']);
 Route::post('/send-pdf', [BaseController::class, 'sendPdf']);
 Route::post('/download-pdf', [BaseController::class, 'downloadPdf']);
 Route::get('/get-agenda', [BaseController::class, 'getAgenda']);
+Route::get('/get-jolali', [BaseController::class, 'getJolali']);
 
 Route::prefix('mobile')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
