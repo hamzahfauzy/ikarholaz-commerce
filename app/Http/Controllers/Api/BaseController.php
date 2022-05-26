@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Card;
 use App\Models\Cart;
+use App\Models\Event;
 use App\Models\Price;
 use App\Models\Alumni;
 use App\Models\WaBlast;
@@ -21,6 +22,10 @@ class BaseController extends Controller
     function getProvinces()
     {
         return Province::get();
+    }
+
+    function getAgenda(){
+        return Event::take(3)->get();
     }
     
     function getFields($fields)
