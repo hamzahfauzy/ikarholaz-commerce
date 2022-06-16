@@ -768,8 +768,8 @@
                     <div class="form-group">
                         <label for="">Kabupaten / Kota</label>
                         <select name="businesses[${els.childElementCount}][city]" class="city form-control">
-                            @if($business->city)
-                            <option value="{{$business->city}}">{{$business->city}}</option>
+                            @if($alumni->city)
+                            <option value="{{$alumni->city}}">{{$alumni->city}}</option>
                             @else
                             <option value="">- Pilih Provinsi terlebih dahulu -</option>
                             @endif
