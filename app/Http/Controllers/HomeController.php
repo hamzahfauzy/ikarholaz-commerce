@@ -100,9 +100,9 @@ class HomeController extends Controller
 
                         foreach ($request['businesses'] as $id => $value) {
                             if (isset($value['id'])) {
-                                $alumni->businesses()->where('id', $value['id'])->update($value);
+                                $user->alumni->businesses()->where('id', $value['id'])->update($value);
                             } else {
-                                $alumni->businesses()->create($value);
+                                $user->alumni->businesses()->create($value);
                             }
                         }
                     }
@@ -111,9 +111,9 @@ class HomeController extends Controller
 
                         foreach ($request['communities'] as $id => $value) {
                             if (isset($value['id'])) {
-                                $alumni->communities()->where('id', $value['id'])->update($value);
+                                $user->alumni->communities()->where('id', $value['id'])->update($value);
                             } else {
-                                $alumni->communities()->create($value);
+                                $user->alumni->communities()->create($value);
                             }
                         }
                     }
@@ -122,9 +122,9 @@ class HomeController extends Controller
 
                         foreach ($request['professions'] as $id => $value) {
                             if (isset($value['id'])) {
-                                $alumni->professions()->where('id', $value['id'])->update($value);
+                                $user->alumni->professions()->where('id', $value['id'])->update($value);
                             } else {
-                                $alumni->professions()->create($value);
+                                $user->alumni->professions()->create($value);
                             }
                         }
                     }
@@ -133,9 +133,9 @@ class HomeController extends Controller
 
                         foreach ($request['trainings'] as $id => $value) {
                             if (isset($value['id'])) {
-                                $alumni->trainings()->where('id', $value['id'])->update($value);
+                                $user->alumni->trainings()->where('id', $value['id'])->update($value);
                             } else {
-                                $alumni->trainings()->create($value);
+                                $user->alumni->trainings()->create($value);
                             }
                         }
                     }
@@ -144,9 +144,9 @@ class HomeController extends Controller
 
                         foreach ($request['appreciations'] as $id => $value) {
                             if (isset($value['id'])) {
-                                $alumni->appreciations()->where('id', $value['id'])->update($value);
+                                $user->alumni->appreciations()->where('id', $value['id'])->update($value);
                             } else {
-                                $alumni->appreciations()->create($value);
+                                $user->alumni->appreciations()->create($value);
                             }
                         }
                     }
@@ -155,9 +155,9 @@ class HomeController extends Controller
 
                         foreach ($request['interests'] as $id => $value) {
                             if (isset($value['id'])) {
-                                $alumni->interests()->where('id', $value['id'])->update($value);
+                                $user->alumni->interests()->where('id', $value['id'])->update($value);
                             } else {
-                                $alumni->interests()->create($value);
+                                $user->alumni->interests()->create($value);
                             }
                         }
                     }
