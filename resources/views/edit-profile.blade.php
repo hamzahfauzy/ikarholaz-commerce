@@ -765,7 +765,6 @@
                 </div>
             </div>
         `
-        initialize()
     }
 
     async function removeBusiness(i,id = false){
