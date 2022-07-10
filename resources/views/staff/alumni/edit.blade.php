@@ -580,7 +580,7 @@
             var lat = mapEl.querySelector(".lat")
             var long = mapEl.querySelector(".long")
 
-            var cLat = lat.value ?? -6.200000
+            var cLat = lat.value ?? 7.2575
             var cLong = long.value ?? 106.816666
 
             var map = new google.maps.Map(mapEl.querySelector(".map"), {

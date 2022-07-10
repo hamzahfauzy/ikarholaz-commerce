@@ -96,6 +96,72 @@ class HomeController extends Controller
                         }
                     }
 
+                    if ($request['businesses']) {
+
+                        foreach ($request['businesses'] as $id => $value) {
+                            if (isset($value['id'])) {
+                                $alumni->businesses()->where('id', $value['id'])->update($value);
+                            } else {
+                                $alumni->businesses()->create($value);
+                            }
+                        }
+                    }
+
+                    if ($request['communities']) {
+
+                        foreach ($request['communities'] as $id => $value) {
+                            if (isset($value['id'])) {
+                                $alumni->communities()->where('id', $value['id'])->update($value);
+                            } else {
+                                $alumni->communities()->create($value);
+                            }
+                        }
+                    }
+
+                    if ($request['professions']) {
+
+                        foreach ($request['professions'] as $id => $value) {
+                            if (isset($value['id'])) {
+                                $alumni->professions()->where('id', $value['id'])->update($value);
+                            } else {
+                                $alumni->professions()->create($value);
+                            }
+                        }
+                    }
+
+                    if ($request['trainings']) {
+
+                        foreach ($request['trainings'] as $id => $value) {
+                            if (isset($value['id'])) {
+                                $alumni->trainings()->where('id', $value['id'])->update($value);
+                            } else {
+                                $alumni->trainings()->create($value);
+                            }
+                        }
+                    }
+
+                    if ($request['appreciations']) {
+
+                        foreach ($request['appreciations'] as $id => $value) {
+                            if (isset($value['id'])) {
+                                $alumni->appreciations()->where('id', $value['id'])->update($value);
+                            } else {
+                                $alumni->appreciations()->create($value);
+                            }
+                        }
+                    }
+
+                    if ($request['interests']) {
+
+                        foreach ($request['interests'] as $id => $value) {
+                            if (isset($value['id'])) {
+                                $alumni->interests()->where('id', $value['id'])->update($value);
+                            } else {
+                                $alumni->interests()->create($value);
+                            }
+                        }
+                    }
+
                     if ($request->file('profile')) {
 
                         $profile = $request->file('profile')->store('profiles');
@@ -122,8 +188,14 @@ class HomeController extends Controller
 
         $provincies = Province::get();
         $alumni = auth()->user()->alumni;
+        $alumni = Alumni::find($id);
+        $sektors = json_decode(file_get_contents('sektors.json'));
+        $communities = json_decode(file_get_contents('communities.json'));
+        $professions = json_decode(file_get_contents('professions.json'));
+        $badan_hukums = json_decode(file_get_contents('badan_hukums.json'));
+        $ijin_usahas = json_decode(file_get_contents('ijin_usahas.json'));
 
-        return view('edit-profile',compact('provincies','alumni'));
+        return view('edit-profile',compact('alumni','provincies','sektors','communities','professions','badan_hukums','ijin_usahas'));
     }
 
     function nra()
