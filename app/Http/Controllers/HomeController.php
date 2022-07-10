@@ -188,7 +188,6 @@ class HomeController extends Controller
 
         $provincies = Province::get();
         $alumni = auth()->user()->alumni;
-        $alumni = Alumni::find($id);
         $sektors = json_decode(file_get_contents('sektors.json'));
         $communities = json_decode(file_get_contents('communities.json'));
         $professions = json_decode(file_get_contents('professions.json'));
