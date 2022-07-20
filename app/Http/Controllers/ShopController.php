@@ -201,14 +201,15 @@ class ShopController extends Controller
 
                 $all_total_price += $cart->price*cart()->get($cart->id);
 
+                $cart_name = ($cart->parent?$cart->parent->parent->name.' - ':'').$cart->name;
                 $order_items[] = [
-                    'sku'       => $cart->slug,
-                    'name'      => $cart->name,
+                    'sku'       => $cart->parent?$cart->parent->parent->slug:$cart->slug,
+                    'name'      => $cart_name,
                     'price'     => (int) $cart->price, // *cart()->get($cart->id),
                     'quantity'  => (int) cart()->get($cart->id)
                 ];
 
-                $order_items_string .= $cart->name." x ".cart()->get($cart->id)." : ".number_format($cart->price*cart()->get($cart->id))."\n";
+                $order_items_string .= $cart_name." x ".cart()->get($cart->id)." : ".number_format($cart->price*cart()->get($cart->id))."\n";
 
                 // cart item
                 if(isset($request->cart_item) && isset($request->cart_item[$cart->id]))

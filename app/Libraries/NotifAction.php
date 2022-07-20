@@ -8,6 +8,7 @@ class NotifAction
 
     public function checkoutSuccess($cart, $transaction, $total, $customer, $payment, $order_items_string = "")
     {
+        $cart_name = ($cart->parent?$cart->parent->parent->name.' - ':'').$cart->name;
         if($cart->categories->contains(config('reference.event_kategori')))
         {
             $item          = $transaction->transactionItems[0];
