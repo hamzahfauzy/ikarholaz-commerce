@@ -49,7 +49,7 @@
     @if(
         !
         (
-            $cart->parent ? $cart->parent-parent->categories->contains(config('reference.event_kategori') : $cart->categories->contains(config('reference.event_kategori'))
+            $cart->parent ? $cart->parent-parent->categories->contains(config('reference.event_kategori')) : $cart->categories->contains(config('reference.event_kategori'))
         )
     )
     <tr>
