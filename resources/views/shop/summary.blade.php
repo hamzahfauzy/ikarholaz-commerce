@@ -46,12 +46,7 @@
     </tr>
     @endfor
     @endforeach
-    @if(
-        !
-        (
-            $cart->parent ? $cart->parent-parent->categories->contains(config('reference.event_kategori')) : $cart->categories->contains(config('reference.event_kategori'))
-        )
-    )
+    @if(!($cart->parent ? $cart->parent-parent->categories->contains(config('reference.event_kategori')) : $cart->categories->contains(config('reference.event_kategori'))))
     <tr>
         <td></td>
         <td>Kurir</td>
