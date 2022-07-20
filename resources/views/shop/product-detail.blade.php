@@ -40,7 +40,7 @@
                     <div class="col-lg-7">
 
                         <div class="card-box">
-                            <h3 style="margin-top:0px;">{{$product->name}}</h3>
+                            <h3 style="margin-top:0px;" id="product_name">{{$product->name}}</h3>
                             <p class="text-muted text-overflow">
                                 <i class="mdi mdi-tag m-r-5"></i>
                                 @forelse($product->categories as $category)
@@ -59,9 +59,9 @@
                                 <label for="">{{__('Pick a Variant')}} :</label>
                                 <div class="variant-list">
                                     <div id="bx-pager">
-                                        <a data-slide-index="0" href="javascript:void(0)" onclick="product_id.value={{$product->id}};product_price.innerHTML='Rp. {{$product->price_formated}}'"><img src="{{$product->thumbnail}}" alt="slide-image" height="40" /></a>
+                                        <a data-slide-index="0" href="javascript:void(0)" onclick="product_id.value={{$product->id}};product_price.innerHTML='Rp. {{$product->price_formated}}';product_name.innerHTML='{{$product->name}}'"><img src="{{$product->thumbnail}}" alt="slide-image" height="40" /></a>
                                         @foreach($product->variants as $key => $variant)
-                                        <a data-slide-index="{{++$key}}" href="javascript:void(0)" onclick="product_id.value={{$variant->id}};product_price.innerHTML='Rp. {{$product->price_formated}}'"><img src="{{$variant->thumbnail}}" alt="slide-image" height="40" /></a>
+                                        <a data-slide-index="{{++$key}}" href="javascript:void(0)" onclick="product_id.value={{$variant->id}};product_price.innerHTML='Rp. {{$variant->price_formated}}';product_name.innerHTML='{{$product->name}} - {{$variant->name}}'"><img src="{{$variant->thumbnail}}" alt="slide-image" height="40" /></a>
                                         @endforeach
                                     </div>
                                 </div>
