@@ -11,6 +11,7 @@
         <td>{{number_format(cart()->subtotal($cart->id))}}</td>
     </tr>
     @for($i=0;$i<cart()->get($cart->id);$i++)
+    @if(count(cart()->custom_fields($cart)))
     <tr>
         <td>{{($i+1)}}</td>
         <td colspan="2">
@@ -44,6 +45,7 @@
         @endforeach
         </td>
     </tr>
+    @endif
     @endfor
     @endforeach
     @if(! (($cart->parent && $cart->parent->parent->categories->contains(config('reference.event_kategori'))) || ($cart->categories->contains(config('reference.event_kategori')))))
