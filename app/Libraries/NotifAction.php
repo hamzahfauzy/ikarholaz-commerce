@@ -14,10 +14,11 @@ class NotifAction
             $item          = $transaction->transactionItems[0];
             $product       = $item->product;
             $custom_fields = \App\Models\CustomField::where('class_target','App\Models\EventProduct')->get();
+            $cf_product_id = $product->parent ? $product->parent->parent->id : $product->id;
             $cf = [];
             foreach($custom_fields as $key => $value)
             {
-                if(isset($value->get_value($product->id)->field_value)) $cf[$value->field_key] = $value->get_value($product->id)->field_value;
+                $cf[$value->field_key] = $value->get_value($cf_product_id)->field_value;
             }
             
             $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
@@ -27,7 +28,7 @@ class NotifAction
                 $cf_values = $value->customFieldValues()->where('pk_id',$item->id)->get();
                 foreach($cf_values as $cf_value)
                 {
-                    if(isset($cf_value->field_value)) $participants[$key][] = $cf_value->field_value;
+                    $participants[$key][] = $cf_value->field_value;
                 }
             }
 
