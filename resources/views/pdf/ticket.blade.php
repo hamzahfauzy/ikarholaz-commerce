@@ -22,7 +22,7 @@
             <img src="{{$qrcode}}" style="width:125px;height:125px;margin:0px;">
         </div>
         <div  style="width:100%;text-align:center;margin-bottom:20px;">KODE BOOKING : <b>{{$transaction->id}}</b></div>
-        <div  style="width:100%;text-align:center;margin-bottom:15px">{{$product->name}}</div>
+        <div  style="width:100%;text-align:center;margin-bottom:15px">{{($product->parent?$product->parent->parent->name.' - ':'').$product->name}}</div>
 
         <div  style="width:100%;text-align:center">{{$cf['venue']}}</div>
         <div  style="width:100%;text-align:center;margin-bottom:15px;">{{date('d-m-Y H:i',strtotime(str_replace('T','',$cf['waktu']).':00'))}}</div>
