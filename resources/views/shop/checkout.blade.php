@@ -190,7 +190,7 @@ $('.nomor_kartu').change(e => {
     })
 })
 
-@if(cart()->all_lists()->first()->categories->contains(config('reference.event_kategori')))
+@if((cart()->all_lists()->first()->parent && cart()->all_lists()->first()->parent->parent->categories->contains(config('reference.event_kategori'))) || cart()->all_lists()->first()->categories->contains(config('reference.event_kategori')))
 getPaymentChannel()
 @endif
 </script>
