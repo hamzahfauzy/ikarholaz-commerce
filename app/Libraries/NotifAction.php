@@ -93,7 +93,7 @@ Silahkan lakukan pembayaran sesuai metode yang dipilih.
     
     public function paymentSuccess($product, $customer, $transaction, $payment)
     {
-        if($product->categories->contains(config('reference.event_kategori')))
+        if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
 
