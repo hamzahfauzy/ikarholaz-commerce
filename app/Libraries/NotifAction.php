@@ -46,7 +46,7 @@ Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
 Kode Transaksi: $transaction->id
 Metode Pembayaran: $payment->payment_type ".($payment->payment_type == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payment->payment_code)."
 Nama Pemesan: $customer->full_name
-Acara: $product->name
+Acara: ".($product->parent?$product->parent->parent->name.' - ':'').$product->name."
 Tempat: $cf[venue]
 Waktu: $cf[waktu]
     
