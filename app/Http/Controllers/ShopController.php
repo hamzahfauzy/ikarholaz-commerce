@@ -113,7 +113,7 @@ class ShopController extends Controller
         $order_items_string = "";
         $order_items = [];
         $shipping_rates = $request->courier ? ShippingRates::init($request->dest_id,cart()->get_weight(),$request->courier)->get() : 0;
-        $dest = District::province($request->province_id)->find($request->dest_id);
+        $dest = $request->courier ? District::province($request->province_id)->find($request->dest_id) : [];
         
         if($request->payment_method != 'cash'){
             $tripay = new Tripay(getenv('TRIPAY_PRIVATE_KEY'), getenv('TRIPAY_API_KEY'));
@@ -138,7 +138,7 @@ class ShopController extends Controller
 
         $data = [];
         $data['request'] = $request->all();
-        $data['dest'] = $dest;
+        if($shipping_rates) $data['dest'] = $dest;
         $data['shipping'] = $shipping_rates ? $shipping_rates[$request->service] : $shipping_rates;
         $data['payment'] = $payment ?? "cash";
 
@@ -152,22 +152,30 @@ class ShopController extends Controller
                 'email' => $request->email,
                 'password' => strtotime('now'),
             ]);
-            // create customer first
-            $customer = Customer::updateOrCreate([
-                'user_id' => $user->id,
-            ],[
+
+            $custData = [
                 'user_id' => $user->id,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
-                'province_id' => $request->province_id,
-                'province_name' => $dest->province,
-                'district_id' => $request->dest_id,
-                'district_name' => $dest->type.' '.$dest->city_name,
-                'address' => $request->address,
-                'postal_code' => $request->postal_code,
                 'phone_number' => $request->phone_number,
-            ]);
+            ];
+
+            if($shipping_rates)
+            {
+                $custData = array_merge($custData,[
+                    'province_id' => $request->province_id,
+                    'province_name' => $dest->province,
+                    'district_id' => $request->dest_id,
+                    'district_name' => $dest->type.' '.$dest->city_name,
+                    'address' => $request->address,
+                    'postal_code' => $request->postal_code,
+                ]);
+            }
+            // create customer first
+            $customer = Customer::updateOrCreate([
+                'user_id' => $user->id,
+            ],$custData);
 
             // then create transaction
             $transaction = Transaction::create([
