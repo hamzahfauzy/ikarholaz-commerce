@@ -25,13 +25,16 @@
             <div class="property-detail-wrapper">
                 <div class="row">
                     <div class="col-lg-5">
-                        <div class="">
+                        <div class="slide-image-container" style="width: 100%;height:300px;">
+                            <img src="{{$product->thumbnail}}" class="product-big-thumb" alt="slide-image" style="width: 100%;height:100%;object-fit: cover;" />
+                            {{--
                             <ul class="bxslider property-slider">
                                 <li><img src="{{$product->thumbnail}}" alt="slide-image" /></li>
                                 @foreach($product->variants as $key => $variant)
                                 <li><img src="{{$variant->thumbnail}}" alt="slide-image" /></li>
                                 @endforeach
                             </ul>
+                            --}}
                         </div>
                         <!-- end slider -->
 
@@ -39,7 +42,7 @@
 
                     <div class="col-lg-7">
 
-                        <div class="card-box">
+                        <div class="card-box description">
                             <h3 style="margin-top:0px;" id="product_name">{{$product->name}}</h3>
                             <p class="text-muted text-overflow">
                                 <i class="mdi mdi-tag m-r-5"></i>
@@ -59,9 +62,9 @@
                                 <label for="">{{__('Pick a Variant')}} :</label>
                                 <div class="variant-list">
                                     <div id="bx-pager">
-                                        <a data-slide-index="0" href="javascript:void(0)" onclick="product_id.value={{$product->id}};product_price.innerHTML='Rp. {{$product->price_formated}}';product_name.innerHTML='{{$product->name}}'"><img src="{{$product->thumbnail}}" alt="slide-image" height="40" /></a>
+                                        <a data-slide-index="0" href="javascript:void(0)" data-id="{{$product->id}}" data-price="{{$product->price_formated}}" data-name="{{$product->name}}" class="slide-btn"><img src="{{$product->thumbnail}}" alt="slide-image" height="40" /></a>
                                         @foreach($product->variants as $key => $variant)
-                                        <a data-slide-index="{{++$key}}" href="javascript:void(0)" onclick="product_id.value={{$variant->id}};product_price.innerHTML='Rp. {{$variant->price_formated}}';product_name.innerHTML='{{$product->name}} - {{$variant->name}}'"><img src="{{$variant->thumbnail}}" alt="slide-image" height="40" /></a>
+                                        <a data-slide-index="{{++$key}}" href="javascript:void(0)" data-id="{{$variant->id}}" data-price="{{$variant->price_formated}}" data-name="{{$product->name}} - {{$variant->name}}" class="slide-btn"><img src="{{$variant->thumbnail}}" alt="slide-image" height="40" /></a>
                                         @endforeach
                                     </div>
                                 </div>
@@ -124,16 +127,33 @@
 <script src="{{asset('plugins/bx-slider/jquery.bxslider.min.js')}}"></script>
 <script>
     $(document).ready(function () {
-        $('.property-slider').bxSlider({
-            pagerCustom: '#bx-pager',
-            controls:false
-        });
+        // var slider = $('.property-slider').bxSlider({
+        //     pagerCustom: '#bx-pager',
+        //     controls:false,
+        //     touchEnabled: false
+        // });
 
         $(".vertical-spin").TouchSpin({
             verticalbuttons: true,
             verticalupclass: 'glyphicon glyphicon-plus',
             verticaldownclass: 'glyphicon glyphicon-minus'
         })
+
     });
+
+    function loadProductDetail(el)
+    {
+        var imgSrc = el.querySelector('img').src
+        document.querySelector('.product-big-thumb').src = imgSrc
+        product_id.value=el.dataset.id
+        product_price.innerHTML='Rp. '+el.dataset.price;
+        product_name.innerHTML=el.dataset.name
+    }
+
+    document.querySelectorAll('.slide-btn').forEach(el => {
+        el.addEventListener('click', e => {
+            loadProductDetail(el)
+        })
+    })
 </script>
 @endsection
