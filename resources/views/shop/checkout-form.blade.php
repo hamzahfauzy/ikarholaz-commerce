@@ -10,6 +10,15 @@
     <label for="">{{__('Email')}}</label>
     <input type="email" class="form-control" name="email" required="" value="{{old('email')}}">
 </div>
+<?php
+$is_event = false;
+foreach(cart()->all_lists()->get() as $cart)
+{
+    $is_event = (($cart->parent && $cart->parent->parent->categories->contains(config('reference.event_kategori'))) || ($cart->categories->contains(config('reference.event_kategori'))));
+    if($is_event) break;
+}
+?>
+@if(!$is_event)
 <div class="form-group">
     <label for="">{{__('Province')}}</label>
     <select name="province_id" class="form-control" onchange="getDistrict(this.value,'#dest_id')" required="" value="{{old('province_id')}}">
@@ -33,6 +42,7 @@
     <label for="">{{__('Postal Code')}}</label>
     <input type="text" class="form-control" name="postal_code" required="" value="{{old('postal_code')}}">
 </div>
+@endif
 <div class="form-group">
     <label for="">{{__('Whatsapp Number').' Ex. 08123xxxx'}}</label>
     <input type="text" class="form-control" name="phone_number" required="" value="{{old('phone_number')}}">
