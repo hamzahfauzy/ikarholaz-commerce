@@ -6,9 +6,12 @@
         <td><a href="{{route('shop.cart-remove',$cart->id)}}"><i class="fa fa-times"></i></a></td>
         <td>
             <a href="{{route('shop.product-detail',$cart->parent?$cart->parent->parent->slug:$cart->slug)}}">{{$cart->parent?$cart->parent->parent->name.' - ':''}}{{$cart->name}}</a><br>
-            <b>{{$cart->price_formated}} x {{cart()->get($cart->id)}}</b>
+            <b>{{$cart->price_formated}} x {{cart()->get($cart->id)}}</b><br>
         </td>
         <td>{{number_format(cart()->subtotal($cart->id))}}</td>
+    </tr>
+    <tr>
+        <td colspan="3"><input type="text" name="notes[]" id="" class="form-control" placeholder="Catatan"></td>
     </tr>
     @for($i=0;$i<cart()->get($cart->id);$i++)
     @if(count(cart()->custom_fields($cart)))

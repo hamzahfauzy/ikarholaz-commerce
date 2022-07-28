@@ -27,6 +27,7 @@ class TransactionItem extends Model
 		'product_id' => 'required',
 		'amount' => 'required',
 		'total' => 'required',
+		'notes' => 'nullable',
     ];
 
     protected $perPage = 20;
@@ -36,7 +37,7 @@ class TransactionItem extends Model
      *
      * @var array
      */
-    protected $fillable = ['transaction_id','product_id','amount','total'];
+    protected $fillable = ['transaction_id','product_id','amount','total','notes'];
 
 
     /**
