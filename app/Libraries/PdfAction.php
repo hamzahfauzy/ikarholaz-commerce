@@ -37,15 +37,17 @@ class PdfAction
             }
     
             $flip = array_map(null, ...$participants);
-            $part = "";
-            $qr_content = "";
+            $part = [];
+            $qrcode = [];
             $no = 1;
             foreach($flip as $ps)
             {
-                $part .= $no.'. '.$ps[0].', '.$ps[1];
-                $part .= "\n";
+                $p = $ps[0].', '.$ps[1];
+                $part[] = $p;
     
-                $qr_content .= $transaction->id.';'.$ps[0].';'.$ps[1].PHP_EOL;
+                $qr_content = $transaction->id.';'.$ps[0].';'.$ps[1];
+                $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=".$qr_content."&chs=180x180&choe=UTF-8&chld=L|0");
+                $qrcode[] = 'data:image/png;base64,' . base64_encode($barcode);
                 $no++;
             }
     
@@ -53,10 +55,6 @@ class PdfAction
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $bg   = 'data:image/' . $type . ';base64,' . base64_encode($data);
-    
-            $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=".$qr_content."&chs=180x180&choe=UTF-8&chld=L|0");
-            $qrcode = 'data:image/png;base64,' . base64_encode($barcode);
-    
     
             $content = view('pdf.ticket',compact('transaction','items','payment','product','customer','cf','part','bg','qrcode'))->render();
     

@@ -183,13 +183,14 @@ class ShopController extends Controller
                 'status'      => 'checkout'
             ]);
 
-            foreach(cart()->all_lists()->get() as $cart)
+            foreach(cart()->all_lists()->get() as $index => $cart)
             {
                 $transaction_item = TransactionItem::create([
                     'transaction_id' => $transaction->id,
                     'product_id'     => $cart->id,
                     'amount'         => cart()->get($cart->id),
-                    'total'          => $cart->price*cart()->get($cart->id)
+                    'total'          => $cart->price*cart()->get($cart->id),
+                    'notes'          => $request->notes[$index]
                 ]);
 
                 $singleProduct = Product::find($cart->id);
