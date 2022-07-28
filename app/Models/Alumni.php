@@ -24,6 +24,15 @@ class Alumni extends Model
         'year_out' => 'required',
     ];
 
+    static $reg = [
+        'name' => 'required',
+        'graduation_year' => 'required',
+        'class_name' => 'required',
+        'year_in' => 'required',
+        'address' => 'required',
+        'graduation_year' => 'required',
+    ];
+
     protected $appends = ['tanggal'];
 
     function getTanggalAttribute()

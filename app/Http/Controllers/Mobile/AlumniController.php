@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AlumniController extends Controller
 {
@@ -380,5 +381,465 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
     function allalumni()
     {
         return Alumni::count();
+    }
+    function registerWa(Request $request)
+    {
+        // http://gerai.ikarholaz.id/api/register-wa?name=Aji&graduation_year=2002&gender=L&address=Semarang&city=Semarang&province=Semarang&country=Semarang&date_of_birth=1997&year_in=2000&year_out=2015
+
+        try {
+            $request->validate([
+                'name' => 'required',
+                'graduation_year' => 'required',
+                'class_name' => 'required',
+                'year_in' => 'required',
+                'address' => 'required',
+            ]);
+        } catch (\Throwable $th) {
+$pesan = 
+"Format tidak sesuai, silahkan coba lagi";
+            
+                    $data = [
+                        'api_key' => env('WA_API'),
+                        'sender'  => $request->sender,
+                        'number'  => $request->phone,
+                        'message' => $pesan
+                    ];
+                    
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                      CURLOPT_URL => env('WA_URL')."/app/api/send-message",
+                      CURLOPT_RETURNTRANSFER => true,
+                      CURLOPT_ENCODING => "",
+                      CURLOPT_MAXREDIRS => 10,
+                      CURLOPT_TIMEOUT => 0,
+                      CURLOPT_FOLLOWLOCATION => true,
+                      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                      CURLOPT_CUSTOMREQUEST => "POST",
+                      CURLOPT_POSTFIELDS => json_encode($data))
+                    );
+                    $response = curl_exec($curl);
+                    curl_close($curl);
+            return json_encode('data tidak sesuai');
+        }
+
+        DB::beginTransaction();
+        try {
+            if($request->phone[0] == "0"){
+                $phone = '+62' . substr($request->phone,1);
+            }else if($request->phone[0] == "6")
+            {
+                $phone = '+62' . substr($request->phone,2);
+            }
+            $new_user = User::create([
+                'name' => $request->name,
+                'email' => $phone,
+                'password' => Str::random(12)
+            ]);
+
+            $tahun_lulus = substr($request->graduation_year, 2, 2);
+            $nomor_kartu = substr(strtotime('now'), 2, 8);
+            $NRA = $tahun_lulus . '.' . $nomor_kartu;
+
+            $new_alumni = $new_user->alumni()->create([
+                'name' => $request->name,
+                'NRA' => $NRA,
+                'class_name' => $request->class_name,
+                'year_in' => $request->year_in,
+                'address' => $request->address,
+                'graduation_year' => $request->graduation_year,
+            ]);
+
+            DB::commit();
+            $pesan = 
+"Terima kasih telah mendaftar sebagai anggota IKARHOLAZ. Lanjutkan langkah dengan mengirim foto melalui WA ini untuk memudahkan verifikasi. 
+Saat ini status masih PENDING hingga diverifikasi petugas. Ketik CEK NRA untuk mengetahui status pendaftaran anggota IKARHOLAZ.";
+
+        $data = [
+            'api_key' => env('WA_API'),
+            'sender'  => $request->sender,
+            'number'  => $request->phone,
+            'message' => $pesan
+        ];
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => env('WA_URL')."/app/api/send-message",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => json_encode($data))
+        );
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return json_encode('berhasil');
+        }catch (\Exception $e) {
+            DB::rollback();
+
+$pesan = 
+"Registrasi GAGAL. Nomer WA sudah digunakan pendaftaran sebelumnya. Ketik CEK NRA untuk mengetahui data terkait nomer WA yang digunakan.";
+            
+            $data = [
+                'api_key' => env('WA_API'),
+                'sender'  => $request->sender,
+                'number'  => $request->phone,
+                'message' => $pesan
+            ];
+            
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => env('WA_URL')."/app/api/send-message",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($data))
+            );
+            $response = curl_exec($curl);
+            curl_close($curl);
+            return json_encode('gagal');
+        }
+    }
+    function getNra(Request $request)
+    {
+        $province = array (
+            0 => 
+            array (
+              'province_id' => '1',
+              'province' => 'Bali',
+            ),
+            1 => 
+            array (
+              'province_id' => '2',
+              'province' => 'Bangka Belitung',
+            ),
+            2 => 
+            array (
+              'province_id' => '3',
+              'province' => 'Banten',
+            ),
+            3 => 
+            array (
+              'province_id' => '4',
+              'province' => 'Bengkulu',
+            ),
+            4 => 
+            array (
+              'province_id' => '5',
+              'province' => 'DI Yogyakarta',
+            ),
+            5 => 
+            array (
+              'province_id' => '6',
+              'province' => 'DKI Jakarta',
+            ),
+            6 => 
+            array (
+              'province_id' => '7',
+              'province' => 'Gorontalo',
+            ),
+            7 => 
+            array (
+              'province_id' => '8',
+              'province' => 'Jambi',
+            ),
+            8 => 
+            array (
+              'province_id' => '9',
+              'province' => 'Jawa Barat',
+            ),
+            9 => 
+            array (
+              'province_id' => '10',
+              'province' => 'Jawa Tengah',
+            ),
+            10 => 
+            array (
+              'province_id' => '11',
+              'province' => 'Jawa Timur',
+            ),
+            11 => 
+            array (
+              'province_id' => '12',
+              'province' => 'Kalimantan Barat',
+            ),
+            12 => 
+            array (
+              'province_id' => '13',
+              'province' => 'Kalimantan Selatan',
+            ),
+            13 => 
+            array (
+              'province_id' => '14',
+              'province' => 'Kalimantan Tengah',
+            ),
+            14 => 
+            array (
+              'province_id' => '15',
+              'province' => 'Kalimantan Timur',
+            ),
+            15 => 
+            array (
+              'province_id' => '16',
+              'province' => 'Kalimantan Utara',
+            ),
+            16 => 
+            array (
+              'province_id' => '17',
+              'province' => 'Kepulauan Riau',
+            ),
+            17 => 
+            array (
+              'province_id' => '18',
+              'province' => 'Lampung',
+            ),
+            18 => 
+            array (
+              'province_id' => '19',
+              'province' => 'Maluku',
+            ),
+            19 => 
+            array (
+              'province_id' => '20',
+              'province' => 'Maluku Utara',
+            ),
+            20 => 
+            array (
+              'province_id' => '21',
+              'province' => 'Nanggroe Aceh Darussalam (NAD)',
+            ),
+            21 => 
+            array (
+              'province_id' => '22',
+              'province' => 'Nusa Tenggara Barat (NTB)',
+            ),
+            22 => 
+            array (
+              'province_id' => '23',
+              'province' => 'Nusa Tenggara Timur (NTT)',
+            ),
+            23 => 
+            array (
+              'province_id' => '24',
+              'province' => 'Papua',
+            ),
+            24 => 
+            array (
+              'province_id' => '25',
+              'province' => 'Papua Barat',
+            ),
+            25 => 
+            array (
+              'province_id' => '26',
+              'province' => 'Riau',
+            ),
+            26 => 
+            array (
+              'province_id' => '27',
+              'province' => 'Sulawesi Barat',
+            ),
+            27 => 
+            array (
+              'province_id' => '28',
+              'province' => 'Sulawesi Selatan',
+            ),
+            28 => 
+            array (
+              'province_id' => '29',
+              'province' => 'Sulawesi Tengah',
+            ),
+            29 => 
+            array (
+              'province_id' => '30',
+              'province' => 'Sulawesi Tenggara',
+            ),
+            30 => 
+            array (
+              'province_id' => '31',
+              'province' => 'Sulawesi Utara',
+            ),
+            31 => 
+            array (
+              'province_id' => '32',
+              'province' => 'Sumatera Barat',
+            ),
+            32 => 
+            array (
+              'province_id' => '33',
+              'province' => 'Sumatera Selatan',
+            ),
+            33 => 
+            array (
+              'province_id' => '34',
+              'province' => 'Sumatera Utara',
+            ),
+        );
+        $sender = $request->sender; 
+        $phone = $request->phone; 
+        $user = User::where('email', '+'.$phone)->first();
+        if(!$user)
+        {
+            $pesan = 
+"GAGAL MENAMPILKAN DATA, disebabkan No WA anda: ".$phone." tidak terdaftar dalam sistem NRA. Anda harus menggunakan no WA terdaftar saat melakukan cek data NRA.
+
+Hubungi mimin untuk memastikan/mengubah nomer WA yang terdaftar di sistem NRA IKARHOLAZ. 
+
+*_Note: Permintaan ganti nomer tidak bisa diwakilkan. 1 nama alumni berlaku 1 NRA dan 1 nomer HP_*
+
+_Jika anda belum melakukan pendaftaran anggota IKARHOLAZ/belum memiliki NRA, gunakan layanan pendaftaran anggota IKARHOLAZ melalui WA, lebih simpel dan praktis. Caranya, ketik:_
+
+REG#nama#kelas#tahunmasuk#tahunlulus#alamat
+
+Alternatif lain melalui:
+web: https://gerai.ikarholaz.id/register";
+
+            $data = [
+                'api_key' => env('WA_API'),
+                'sender'  => $sender,
+                'number'  => $phone,
+                'message' => $pesan
+            ];
+    
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => env('WA_URL')."/app/api/send-message",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode($data))
+            );
+            $response = curl_exec($curl);
+            curl_close($curl);
+            return json_encode($response);
+        }
+        $alumni = Alumni::where('user_id', $user->id)->first();
+        // USAHA DAN BISNIS
+        $skill = Skill::where('alumni_id', $alumni->id)->get();
+        $business = Business::where('alumni_id', $alumni->id)->get();
+        $profession = Profession::where('alumni_id', $alumni->id)->get();
+        $comunities = Community::where('alumni_id', $alumni->id)->get();
+        $trainings = Training::where('alumni_id', $alumni->id)->get();
+        $apreciation = Appreciation::where('alumni_id', $alumni->id)->get();
+        $interest = Interest::where('alumni_id', $alumni->id)->get();
+        $dataUsaha = [$skill, $business, $profession,$comunities, $trainings, $apreciation, $interest];
+        function getDataUsaha($data){
+            if(count($data) >0){
+                $dataValue = [];
+                foreach ($data as $key => $value) {
+                    $dataValue[] = $value->name;
+                }
+                return implode("\n", $dataValue);
+            }else{
+                return "_(kosong)_";
+            }
+        }
+
+        function getDataMinat($data){
+            if(count($data) >0){
+                $dataValue = [];
+                foreach ($data as $key => $value) {
+                $dataValue[] = $value->bidang;
+                }
+                return implode("\n", $dataValue);
+            }else{
+                return "_(kosong)_";
+            }
+        }
+        // USAHA DAN BISNIS
+        $status = $alumni->approval_status == "approved" ? "APPROVED" : "PENDING";
+        $photo = $alumni->profile_pic == NULL ? "_(kosong)_" : url('/storage/public')."/".$alumni->profile_pic;
+        $ttl = $alumni->place_of_birth == NULL ? "_(kosong)_" : $alumni->place_of_birth . "/" . $alumni->date_of_birth;
+        function getProvince($value, $data)
+        {
+           if($value != null)
+           {
+            if(strlen($value) <= 2)
+            {
+                return $data[$value-1]['province'];
+            } else {
+                return $value ;
+            }
+           }
+        }
+        function belumDiIsi($value)
+        {
+            if($value == NULL)
+            {
+                return "_(kosong)_";
+            } else {
+                return $value ;
+            }
+        }
+        $pesan = 
+"STATUS : *$status*
+NRA : $alumni->NRA
+Tgl Reg : $alumni->created_at
+----------------------------------------
+Nama : $alumni->name
+Tahun Lulus : ".belumDiIsi($alumni->graduation_year)."
+Tahun Masuk : ".belumDiIsi($alumni->year_in)."
+Kelas : ".belumDiIsi($alumni->class_name)."
+Foto Profile : $photo
+----------------------------------------
+Gender : ".belumDiIsi($alumni->gender)."
+Tempat/Tgl Lahir: $ttl
+Alamat : ".belumDiIsi($alumni->address)."
+Kota : ".belumDiIsi($alumni->city)."
+Provinsi : ".belumDiIsi(getProvince($alumni->province, $province))."
+Negara : ".belumDiIsi($alumni->country)."
+Email : ".belumDiIsi($alumni->email)."
+----------------------------------------
+*USAHA/BISNIS:*
+".getDataUsaha($business)."
+*PEKERJAAN:*
+".getDataMinat($profession)."
+*KOMUNITAS:*
+".getDataUsaha($comunities)."
+*PELATIHAN:*
+".getDataUsaha($trainings)."
+*PENCAPAIAN:*
+".getDataUsaha($apreciation)."
+*MINAT:*
+".getDataMinat($interest)."
+----------------------------------------
+Lengkapi data profile melalui http://gerai.ikarholaz.id/login 
+_Hanya alumni berstatus *approved* yang bisa login._
+
+*NRA IKARHOLAZ SYSTEM*
+_part of Sistem Informasi Rholaz (SIR) 2022_
+";
+
+        $data = [
+            'api_key' => env('WA_API'),
+            'sender'  => $sender,
+            'number'  => $phone,
+            'message' => $pesan
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('WA_URL')."/app/api/send-message",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode($data))
+        );
+        $response = curl_exec($curl);
+        curl_close($curl);
+        echo $response;
     }
 }
