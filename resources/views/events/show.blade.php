@@ -27,6 +27,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Nama Peserta</th>
+                                            <th>Produk</th>
                                             <th>Tahun Lulus</th>
                                             <th>Kode Booking</th>
                                             <th>Tanggal Order</th>
@@ -42,6 +43,7 @@
                                         <tr>
                                             <td>{{$no++}}</td>
                                             <td>{{$participant[0]}}</td>
+                                            <td>{{$item->product->name}}</td>
                                             <td>{{$participant[1]}}</td>
                                             <td>{{$item->transaction->id}}</td>
                                             <td>{{$item->transaction->created_at->format('d-m-Y H:i')}}</td>
