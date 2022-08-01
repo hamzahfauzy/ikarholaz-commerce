@@ -40,6 +40,7 @@
                                     <tr>
                                         <th>No</th>
                                         
+										<th>Transaction Id / Kode Booking</th>
 										<th>Product</th>
 										<th>Amount</th>
 										<th>Subtotal</th>
@@ -49,7 +50,7 @@
                                     @foreach ($transactionItems as $transactionItem)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
+                                            <td>{{$transactionItem->transaction_id}}</td>
 											<td>
                                             <a href="{{route('staff.products.edit',$transactionItem->product->id)}}">{{ $transactionItem->product->name }}</a>
                                             <br>
