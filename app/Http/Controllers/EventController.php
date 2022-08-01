@@ -54,7 +54,9 @@ class EventController extends Controller
     public function show($id)
     {
         //
-        $transactionItems = TransactionItem::where('product_id',$id)->whereHas('transaction',function($q){
+        $variants = ProductVariant::where('parent_id',$id)->pluck('id');
+        $variants[] = $id;
+        $transactionItems = TransactionItem::whereIn('product_id',$variants)->whereHas('transaction',function($q){
             $q->where('status','PAID');
         })->get();
 
