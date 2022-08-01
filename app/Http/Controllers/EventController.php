@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\ProductVariant;
 use App\Models\TransactionItem;
 
 class EventController extends Controller
