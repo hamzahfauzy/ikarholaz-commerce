@@ -173,9 +173,7 @@ class ShopController extends Controller
                 ]);
             }
             // create customer first
-            $customer = Customer::updateOrCreate([
-                'user_id' => $user->id,
-            ],$custData);
+            $customer = Customer::create($custData);
 
             // then create transaction
             $transaction = Transaction::create([
