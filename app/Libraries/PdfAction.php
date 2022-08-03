@@ -20,7 +20,7 @@ class PdfAction
         {
             $custom_fields = \App\Models\CustomField::where('class_target','App\Models\EventProduct')->get();
             $cf = [];
-            $cf_product_id = $product->parent ? $product->parent->parent->id : $product->id;
+            $cf_product_id = $product->parent && $product->parent->parent ? $product->parent->parent->id : $product->id;
             foreach($custom_fields as $key => $value)
             {
                 $cf[$value->field_key] = $value->get_value($cf_product_id)->field_value;
