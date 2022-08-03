@@ -37,6 +37,7 @@
                                         <th>No</th>
                                         
 										<th>Customer</th>
+										<th>Produk</th>
 										<th>Total</th>
 										<th>Status</th>
 										<th>Date</th>
@@ -51,9 +52,10 @@
                                             <td>{{ ++$i }}</td>
                                             
 											<td>{{ $transaction->customer->full_name }}</td>
+											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
 											<td>{{ $transaction->total_formated }}</td>
 											<td>{{ $transaction->status }}</td>
-											<td>{{ $transaction->created_at->format('j F Y') }}</td>
+											<td>{{ $transaction->created_at->format('d/m/Y') }}</td>
 											<td>
                                             {{ $transaction->shipping ? ($transaction->shipping->resi_number != NULL ? $transaction->shipping->resi_number : 'Belum ada nomor resi') : '-' }}
                                             </td>
