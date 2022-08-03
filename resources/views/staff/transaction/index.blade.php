@@ -52,7 +52,11 @@
                                             <td>{{ ++$i }}</td>
                                             
 											<td>{{ $transaction->customer->full_name }}</td>
+                                            @if($transaction->transactionItems[0]->product)
 											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
+                                            @else
+                                            <td></td>
+                                            @endif
 											<td>{{ $transaction->total_formated }}</td>
 											<td>{{ $transaction->status }}</td>
 											<td>{{ $transaction->created_at->format('d/m/Y') }}</td>
