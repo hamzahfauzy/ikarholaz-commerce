@@ -77,7 +77,7 @@
                                             <td></td>
                                             <td>
                                             Shipping :<br>
-                                            {{$transactionItems[0]->transaction->shipping->province_name.', '.$transactionItems[0]->transaction->shipping->district_name}}<br>
+                                            {{$transactionItems[0]->transaction->shipping->province_name.', '.$transactionItems[0]->transaction->shipping->district_name.', '.$transactionItems[0]->transaction->shipping->address}}<br>
                                             {{$transactionItems[0]->transaction->shipping->courir_name.' ('.$transactionItems[0]->transaction->shipping->service_name.')'}}
                                             </td>
                                             <td></td>
