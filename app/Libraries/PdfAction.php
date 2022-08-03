@@ -10,10 +10,10 @@ class PdfAction
     function ticketUrl($transaction_id)
     {
         $transaction = \App\Models\Transaction::find($transaction_id);
-        Log::info($transaction);
         $items    = $transaction->transactionItems;
         $payment  = $transaction->payment;
         $product  = $items[0]->product;
+        if(!$product) return '';
         $customer = $transaction->customer;
 
         $filename = md5(md5($customer->id.".".$transaction->id.".".$transaction->created_at));
