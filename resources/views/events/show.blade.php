@@ -51,6 +51,8 @@
                                             @else
                                             <td>{{$item->product->name}}</td>
                                             @endif
+                                            @else
+                                            <td>-</td>
                                             @endif
                                             <td>{{$participant[1]}}</td>
                                             <td>{{$item->transaction->id}}</td>
