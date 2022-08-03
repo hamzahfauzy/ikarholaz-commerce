@@ -43,7 +43,13 @@
                                         <tr>
                                             <td>{{$no++}}</td>
                                             <td>{{$participant[0]}}</td>
+                                            @if($item->product->parent)
+                                            <td>{{$item->product->parent->product->name.' - '.$item->product->name}}</td>
+                                            @elseif($item->product->variants)
+                                            <td>{{$item->product->name.' - '.$item->product->variants[0]->name}}</td>
+                                            @else
                                             <td>{{$item->product->name}}</td>
+                                            @endif
                                             <td>{{$participant[1]}}</td>
                                             <td>{{$item->transaction->id}}</td>
                                             <td>{{$item->transaction->created_at->format('d-m-Y H:i')}}</td>

@@ -68,6 +68,7 @@
 											<td>{{Form::label($cf->customField->field_key)}} : {{ $cf->field_value }}</td>
 											<td></td>
 											<td></td>
+											<td></td>
                                         </tr>
                                         @endforeach
                                     @endforeach
@@ -81,6 +82,7 @@
                                             </td>
                                             <td></td>
                                             <td>{{$transactionItems[0]->transaction->shipping->service_rates_formated}}</td>
+                                            <td></td>
                                         </tr>
                                         @if($transactionItems[0]->transaction->shipping->resi_number == NULL)
                                         <tr>
@@ -97,6 +99,7 @@
                                             </td>
                                             <td></td>
                                             <td></td>
+                                            <td></td>
                                         </tr>
                                         @else
                                         <tr>
@@ -107,6 +110,12 @@
                                         </tr>
                                         @endif
                                         @endif
+                                        <tr>
+                                            <td></td>
+                                            <td>Metode Pembayaran</td>
+                                            <td></td>
+                                            <td>{{$transactionItems[0]->transaction->payment->payment_type}}</td>
+                                        </tr>
                                         <tr>
                                             <td></td>
                                             <td>Admin Fee</td>
