@@ -52,7 +52,7 @@
                                             <td>{{ ++$i }}</td>
                                             
 											<td>{{ $transaction->customer->full_name }}</td>
-                                            @if($transaction->transactionItems[0]->product)
+                                            @if(count($transaction->transactionItems) && $transaction->transactionItems[0]->product)
 											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
                                             @else
                                             <td></td>
