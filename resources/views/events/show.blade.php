@@ -43,12 +43,14 @@
                                         <tr>
                                             <td>{{$no++}}</td>
                                             <td>{{$participant[0]}}</td>
+                                            @if($item->product)
                                             @if($item->product->parent)
                                             <td>{{$item->product->parent->parent->name.' - '.$item->product->name}}</td>
                                             @elseif(!empty($item->product->variants) && count($item->product->variants))
                                             <td>{{$item->product->name.' - '.$item->product->variants[0]->name}}</td>
                                             @else
                                             <td>{{$item->product->name}}</td>
+                                            @endif
                                             @endif
                                             <td>{{$participant[1]}}</td>
                                             <td>{{$item->transaction->id}}</td>
