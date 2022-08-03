@@ -54,7 +54,7 @@
                                             <td>{{$item->transaction->id}}</td>
                                             <td>{{$item->transaction->created_at->format('d-m-Y H:i')}}</td>
                                             <td>{{$item->transaction->customer->full_name}}</td>
-                                            <td><a href="{{url()->to($ticket_url)}}" target="_blank" class="btn btn-success">Download E-Ticket</a></td>
+                                            <td><a href="{{$ticket_url ? url()->to($ticket_url) : '#'}}" target="_blank" class="btn btn-success">Download E-Ticket</a></td>
                                         </tr>
                                         @endforeach
                                         @endforeach
