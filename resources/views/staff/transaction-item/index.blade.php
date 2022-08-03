@@ -81,8 +81,8 @@
                                             {{$transactionItems[0]->transaction->shipping->courir_name.' ('.$transactionItems[0]->transaction->shipping->service_name.')'}}
                                             </td>
                                             <td></td>
-                                            <td>{{$transactionItems[0]->transaction->shipping->service_rates_formated}}</td>
                                             <td></td>
+                                            <td>{{$transactionItems[0]->transaction->shipping->service_rates_formated}}</td>
                                         </tr>
                                         @if($transactionItems[0]->transaction->shipping->resi_number == NULL)
                                         <tr>
@@ -104,13 +104,15 @@
                                         @else
                                         <tr>
                                             <td></td>
+                                            <td></td>
+                                            <td></td>
                                             <td>Nomor Resi</td>
                                             <td>{{$transactionItems[0]->transaction->shipping->resi_number}}</td>
-                                            <td></td>
                                         </tr>
                                         @endif
                                         @endif
                                         <tr>
+                                            <td></td>
                                             <td></td>
                                             <td>Metode Pembayaran</td>
                                             <td></td>
@@ -118,11 +120,13 @@
                                         </tr>
                                         <tr>
                                             <td></td>
+                                            <td></td>
                                             <td>Admin Fee</td>
                                             <td></td>
                                             <td>{{$transactionItems[0]->transaction->payment->admin_fee_formated}}</td>
                                         </tr>
                                         <tr>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td>Total</td>
