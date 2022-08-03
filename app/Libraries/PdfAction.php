@@ -3,6 +3,7 @@ namespace App\Libraries;
 
 use App\Models\TransactionItem;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class PdfAction
 {
