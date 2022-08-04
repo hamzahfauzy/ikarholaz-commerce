@@ -75,6 +75,17 @@ class Customer extends Model
     {
         return $this->first_name.' '.$this->last_name;
     }
+
+    public function getPhoneParseAttribute()
+    {
+        $phone = $this->phone_number;
+        if($phone[0] == 0)
+        {
+            $phone = $out = preg_replace('/^0/', '62', $phone);
+        }
+
+        return $phone;
+    }
     
 
 }
