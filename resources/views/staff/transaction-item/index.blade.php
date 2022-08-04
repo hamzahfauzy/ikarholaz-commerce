@@ -162,7 +162,8 @@
                         </div>
                         <div>
                             <label for="">WA : {{$customer->phone_number}}</label>
-                            <a href="https://wa.me/{{$customer->phone_parse}}" class="btn btn-success">WhatsApp</a>
+                            <br>
+                            <a href="https://wa.me/{{$customer->phone_parse}}" target="_blank" class="btn btn-success">WhatsApp</a>
                         </div>
                     </div>
                 </div>
