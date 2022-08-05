@@ -26,12 +26,18 @@
                             <span id="card_title">
                                 {{ __('Transaction') }}
                             </span>
+
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm float-right btn-export" data-placement="left">
+                                  {{ __('Export') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped table-hover tbl-transactions">
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
@@ -47,7 +53,7 @@
 										<th>Kurir</th>
 										<th>Catatan</th>
 
-                                        <th></th>
+                                        <th class="noExl"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -81,7 +87,7 @@
                                             <td></td>
                                             @endif
 
-                                            <td>
+                                            <td class="noExl">
                                                 <form action="{{ route('staff.transactions.destroy',$transaction->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
                                                     @if($transaction->status == 'checkout')
                                                     <a class="btn btn-sm btn-success " href="{{ route('staff.transactions.approve',$transaction->id) }}" onclick="if(confirm('Apakah anda yakin akan menyetujui transaksi ini ?')){ return true }else{ return false }"><i class="fa fa-fw fa-check"></i> Approve</a>
@@ -106,4 +112,20 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{asset('js/jquery.table2excel.js')}}"></script>
+<script>
+$(".btn-export").click(function(){
+  $(".tbl-transactions").table2excel({
+    // exclude CSS class
+    exclude: ".noExl",
+    name: "Laporan Transaksi",
+    filename: "LaporanTransaksi", //do not include extension
+    fileext: ".xls" // file extension
+  }); 
+});
+</script>
 @endsection
