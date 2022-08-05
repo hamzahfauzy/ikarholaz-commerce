@@ -36,12 +36,16 @@
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Customer</th>
+										<th>Nama</th>
 										<th>Produk</th>
-										<th>Total</th>
-										<th>Status</th>
-										<th>Date</th>
-										<th>Nomor Resi</th>
+										<th>Varian</th>
+										<th>Kode</th>
+										<th>Bayar</th>
+										<th>Tgl Bayar</th>
+										<th>Metode Pembayaran</th>
+										<th>No HP</th>
+										<th>Kurir</th>
+										<th>Catatan</th>
 
                                         <th></th>
                                     </tr>
@@ -53,16 +57,29 @@
                                             
 											<td>{{ $transaction->customer->full_name }}</td>
                                             @if(count($transaction->transactionItems) && $transaction->transactionItems[0]->product)
+                                            @if($transaction->transactionItems[0]->product->parent)
+											<td>{{ $transaction->transactionItems[0]->product->parent->parent->name }}</td>
 											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
+                                            @else
+											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
+                                            <td></td>
+                                            @endif
                                             @else
                                             <td></td>
                                             @endif
+                                            <td>{{ $transaction->id }}</td>
 											<td>{{ $transaction->total_formated }}</td>
-											<td>{{ $transaction->status }}</td>
-											<td>{{ $transaction->created_at->format('d/m/Y') }}</td>
+											<td>{{ $transaction->status == 'PAID' ? $transaction->updated_at->format('d/m/Y') : '' }}</td>
+											<td>{{ $transaction->payment->payment_type }}</td>
+											<td>{{ $transaction->customer->phone_number }}</td>
 											<td>
-                                            {{ $transaction->shipping ? ($transaction->shipping->resi_number != NULL ? $transaction->shipping->resi_number : 'Belum ada nomor resi') : '-' }}
+                                            {{ $transaction->shipping ? $transaction->shipping->courier_name.' - '.$transaction->shipping->service_name : '-' }}
                                             </td>
+                                            @if(count($transaction->transactionItems))
+                                            <td>{{$transaction->transactionItems[0]->notes}}</td>
+                                            @else
+                                            <td></td>
+                                            @endif
 
                                             <td>
                                                 <form action="{{ route('staff.transactions.destroy',$transaction->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
