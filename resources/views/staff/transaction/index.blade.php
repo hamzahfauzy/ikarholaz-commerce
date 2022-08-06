@@ -26,24 +26,34 @@
                             <span id="card_title">
                                 {{ __('Transaction') }}
                             </span>
+
+                            <div class="float-right">
+                                <button class="btn btn-primary btn-sm float-right btn-export" data-placement="left">
+                                  {{ __('Export') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped table-hover tbl-transactions">
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
                                         
-										<th>Customer</th>
+										<th>Nama</th>
 										<th>Produk</th>
-										<th>Total</th>
-										<th>Status</th>
-										<th>Date</th>
-										<th>Nomor Resi</th>
+										<th>Varian</th>
+										<th>Kode</th>
+										<th>Bayar</th>
+										<th>Tgl Bayar</th>
+										<th>Metode Pembayaran</th>
+										<th>No HP</th>
+										<th>Kurir</th>
+										<th>Catatan</th>
 
-                                        <th></th>
+                                        <th class="noExl"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -53,18 +63,31 @@
                                             
 											<td>{{ $transaction->customer->full_name }}</td>
                                             @if(count($transaction->transactionItems) && $transaction->transactionItems[0]->product)
+                                            @if($transaction->transactionItems[0]->product->parent)
+											<td>{{ $transaction->transactionItems[0]->product->parent->parent->name }}</td>
 											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
+                                            @else
+											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
+                                            <td></td>
+                                            @endif
                                             @else
                                             <td></td>
                                             @endif
+                                            <td>{{ $transaction->id }}</td>
 											<td>{{ $transaction->total_formated }}</td>
-											<td>{{ $transaction->status }}</td>
-											<td>{{ $transaction->created_at->format('d/m/Y') }}</td>
+											<td>{{ $transaction->status == 'PAID' ? $transaction->updated_at->format('d/m/Y') : '' }}</td>
+											<td>{{ $transaction->payment->payment_type }}</td>
+											<td>{{ $transaction->customer->phone_number }}</td>
 											<td>
-                                            {{ $transaction->shipping ? ($transaction->shipping->resi_number != NULL ? $transaction->shipping->resi_number : 'Belum ada nomor resi') : '-' }}
+                                            {{ $transaction->shipping ? $transaction->shipping->courier_name.' - '.$transaction->shipping->service_name : '-' }}
                                             </td>
+                                            @if(count($transaction->transactionItems))
+                                            <td>{{$transaction->transactionItems[0]->notes}}</td>
+                                            @else
+                                            <td></td>
+                                            @endif
 
-                                            <td>
+                                            <td class="noExl">
                                                 <form action="{{ route('staff.transactions.destroy',$transaction->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
                                                     @if($transaction->status == 'checkout')
                                                     <a class="btn btn-sm btn-success " href="{{ route('staff.transactions.approve',$transaction->id) }}" onclick="if(confirm('Apakah anda yakin akan menyetujui transaksi ini ?')){ return true }else{ return false }"><i class="fa fa-fw fa-check"></i> Approve</a>
@@ -89,4 +112,20 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{asset('js/jquery.table2excel.js')}}"></script>
+<script>
+$(".btn-export").click(function(){
+  $(".tbl-transactions").table2excel({
+    // exclude CSS class
+    exclude: ".noExl",
+    name: "Laporan Transaksi",
+    filename: "LaporanTransaksi", //do not include extension
+    fileext: ".xls" // file extension
+  }); 
+});
+</script>
 @endsection
