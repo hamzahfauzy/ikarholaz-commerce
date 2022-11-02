@@ -7,7 +7,7 @@ return  [
             'description' => 'Ambil sendiri',
             'cost' => [
                 [
-                    'value' => 3000,
+                    'value' => 1500,
                     'etd'   => '1',
                     'note'  => ''
                 ]

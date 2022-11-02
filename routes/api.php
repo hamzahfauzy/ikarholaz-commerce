@@ -39,6 +39,7 @@ Route::get('/get-agenda', [BaseController::class, 'getAgenda']);
 Route::get('/get-jolali', [BaseController::class, 'getJolali']);
 Route::get('/register-wa', [AlumniController::class, 'registerWa']);
 Route::post('/register-wa2', [AlumniController::class, 'registerWa']);
+Route::post('/order-tiket', [BaseController::class, 'orderTiket']);
 Route::post('/info-nra', [AlumniController::class, 'getNra']);
 
 Route::prefix('mobile')->group(function () {

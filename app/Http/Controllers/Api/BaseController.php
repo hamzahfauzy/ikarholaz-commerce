@@ -9,6 +9,7 @@ use App\Models\Price;
 use App\Models\Alumni;
 use App\Models\Jolali;
 use App\Models\WaBlast;
+use App\Models\{User,Customer,Transaction,TransactionItem,Product,Payment};
 use App\Models\Ref\Tripay;
 use App\Models\Ref\District;
 use App\Models\Ref\Province;
@@ -16,6 +17,9 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Ref\ShippingRates;
 use App\Http\Controllers\Controller;
+use Validator;
+use DB;
+use App\Libraries\NotifAction;
 
 class BaseController extends Controller
 {
@@ -251,5 +255,164 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
         file_put_contents($file_to_save, $pdf->output());
 
         return $file_to_save;
+    }
+    
+    function orderTiket(Request $request)
+    {
+        $paymentChannel = (array) $this->paymentChannel();
+        $payments = $paymentChannel['data'];
+        $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
+        $paymentChannel = implode(',',$paymentChannel);
+        // validation
+        $validator = Validator::make($request->all(), [
+          'slug' => 'required|exists:products',
+          'name' => 'required',
+          'pg'   => 'required|in:'.$paymentChannel,
+        ], 
+        [
+            'slug.required' => 'Kode tiket tidak boleh kosong!',
+            'slug.exists' => 'Kode tiket tidak valid!',
+            'pg.required' => 'Metode pembayaran tidak boleh kosong!',
+            'pg.in' => 'Metode pembayaran tidak valid!',
+        ]);
+        
+        if ($validator->fails()) {
+            $error =  $validator->getMessageBag()->first();
+            WaBlast::webisnisSend($request->sender, $request->phone, $error);
+            return response()->json([
+                'status' => 'failed',
+                'errors' => $error
+            ], 400);
+        }
+        
+        $key = array_search($request->payment_method, array_column($payments, 'code'));
+        $payment = $payments[$key];
+        $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+        DB::beginTransaction();
+        try {
+            // create user first if not exists
+            $user = User::create([
+                'name' => $request->name,
+                'email' => strtotime('now').'@randomuser.com',
+                'password' => strtotime('now'),
+            ]);
+
+            $custData = [
+                'user_id' => $user->id,
+                'first_name' => $request->name,
+                'last_name' => ' ',
+                'email' => $user->email,
+                'phone_number' => $request->phone,
+            ];
+            
+            // create customer first
+            $customer = Customer::create($custData);
+
+            // then create transaction
+            $transaction = Transaction::create([
+                'customer_id' => $customer->id,
+                'status'      => 'checkout'
+            ]);
+            
+            $singleProduct = Product::where('slug',$request->slug)->first();
+            
+            $transaction_item = TransactionItem::create([
+                'transaction_id' => $transaction->id,
+                'product_id'     => $singleProduct->id,
+                'amount'         => 1,
+                'total'          => $singleProduct->price,
+                'notes'          => ' '
+            ]);
+            
+            if(
+                (
+                    $singleProduct->stock_status == 0 || 
+                    empty($singleProduct->stock_status)
+                ) 
+                && 
+                $singleProduct->stock >= 1
+            )
+            {
+                $singleProduct->update([
+                    'stock' => $singleProduct->stock - 1
+                ]);
+            }
+            
+            $all_total_price = $singleProduct->price;
+
+            $cart_name = $singleProduct->name;
+            $order_items[] = [
+                'sku'       => $singleProduct->slug,
+                'name'      => $cart_name,
+                'price'     => (int) $singleProduct->price, // *cart()->get($cart->id),
+                'quantity'  => (int) 1
+            ];
+
+            $order_items_string .= $cart_name." x 1 : ".number_format($singleProduct->price)."\n";
+            
+            $privateKey = getenv('TRIPAY_PRIVATE_KEY');
+            $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
+            $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
+            
+            $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
+
+            $data = [
+                'method'            => $request->pg,
+                'merchant_ref'      => $merchantRef,
+                'amount'            => $all_total_price,
+                'customer_name'     => $user->name,
+                'customer_email'    => $user->email,
+                'customer_phone'    => $customer->phone_number,
+                'callback_url'      => route('tripay-callback'),
+                'order_items'       => $order_items,
+                'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
+            ];
+
+            $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
+            $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
+            if($response['success'] == false)
+            {
+                return response()->json($response,400);
+            }
+            $response_data = $response['data'];
+            $payments = [
+                'transaction_id' => $transaction->id,
+                'total' => $all_total_price,
+                'admin_fee' => $payment['total_fee']['flat'],
+                'checkout_url' => $response_data['checkout_url'],
+                'payment_type' => $request->pg,
+                'merchant_ref'      => $merchantRef,
+                'status' => $response_data['status'],
+                'payment_reference' => $response_data['reference'],
+                'payment_code' => $response_data['pay_code'],
+                'expired_time' => $response_data['expired_time'],
+            ];
+            $_payment = Payment::create($payments);
+
+            DB::commit();
+
+            if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
+
+                $total = $all_total_price;
+
+                $total += $payment['total_fee']['flat'];
+
+                $notifAction = new NotifAction;
+                $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string);
+                WaBlast::webisnisSend($request->sender, $request->phone, $message);
+
+            endif;
+
+            // return redirect()->to($response_data['checkout_url']);
+            WaBlast::webisnisSend($request->sender, $request->phone, "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']);
+            return response()->json([
+                'status' => 'succes',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+
+            
     }
 }

@@ -158,4 +158,30 @@ class WaBlast
         sleep(1); #do not delete!
         return $response;
     }
+    
+    function webisnisSend($sender, $phone, $pesan)
+    {
+        $data = [
+            'api_key' => env('WA_API'),
+            'sender'  => $sender,
+            'number'  => $phone,
+            'message' => $pesan
+        ];
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('WA_URL')."/app/api/send-message",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode($data))
+        );
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return json_encode($response);
+    }
 }
