@@ -41,7 +41,7 @@ class PdfAction
 
             if(empty($participants))
             {
-                $partiipants[] = [$customer->full_name,''];
+                $participants[] = [$customer->full_name,''];
             }
     
             $flip = array_map(null, ...$participants);
