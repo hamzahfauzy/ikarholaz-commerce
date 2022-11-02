@@ -38,6 +38,11 @@ class PdfAction
                     $participants[$key][] = $cf_value->field_value;
                 }
             }
+
+            if(empty($participants))
+            {
+                $partiipants[] = [$customer->full_name,''];
+            }
     
             $flip = array_map(null, ...$participants);
             $part = [];
@@ -52,7 +57,7 @@ class PdfAction
 
             foreach($flip as $ps)
             {
-                $p = $start.', '.$ps[0].', '.$ps[1];
+                $p = $start.', '.$ps[0].(isset($ps[1])?', '.$ps[1]:'');
                 $part[] = $p;
     
                 $qr_content = $start.';'.$transaction->id.';'.$ps[0].';'.$ps[1];
