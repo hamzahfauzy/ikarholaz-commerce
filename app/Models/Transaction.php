@@ -97,7 +97,7 @@ class Transaction extends Model
     {
         $item_total = $this->transactionItems()->sum('total');
         $shipping   = $this->shipping->service_rates ?? 0;
-        $payment    = $this->payment->admin_fee;
+        $payment    = $this->payment ? $this->payment->admin_fee : 0;
         return $item_total+$shipping+$payment;
     }
 
