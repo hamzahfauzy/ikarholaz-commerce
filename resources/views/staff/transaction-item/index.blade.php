@@ -116,7 +116,7 @@
                                             <td></td>
                                             <td>Metode Pembayaran</td>
                                             <td></td>
-                                            <td>{{$transactionItems[0]->transaction->payment->payment_type}}</td>
+                                            <td>{{$transactionItems[0]->transaction->payment?$transactionItems[0]->transaction->payment->payment_type:''}}</td>
                                         </tr>
                                         <tr>
                                             <td></td>
