@@ -123,7 +123,7 @@
                                             <td></td>
                                             <td>Admin Fee</td>
                                             <td></td>
-                                            <td>{{$transactionItems[0]->transaction->payment->admin_fee_formated}}</td>
+                                            <td>{{$transactionItems[0]->transaction->payment?$transactionItems[0]->transaction->payment->admin_fee_formated:0}}</td>
                                         </tr>
                                         <tr>
                                             <td></td>
