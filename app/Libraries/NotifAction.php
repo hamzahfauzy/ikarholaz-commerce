@@ -168,6 +168,6 @@ Terima kasih.";
 
     function regticketSuccess($event, $alumni)
     {
-        return "Terima kasih telah melakukan pendaftaran Event $event->name. Pendaftaran atas nama: $alumni->name - NRA: $alumni->NRA - Alumni: $alumni->graduation_year akan kami verifikasi berdasar syarat dan ketentuan berlaku.";
+        return "Terima kasih telah melakukan pendaftaran Event $event->name. Pendaftaran atas Nama: *$alumni->name* - NRA: *$alumni->NRA* - Alumni: $alumni->graduation_year akan kami verifikasi berdasar syarat dan ketentuan berlaku.";
     }
 }

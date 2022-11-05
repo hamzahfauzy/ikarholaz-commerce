@@ -76,7 +76,7 @@
                                             <td>{{ $transaction->id }}</td>
 											<td>{{ $transaction->total_formated }}</td>
 											<td>{{ $transaction->status == 'PAID' ? $transaction->updated_at->format('d/m/Y') : '' }}</td>
-											<td>{{ $transaction->payment->payment_type }}</td>
+											<td>{{ $transaction->payment?$transaction->payment->payment_type:'-' }}</td>
 											<td>{{ $transaction->customer->phone_number }}</td>
 											<td>
                                             {{ $transaction->shipping ? $transaction->shipping->courier_name.' - '.$transaction->shipping->service_name : '-' }}
