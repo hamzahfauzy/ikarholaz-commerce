@@ -415,4 +415,113 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
             
     }
+
+    function regTiket(Request $request)
+    {
+        // validation
+        $validator = Validator::make($request->all(), [
+          'slug' => 'required|exists:products',
+          'phone' => 'required|exists:users,email'
+        ], 
+        [
+            'slug.required' => 'Kode tiket tidak boleh kosong!',
+            'slug.exists' => 'Kode tiket tidak valid!',
+            'phone.exists' => 'Maaf, pendaftaran HUT4 IKARHOLAZ ditolak, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
+        ]);
+        
+        if ($validator->fails()) {
+            $error =  $validator->getMessageBag()->first();
+            WaBlast::webisnisSend($request->sender, $request->phone, $error);
+            return response()->json([
+                'status' => 'failed',
+                'errors' => $error
+            ], 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            $phone = str_replace('+','',$request->phone);
+            $user = User::where('email',$request->phone)->first();
+
+            if(!$user->alumni)
+            {
+                WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
+                return response()->json([
+                    'status' => 'succes',
+                ]);
+            }
+
+            $customer = Customer::where('user_id',$user->id);
+
+            if(!$customer->exists())
+            {
+                $customer = Customer::create([
+                    'user_id' => $user->id,
+                    'first_name' => $user->name,
+                    'last_name' => ' ',
+                    'email' => $user->email,
+                    'phone_number' => $phone,
+                ]);
+            }
+            else
+            {
+                $customer = $customer->first();
+            }
+
+            $singleProduct = Product::where('slug',$request->slug)->first();
+
+            if(
+                (
+                    $singleProduct->stock_status == 0 || 
+                    empty($singleProduct->stock_status)
+                ) 
+                && 
+                $singleProduct->stock >= 1
+            )
+            {
+                $singleProduct->update([
+                    'stock' => $singleProduct->stock - 1
+                ]);
+            }
+            else
+            {
+                WaBlast::webisnisSend($request->sender, $phone, "Maaf, saat ini tiket sudah sold out atau tidak tersedia.");
+                return response()->json([
+                    'status' => 'succes',
+                ]);
+            }
+
+            // then create transaction
+            $transaction = Transaction::create([
+                'customer_id' => $customer->id,
+                'status'      => 'checkout'
+            ]);
+            
+            $transaction_item = TransactionItem::create([
+                'transaction_id' => $transaction->id,
+                'product_id'     => $singleProduct->id,
+                'amount'         => 1,
+                'total'          => $singleProduct->price,
+                'notes'          => ' '
+            ]);
+
+            DB::commit();
+
+            if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
+
+                $notifAction = new NotifAction;
+                $message = $notifAction->regticketSuccess($singleProduct, $user->alumni);
+                WaBlast::webisnisSend($request->sender, $phone, $message);
+
+            endif;
+
+            // return redirect()->to($response_data['checkout_url']);
+            return response()->json([
+                'status' => 'succes',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+    }
 }

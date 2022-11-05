@@ -165,4 +165,9 @@ Terima kasih.";
         }
         WaBlast::send($customer->phone_number,$message);
     }
+
+    function regticketSuccess($event, $alumni)
+    {
+        return "Terima kasih telah melakukan pendaftaran Event $event->name. Pendaftaran atas nama: $alumni->name - NRA: $alumni->NRA - Alumni: $alumni->graduation_year akan kami verifikasi berdasar syarat dan ketentuan berlaku.";
+    }
 }
