@@ -447,8 +447,9 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             {
                 WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
                 return response()->json([
-                    'status' => 'succes',
-                ]);
+                    'status' => 'fail',
+                    'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
+                ], 400);
             }
 
             $customer = Customer::where('user_id',$user->id);
@@ -484,12 +485,13 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 ]);
             }
 
-            if(($singleProduct->stock_status == 0 || empty($singleProduct->stock_status)) && $singleProduct->stock == 0)
+            if(!$singleProduct->stock_status && $singleProduct->stock == 0)
             {
                 WaBlast::webisnisSend($request->sender, $phone, "Maaf, saat ini tiket sudah sold out atau tidak tersedia.");
                 return response()->json([
-                    'status' => 'succes',
-                ]);
+                    'status' => 'fail',
+                    'message' => "Maaf, saat ini tiket sudah sold out atau tidak tersedia."
+                ], 400);
             }
 
             // then create transaction
