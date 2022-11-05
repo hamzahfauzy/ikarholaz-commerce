@@ -483,7 +483,8 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'stock' => $singleProduct->stock - 1
                 ]);
             }
-            else
+
+            if(($singleProduct->stock_status == 0 || empty($singleProduct->stock_status)) && $single->stok == 0)
             {
                 WaBlast::webisnisSend($request->sender, $phone, "Maaf, saat ini tiket sudah sold out atau tidak tersedia.");
                 return response()->json([
