@@ -418,25 +418,21 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
     function regTiket(Request $request)
     {
-        // validation
-        $validator = Validator::make($request->all(), [
-          'slug' => 'required|exists:products',
-          'phone' => 'required|exists:users,email'
-        ], 
-        [
-            'slug.required' => 'Kode tiket tidak boleh kosong!',
-            'slug.exists' => 'Kode tiket tidak valid!',
-            'phone.exists' => 'Maaf, pendaftaran HUT4 IKARHOLAZ ditolak, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
-        ]);
-        
-        if ($validator->fails()) {
-            $error =  $validator->getMessageBag()->first();
-            WaBlast::webisnisSend($request->sender, $request->phone, $error);
+        $options = [
+            'hut4-free',
+            'hut4-35k'
+        ];
+
+        if(!isset($options[$request->option]))
+        {
+            WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
             return response()->json([
                 'status' => 'failed',
                 'errors' => $error
             ], 400);
         }
+
+        $slug = $options[$request->option];
 
         DB::beginTransaction();
         try {
@@ -469,7 +465,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 $customer = $customer->first();
             }
 
-            $singleProduct = Product::where('slug',$request->slug)->first();
+            $singleProduct = Product::where('slug',$slug)->first();
 
             if(
                 (
@@ -526,5 +522,88 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             DB::rollback();
             throw $th;
         }
+    }
+
+    function regTiketOption(Request $request)
+    {
+        // validation
+        $validator = Validator::make($request->all(), [
+          'phone' => 'required|exists:users,email'
+        ], 
+        [
+            'phone.exists' => 'Maaf, pendaftaran HUT4 IKARHOLAZ ditolak, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
+        ]);
+        
+        if ($validator->fails()) {
+            $error =  $validator->getMessageBag()->first();
+            WaBlast::webisnisSend($request->sender, $request->phone, $error);
+            return response()->json([
+                'status' => 'failed',
+                'errors' => $error
+            ], 400);
+        }
+
+        DB::beginTransaction();
+        try {
+            $phone = str_replace('+','',$request->phone);
+            $user = User::where('email',$request->phone)->first();
+
+            if(!$user->alumni)
+            {
+                WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
+                ], 400);
+            }
+
+            
+            WaBlast::webisnisSend($request->sender, $phone, "*Silahkan pilih salah satu :*
+1. Bawa makanan sendiri (FREE)
+2. Bayar 35k");
+
+            return response()->json([
+                'status' => 'succes',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+    }
+
+    function cekNra(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|exists:users,email'
+        ], 
+        [
+            'phone.exists' => 'Maaf, Voting ditolak, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
+        ]);
+        
+        if ($validator->fails()) {
+            $error =  $validator->getMessageBag()->first();
+            // WaBlast::webisnisSend($request->sender, $request->phone, $error);
+            return response()->json([
+                'status' => 'failed',
+                'errors' => $error
+            ], 400);
+        }
+
+        $phone = str_replace('+','',$request->phone);
+        $user = User::where('email',$request->phone)->first();
+
+        if(!$user->alumni)
+        {
+            // WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
+            return response()->json([
+                'status' => 'failed',
+                'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data'   => $user->alumni
+        ]);
     }
 }
