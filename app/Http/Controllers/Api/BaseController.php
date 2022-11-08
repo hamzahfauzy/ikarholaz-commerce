@@ -577,7 +577,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             'phone' => 'required|exists:users,email'
         ], 
         [
-            'phone.exists' => 'Maaf, Voting ditolak, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
+            'phone.exists' => 'Maaf, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
         ]);
         
         if ($validator->fails()) {
