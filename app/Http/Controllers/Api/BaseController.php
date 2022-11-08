@@ -606,4 +606,42 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             'data'   => $user->alumni
         ]);
     }
+
+    function sendCandidates(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|exists:users,email'
+        ], 
+        [
+            'phone.exists' => 'Maaf, no WA anda belum terdaftar di NRA System. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.'
+        ]);
+        
+        if ($validator->fails()) {
+            $error =  $validator->getMessageBag()->first();
+            WaBlast::webisnisSend($request->sender, $request->phone, $error);
+            return response()->json([
+                'status' => 'failed',
+                'errors' => $error
+            ], 400);
+        }
+
+        $phone = str_replace('+','',$request->phone);
+        $user = User::where('email',$request->phone)->first();
+
+        if(!$user->alumni)
+        {
+            WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
+            return response()->json([
+                'status' => 'failed',
+                'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
+            ], 400);
+        }
+        
+        WaBlast::webisnisSend($request->sender, $phone, "Berikut adalah data kandidat voting. Silahkan pilih sesuai dengan nomor urut
+".$request->data);
+        return response()->json([
+            'status' => 'success',
+            'data'   => $user->alumni
+        ]);
+    }
 }
