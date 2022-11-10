@@ -523,7 +523,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
 
                 $data = [
-                    'method'            => $paymentChannel[$pgIndex]['code'],
+                    'method'            => $paymentChannel[$pgIndex],
                     'merchant_ref'      => $merchantRef,
                     'amount'            => $all_total_price,
                     'customer_name'     => $user->name,
@@ -546,7 +546,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'total' => $all_total_price,
                     'admin_fee' => $payment['total_fee']['flat'],
                     'checkout_url' => $response_data['checkout_url'],
-                    'payment_type' => $paymentChannel[$pgIndex]['code'],
+                    'payment_type' => $paymentChannel[$pgIndex],
                     'merchant_ref'      => $merchantRef,
                     'status' => $response_data['status'],
                     'payment_reference' => $response_data['reference'],
