@@ -438,19 +438,28 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             $option = explode('#',$request->option); // 0 = slug, 1 = option index, 2 = pg index
             $paymentChannel = (array) $this->paymentChannel();
             $payments = $paymentChannel['data'];
+            $payment  = false;
             $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
-            $pgIndex = $option[2]-1;
-            if(!isset($paymentChannel[$pgIndex]))
+            $order_items_string = "";
+            if($option[2] == count($payments))
             {
-                WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan pembayaran yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
-                return response()->json([
-                    'status' => 'failed',
-                    'errors' => $error
-                ], 400);
+                $payment = 'cash';
             }
-
-            $payment = $payments[$pgIndex];
-            $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+            else
+            {
+                $pgIndex = $option[2]-1;
+                if(!isset($payments[$pgIndex]))
+                {
+                    WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan pembayaran yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
+                    return response()->json([
+                        'status' => 'failed',
+                        'errors' => $error
+                    ], 400);
+                }
+    
+                $payment = $payments[$pgIndex];
+                $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+            }
             DB::beginTransaction();
             try {
 
@@ -521,44 +530,60 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
                 $order_items_string .= $cart_name." x 1 : ".number_format($singleProduct->price)."\n";
                 
-                $privateKey = getenv('TRIPAY_PRIVATE_KEY');
-                $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
-                $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
-                
-                $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
-
-                $data = [
-                    'method'            => $paymentChannel[$pgIndex],
-                    'merchant_ref'      => $merchantRef,
-                    'amount'            => $all_total_price,
-                    'customer_name'     => $customer->full_name,
-                    'customer_email'    => $customer->email,
-                    'customer_phone'    => $customer->phone_number,
-                    'callback_url'      => route('tripay-callback'),
-                    'order_items'       => $order_items,
-                    'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
-                ];
-
-                $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
-                $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
-                if($response['success'] == false)
+                if(is_array($payment))
                 {
-                    WaBlast::webisnisSend($request->sender, $phone, "Tripay Error : ". $response['message']);
-                    return response()->json($response,400);
+                    $privateKey = getenv('TRIPAY_PRIVATE_KEY');
+                    $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
+                    $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
+                    
+                    $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
+    
+                    $data = [
+                        'method'            => $paymentChannel[$pgIndex],
+                        'merchant_ref'      => $merchantRef,
+                        'amount'            => $all_total_price,
+                        'customer_name'     => $customer->full_name,
+                        'customer_email'    => $customer->email,
+                        'customer_phone'    => $customer->phone_number,
+                        'callback_url'      => route('tripay-callback'),
+                        'order_items'       => $order_items,
+                        'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
+                    ];
+    
+                    $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
+                    $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
+                    if($response['success'] == false)
+                    {
+                        WaBlast::webisnisSend($request->sender, $phone, "Tripay Error : ". $response['message']);
+                        return response()->json($response,400);
+                    }
+                    $response_data = $response['data'];
+                    $payments = [
+                        'transaction_id' => $transaction->id,
+                        'total' => $all_total_price,
+                        'admin_fee' => $payment['total_fee']['flat'],
+                        'checkout_url' => $response_data['checkout_url'],
+                        'payment_type' => $paymentChannel[$pgIndex],
+                        'merchant_ref'      => $merchantRef,
+                        'status' => $response_data['status'],
+                        'payment_reference' => $response_data['reference'],
+                        'payment_code' => $response_data['pay_code'],
+                        'expired_time' => $response_data['expired_time'],
+                    ];
+                }else{
+                    $payments = [
+                        'transaction_id' => $transaction->id,
+                        'total' => $all_total_price,
+                        'admin_fee' => 0,
+                        'checkout_url' => "",
+                        'payment_type' => 'cash',
+                        'merchant_ref'      => 'cash',
+                        'status' => "UNPAID",
+                        'payment_reference' => "",
+                        'payment_code' => "",
+                        'expired_time' => "",
+                    ];
                 }
-                $response_data = $response['data'];
-                $payments = [
-                    'transaction_id' => $transaction->id,
-                    'total' => $all_total_price,
-                    'admin_fee' => $payment['total_fee']['flat'],
-                    'checkout_url' => $response_data['checkout_url'],
-                    'payment_type' => $paymentChannel[$pgIndex],
-                    'merchant_ref'      => $merchantRef,
-                    'status' => $response_data['status'],
-                    'payment_reference' => $response_data['reference'],
-                    'payment_code' => $response_data['pay_code'],
-                    'expired_time' => $response_data['expired_time'],
-                ];
                 $_payment = Payment::create($payments);
 
                 DB::commit();
@@ -567,7 +592,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
                     $total = $all_total_price;
 
-                    $total += $payment['total_fee']['flat'];
+                    if(is_array($payment)) $total += $payment['total_fee']['flat'];
 
                     $notifAction = new NotifAction;
                     $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string);
@@ -702,6 +727,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 $message .= ($i+1).'. '.$p['code']."
 ";
                 }
+$message .= ($i+1).'. CASH';
                 // $paymentChannel = implode(',',$paymentChannel);
                 WaBlast::webisnisSend($request->sender, $phone, $message);
                 return response()->json([
