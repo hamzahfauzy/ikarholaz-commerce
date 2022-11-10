@@ -418,110 +418,276 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
     function regTiket(Request $request)
     {
+        $phone = str_replace('+','',$request->phone);
         $options = [
             'hut4-free',
             'hut4-35k'
         ];
-
-        if(!isset($options[$request->option]))
+        $user = User::where('email',$request->phone)->first();
+        if(!$user->alumni)
         {
-            WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
+            WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
             return response()->json([
-                'status' => 'failed',
-                'errors' => $error
+                'status' => 'fail',
+                'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
             ], 400);
         }
 
-        $slug = $options[$request->option];
-
-        DB::beginTransaction();
-        try {
-            $phone = str_replace('+','',$request->phone);
-            $user = User::where('email',$request->phone)->first();
-
-            if(!$user->alumni)
+        if(strpos($request->option,"#") !== false)
+        {
+            $option = explode('#',$request->option); // 0 = slug, 1 = option index, 2 = pg index
+            $paymentChannel = (array) $this->paymentChannel();
+            $payments = $paymentChannel['data'];
+            $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
+            $pgIndex = $option[2]-1;
+            if(!isset($paymentChannel[$pgIndex]))
             {
-                WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
+                WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan pembayaran yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
                 return response()->json([
-                    'status' => 'fail',
-                    'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
+                    'status' => 'failed',
+                    'errors' => $error
                 ], 400);
             }
 
-            $customer = Customer::where('user_id',$user->id);
+            $payment = $payments[$pgIndex];
+            $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+            DB::beginTransaction();
+            try {
 
-            if(!$customer->exists())
-            {
-                $customer = Customer::create([
+                $custData = [
                     'user_id' => $user->id,
-                    'first_name' => $user->name,
+                    'first_name' => $user->alumni->name,
                     'last_name' => ' ',
-                    'email' => $user->email,
+                    'email' => $user->alumni->email,
                     'phone_number' => $phone,
+                ];
+                
+                // create customer first
+                $customer = Customer::create($custData);
+
+                // then create transaction
+                $transaction = Transaction::create([
+                    'customer_id' => $customer->id,
+                    'status'      => 'checkout'
                 ]);
+                
+                $singleProduct = Product::where('slug',$options[$option[1]-1])->first();
+                
+                $transaction_item = TransactionItem::create([
+                    'transaction_id' => $transaction->id,
+                    'product_id'     => $singleProduct->id,
+                    'amount'         => 1,
+                    'total'          => $singleProduct->price,
+                    'notes'          => ' '
+                ]);
+                
+                if(
+                    (
+                        $singleProduct->stock_status == 0 || 
+                        empty($singleProduct->stock_status)
+                    ) 
+                    && 
+                    $singleProduct->stock >= 1
+                )
+                {
+                    $singleProduct->update([
+                        'stock' => $singleProduct->stock - 1
+                    ]);
+                }
+                
+                $all_total_price = $singleProduct->price;
+
+                $cart_name = $singleProduct->name;
+                $order_items[] = [
+                    'sku'       => $singleProduct->slug,
+                    'name'      => $cart_name,
+                    'price'     => (int) $singleProduct->price, // *cart()->get($cart->id),
+                    'quantity'  => (int) 1
+                ];
+
+                $order_items_string .= $cart_name." x 1 : ".number_format($singleProduct->price)."\n";
+                
+                $privateKey = getenv('TRIPAY_PRIVATE_KEY');
+                $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
+                $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
+                
+                $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
+
+                $data = [
+                    'method'            => $request->pg,
+                    'merchant_ref'      => $merchantRef,
+                    'amount'            => $all_total_price,
+                    'customer_name'     => $user->name,
+                    'customer_email'    => $user->email,
+                    'customer_phone'    => $customer->phone_number,
+                    'callback_url'      => route('tripay-callback'),
+                    'order_items'       => $order_items,
+                    'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
+                ];
+
+                $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
+                $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
+                if($response['success'] == false)
+                {
+                    return response()->json($response,400);
+                }
+                $response_data = $response['data'];
+                $payments = [
+                    'transaction_id' => $transaction->id,
+                    'total' => $all_total_price,
+                    'admin_fee' => $payment['total_fee']['flat'],
+                    'checkout_url' => $response_data['checkout_url'],
+                    'payment_type' => $request->pg,
+                    'merchant_ref'      => $merchantRef,
+                    'status' => $response_data['status'],
+                    'payment_reference' => $response_data['reference'],
+                    'payment_code' => $response_data['pay_code'],
+                    'expired_time' => $response_data['expired_time'],
+                ];
+                $_payment = Payment::create($payments);
+
+                DB::commit();
+
+                if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
+
+                    $total = $all_total_price;
+
+                    $total += $payment['total_fee']['flat'];
+
+                    $notifAction = new NotifAction;
+                    $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string);
+                    WaBlast::webisnisSend($request->sender, $request->phone, $message);
+
+                endif;
+
+                // return redirect()->to($response_data['checkout_url']);
+                WaBlast::webisnisSend($request->sender, $request->phone, "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']);
+                return response()->json([
+                    'status' => 'succes',
+                ]);
+            } catch (\Throwable $th) {
+                DB::rollback();
+                throw $th;
+            }
+        }
+        else
+        {
+    
+            $index = $request->option-1;
+    
+            if(!isset($options[$index]))
+            {
+                WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
+                return response()->json([
+                    'status' => 'failed',
+                    'errors' => $error
+                ], 400);
+            }
+    
+            $slug = $options[$index];
+            $singleProduct = Product::where('slug',$slug)->first();
+    
+            if($singleProduct->price == 0)
+            {
+                DB::beginTransaction();
+                try {
+                    $user = User::where('email',$request->phone)->first();
+        
+                    if(!$user->alumni)
+                    {
+                        WaBlast::webisnisSend($request->sender, $phone, "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut.");
+                        return response()->json([
+                            'status' => 'fail',
+                            'message' => "Maaf, tidak ada data alumni dengan nomor WA Anda. Lakukan pendaftaran Alumni melalui kanal tersedia, atau hubungi mimin untuk bantuan lebih lanjut."
+                        ], 400);
+                    }
+        
+                    $customer = Customer::where('user_id',$user->id);
+        
+                    if(!$customer->exists())
+                    {
+                        $customer = Customer::create([
+                            'user_id' => $user->id,
+                            'first_name' => $user->name,
+                            'last_name' => ' ',
+                            'email' => $user->email,
+                            'phone_number' => $phone,
+                        ]);
+                    }
+                    else
+                    {
+                        $customer = $customer->first();
+                    }
+        
+                    if(
+                        (
+                            $singleProduct->stock_status == 0 || 
+                            empty($singleProduct->stock_status)
+                        ) 
+                        && 
+                        $singleProduct->stock >= 1
+                    )
+                    {
+                        $singleProduct->update([
+                            'stock' => $singleProduct->stock - 1
+                        ]);
+                    }
+        
+                    if(!$singleProduct->stock_status && $singleProduct->stock == 0)
+                    {
+                        WaBlast::webisnisSend($request->sender, $phone, "Maaf, saat ini tiket sudah sold out atau tidak tersedia.");
+                        return response()->json([
+                            'status' => 'fail',
+                            'message' => "Maaf, saat ini tiket sudah sold out atau tidak tersedia."
+                        ], 400);
+                    }
+        
+                    // then create transaction
+                    $transaction = Transaction::create([
+                        'customer_id' => $customer->id,
+                        'status'      => 'checkout'
+                    ]);
+                    
+                    $transaction_item = TransactionItem::create([
+                        'transaction_id' => $transaction->id,
+                        'product_id'     => $singleProduct->id,
+                        'amount'         => 1,
+                        'total'          => $singleProduct->price,
+                        'notes'          => ' '
+                    ]);
+        
+                    DB::commit();
+        
+                    if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
+        
+                        $notifAction = new NotifAction;
+                        $message = $notifAction->regticketSuccess($singleProduct, $user->alumni);
+                        WaBlast::webisnisSend($request->sender, $phone, $message);
+        
+                    endif;
+        
+                    // return redirect()->to($response_data['checkout_url']);
+                    return response()->json([
+                        'status' => 'succes',
+                    ]);
+                } catch (\Throwable $th) {
+                    DB::rollback();
+                    throw $th;
+                }
             }
             else
             {
-                $customer = $customer->first();
-            }
-
-            $singleProduct = Product::where('slug',$slug)->first();
-
-            if(
-                (
-                    $singleProduct->stock_status == 0 || 
-                    empty($singleProduct->stock_status)
-                ) 
-                && 
-                $singleProduct->stock >= 1
-            )
-            {
-                $singleProduct->update([
-                    'stock' => $singleProduct->stock - 1
+                $paymentChannel = (array) $this->paymentChannel();
+                $payments = $paymentChannel['data'];
+                $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
+                $paymentChannel = implode(',',$paymentChannel);
+                WaBlast::webisnisSend($request->sender, $phone, $paymentChannel);
+                return response()->json([
+                    'status' => 'succes',
                 ]);
             }
-
-            if(!$singleProduct->stock_status && $singleProduct->stock == 0)
-            {
-                WaBlast::webisnisSend($request->sender, $phone, "Maaf, saat ini tiket sudah sold out atau tidak tersedia.");
-                return response()->json([
-                    'status' => 'fail',
-                    'message' => "Maaf, saat ini tiket sudah sold out atau tidak tersedia."
-                ], 400);
-            }
-
-            // then create transaction
-            $transaction = Transaction::create([
-                'customer_id' => $customer->id,
-                'status'      => 'checkout'
-            ]);
-            
-            $transaction_item = TransactionItem::create([
-                'transaction_id' => $transaction->id,
-                'product_id'     => $singleProduct->id,
-                'amount'         => 1,
-                'total'          => $singleProduct->price,
-                'notes'          => ' '
-            ]);
-
-            DB::commit();
-
-            if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
-
-                $notifAction = new NotifAction;
-                $message = $notifAction->regticketSuccess($singleProduct, $user->alumni);
-                WaBlast::webisnisSend($request->sender, $phone, $message);
-
-            endif;
-
-            // return redirect()->to($response_data['checkout_url']);
-            return response()->json([
-                'status' => 'succes',
-            ]);
-        } catch (\Throwable $th) {
-            DB::rollback();
-            throw $th;
         }
+
     }
 
     function regTiketOption(Request $request)
