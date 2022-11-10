@@ -531,7 +531,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'method'            => $paymentChannel[$pgIndex],
                     'merchant_ref'      => $merchantRef,
                     'amount'            => $all_total_price,
-                    'customer_name'     => $customer->name,
+                    'customer_name'     => $customer->full_name,
                     'customer_email'    => $customer->email,
                     'customer_phone'    => $customer->phone_number,
                     'callback_url'      => route('tripay-callback'),
