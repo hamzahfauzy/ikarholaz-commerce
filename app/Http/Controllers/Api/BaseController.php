@@ -680,7 +680,12 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 $paymentChannel = (array) $this->paymentChannel();
                 $payments = $paymentChannel['data'];
                 $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
-                $paymentChannel = implode(',',$paymentChannel);
+                $message = "*Silahkan Pilih Metode Pembayaran :*";
+                foreach($paymentChannel as $i => $p)
+                {
+$message .= ($i+1).'. '.$p['code'];
+                }
+                // $paymentChannel = implode(',',$paymentChannel);
                 WaBlast::webisnisSend($request->sender, $phone, $paymentChannel);
                 return response()->json([
                     'status' => 'succes',
