@@ -695,7 +695,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 $message .= ($i+1).'. '.$p['code'];
                 }
                 // $paymentChannel = implode(',',$paymentChannel);
-                WaBlast::webisnisSend($request->sender, $phone, $paymentChannel);
+                WaBlast::webisnisSend($request->sender, $phone, $message);
                 return response()->json([
                     'status' => 'succes',
                 ]);
