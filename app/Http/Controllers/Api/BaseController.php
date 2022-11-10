@@ -458,7 +458,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'user_id' => $user->id,
                     'first_name' => $user->alumni->name,
                     'last_name' => ' ',
-                    'email' => $user->email,
+                    'email' => strtotime('now').'@randomuser.com',
                     'phone_number' => $phone,
                 ];
 
