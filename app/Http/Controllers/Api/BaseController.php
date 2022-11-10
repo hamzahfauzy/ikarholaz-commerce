@@ -543,6 +543,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
                 if($response['success'] == false)
                 {
+                    WaBlast::webisnisSend($request->sender, $phone, "Tripay Error : ". $response['message']);
                     return response()->json($response,400);
                 }
                 $response_data = $response['data'];
@@ -570,12 +571,12 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
                     $notifAction = new NotifAction;
                     $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string);
-                    WaBlast::webisnisSend($request->sender, $request->phone, $message);
+                    WaBlast::webisnisSend($request->sender, $phone, $message);
 
                 endif;
 
                 // return redirect()->to($response_data['checkout_url']);
-                WaBlast::webisnisSend($request->sender, $request->phone, "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']);
+                WaBlast::webisnisSend($request->sender, $phone, "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']);
                 return response()->json([
                     'status' => 'succes',
                 ]);
