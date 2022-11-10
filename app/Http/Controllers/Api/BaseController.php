@@ -461,9 +461,18 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'email' => $user->alumni->email,
                     'phone_number' => $phone,
                 ];
+
+                $customer = Customer::where('email',$user->alumni->email);
+                if($customer->exists())
+                {
+                    $customer = $customer->first();
+                }
+                else
+                {
+                    // create customer first
+                    $customer = Customer::create($custData);
+                }
                 
-                // create customer first
-                $customer = Customer::create($custData);
 
                 // then create transaction
                 $transaction = Transaction::create([
