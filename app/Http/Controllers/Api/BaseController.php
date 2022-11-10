@@ -463,13 +463,13 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             $payment  = false;
             $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
             $order_items_string = "";
-            if($option[2] == count($payments))
+            $pgIndex = $option[2]-1;
+            if($pgIndex == count($payments))
             {
                 $payment = 'cash';
             }
             else
             {
-                $pgIndex = $option[2]-1;
                 if(!isset($payments[$pgIndex]))
                 {
                     WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan pembayaran yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
