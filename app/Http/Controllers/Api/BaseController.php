@@ -461,13 +461,18 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'email' => strtotime('now').'@randomuser.com',
                     'phone_number' => $phone,
                 ];
-
-                $customer = Customer::where('email',$user->alumni->email);
-                if($customer->exists())
+                $customer_valid = false;
+                if($user->alumni->email && filter_var($user->alumni->email, FILTER_VALIDATE_EMAIL)) 
                 {
-                    $customer = $customer->first();
+                    $customer = Customer::where('email',$user->alumni->email);
+                    if($customer->exists())
+                    {
+                        $customer = $customer->first();
+                        $customer_valid = true;
+                    }
                 }
-                else
+                
+                if(!$customer_valid)
                 {
                     // create customer first
                     $customer = Customer::create($custData);
