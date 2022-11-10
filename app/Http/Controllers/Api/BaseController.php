@@ -262,7 +262,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
         $paymentChannel = (array) $this->paymentChannel();
         $payments = $paymentChannel['data'];
         $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
-        $paymentChannel = implode(',',$paymentChannel);
+        $paymentChannel = implode(',',$paymentChannel).',CASH';
         // validation
         $validator = Validator::make($request->all(), [
           'slug' => 'required|exists:products',
@@ -285,9 +285,12 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             ], 400);
         }
         
-        $key = array_search($request->payment_method, array_column($payments, 'code'));
-        $payment = $payments[$key];
-        $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+        if($request->pg != 'CASH')
+        {
+            $key = array_search($request->pg, array_column($payments, 'code'));
+            $payment = $payments[$key];
+            $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+        }
         DB::beginTransaction();
         try {
             // create user first if not exists
@@ -350,43 +353,62 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
             $order_items_string .= $cart_name." x 1 : ".number_format($singleProduct->price)."\n";
             
-            $privateKey = getenv('TRIPAY_PRIVATE_KEY');
-            $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
-            $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
-            
-            $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
-
-            $data = [
-                'method'            => $request->pg,
-                'merchant_ref'      => $merchantRef,
-                'amount'            => $all_total_price,
-                'customer_name'     => $user->name,
-                'customer_email'    => $user->email,
-                'customer_phone'    => $customer->phone_number,
-                'callback_url'      => route('tripay-callback'),
-                'order_items'       => $order_items,
-                'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
-            ];
-
-            $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
-            $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
-            if($response['success'] == false)
+            if($request->pg != 'CASH')
             {
-                return response()->json($response,400);
+
+                $privateKey = getenv('TRIPAY_PRIVATE_KEY');
+                $merchantCode = getenv('TRIPAY_MERCHANT_CODE');
+                $merchantRef = strtotime('now').'-'.$transaction->id; // getenv('TRIPAY_MERCHANT_REF'); Kode Unik Transaksi
+                
+                $signature = hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey);
+    
+                $data = [
+                    'method'            => $request->pg,
+                    'merchant_ref'      => $merchantRef,
+                    'amount'            => $all_total_price,
+                    'customer_name'     => $user->name,
+                    'customer_email'    => $user->email,
+                    'customer_phone'    => $customer->phone_number,
+                    'callback_url'      => route('tripay-callback'),
+                    'order_items'       => $order_items,
+                    'signature'         => hash_hmac('sha256', $merchantCode.$merchantRef.$all_total_price, $privateKey)
+                ];
+    
+                $tripay = new Tripay($privateKey, getenv('TRIPAY_API_KEY'));
+                $response = $tripay->curlAPI($tripay->URL_transMp,$data,'POST');
+                if($response['success'] == false)
+                {
+                    return response()->json($response,400);
+                }
+                $response_data = $response['data'];
+                $payments = [
+                    'transaction_id' => $transaction->id,
+                    'total' => $all_total_price,
+                    'admin_fee' => $payment['total_fee']['flat'],
+                    'checkout_url' => $response_data['checkout_url'],
+                    'payment_type' => $request->pg,
+                    'merchant_ref'      => $merchantRef,
+                    'status' => $response_data['status'],
+                    'payment_reference' => $response_data['reference'],
+                    'payment_code' => $response_data['pay_code'],
+                    'expired_time' => $response_data['expired_time'],
+                ];
             }
-            $response_data = $response['data'];
-            $payments = [
-                'transaction_id' => $transaction->id,
-                'total' => $all_total_price,
-                'admin_fee' => $payment['total_fee']['flat'],
-                'checkout_url' => $response_data['checkout_url'],
-                'payment_type' => $request->pg,
-                'merchant_ref'      => $merchantRef,
-                'status' => $response_data['status'],
-                'payment_reference' => $response_data['reference'],
-                'payment_code' => $response_data['pay_code'],
-                'expired_time' => $response_data['expired_time'],
-            ];
+            else
+            {
+                $payments = [
+                    'transaction_id' => $transaction->id,
+                    'total' => $all_total_price,
+                    'admin_fee' => 0,
+                    'checkout_url' => "",
+                    'payment_type' => 'cash',
+                    'merchant_ref'      => 'cash',
+                    'status' => "UNPAID",
+                    'payment_reference' => "",
+                    'payment_code' => "",
+                    'expired_time' => "",
+                ];
+            }
             $_payment = Payment::create($payments);
 
             DB::commit();
@@ -395,7 +417,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 
                 $total = $all_total_price;
 
-                $total += $payment['total_fee']['flat'];
+                if($request->pg != 'CASH') $total += $payment['total_fee']['flat'];
 
                 $notifAction = new NotifAction;
                 $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string);
