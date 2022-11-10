@@ -749,7 +749,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 $message .= ($i+1).'. '.$p['code']."
 ";
                 }
-$message .= ($i+2).'. CASH';
+$message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri Petugas)';
                 // $paymentChannel = implode(',',$paymentChannel);
                 WaBlast::webisnisSend($request->sender, $phone, $message);
                 return response()->json([
