@@ -458,7 +458,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     'user_id' => $user->id,
                     'first_name' => $user->alumni->name,
                     'last_name' => ' ',
-                    'email' => $user->alumni->email,
+                    'email' => $user->alumni->email??$user->email,
                     'phone_number' => $phone,
                 ];
 
@@ -689,10 +689,12 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 $paymentChannel = (array) $this->paymentChannel();
                 $payments = $paymentChannel['data'];
                 // $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
-                $message = "*Silahkan Pilih Metode Pembayaran :*";
+                $message = "*Silahkan Pilih Metode Pembayaran :*
+";
                 foreach($payments as $i => $p)
                 {
-$message .= ($i+1).'. '.$p['code'];
+$message .= ($i+1).'. '.$p['code']."
+";
                 }
                 // $paymentChannel = implode(',',$paymentChannel);
                 WaBlast::webisnisSend($request->sender, $phone, $message);
