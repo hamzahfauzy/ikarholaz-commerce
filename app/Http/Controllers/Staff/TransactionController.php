@@ -118,12 +118,19 @@ class TransactionController extends Controller
 
     public function resend(Transaction $transaction)
     {
+        $notifAction = new NotifAction;
         $product  = $transaction->transactionItems[0]->product;
         $customer = $transaction->customer;
-        $payment  = $transaction->payment;
+        if(isset($transaction->payment))
+        {
+            $payment  = $transaction->payment;
 
-        $notifAction = new NotifAction;
-        $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
+            $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
+        }
+        else
+        {
+            $notifAction->paymentCashSuccess($product, $customer, $transaction);
+        }
 
         return redirect()->route('staff.transactions.index')
             ->with('success', 'Notification resend successfully');
@@ -135,7 +142,8 @@ class TransactionController extends Controller
 
         $product  = $transaction->transactionItems[0]->product;
         $customer = $transaction->customer;
-        if($transaction->payment)
+        $notifAction = new NotifAction;
+        if(isset($transaction->payment))
         {
             $payment  = $transaction->payment;
     
@@ -143,8 +151,11 @@ class TransactionController extends Controller
                 'status' => 'PAID'
             ]);
             
-            $notifAction = new NotifAction;
             $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
+        }
+        else
+        {
+            $notifAction->paymentCashSuccess($product, $customer, $transaction);
         }
 
 

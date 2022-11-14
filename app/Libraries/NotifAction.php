@@ -193,4 +193,37 @@ _part of Sistem Informasi Rholaz (SIR) 2022_';
         }
         return "Terima kasih telah melakukan pendaftaran Event $event->name. Pendaftaran atas Nama: *$alumni->name* - NRA: *$alumni->NRA* - Alumni: $alumni->graduation_year akan kami verifikasi berdasar syarat dan ketentuan berlaku.";
     }
+
+    public function paymentCashSuccess($product, $customer, $transaction)
+    {
+        if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
+        {
+            $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
+            $message = "Hai kak ".$customer->full_name.",
+Terima kasih telah melakukan pembayaran untuk kode booking #".$transaction->id." sebesar Rp. ".$transaction->total_formated." melalui cash.
+
+Silakan download E-TIKET nya melalui ".url()->to($pdf_url)." 
+Sampai ketemu di lokasi ya kak! Mimin pake baju pink.
+
+Terima kasih,
+Salam hangat
+Mimin Gerai
+
+---------
+Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
+
+*GERAI IKARHOLAZ*
+_part of Sistem Informasi Rholaz (SIR) 2022_";
+
+        }
+        else
+        {
+            $message = "Terima Kasih Kak ".$customer->full_name."
+Pembayaran atas tagihan #$transaction->id sebesar ".$transaction->total_formated." telah kami terima.
+            
+Pesanan kakak segera kami proses ya
+Terima kasih.";
+        }
+        WaBlast::send($customer->phone_number,$message);
+    }
 }
