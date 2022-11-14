@@ -57,10 +57,19 @@ class PdfAction
 
             foreach($flip as $ps)
             {
-                $p = $start.', '.$ps[0].(isset($ps[1])?', '.$ps[1]:'');
+                if(is_array($ps))
+                {
+                    $p = $start.', '.$ps[0].(isset($ps[1])?', '.$ps[1]:'');
+                    $qr_content = $start.';'.$transaction->id.';'.$ps[0].(isset($ps[1])?';'.$ps[1]:'');
+                }
+                else
+                {
+                    $p = $start.', '.$ps;
+                    $qr_content = $start.';'.$transaction->id.';'.$ps;
+                }
                 $part[] = $p;
     
-                $qr_content = $start.';'.$transaction->id.';'.$ps[0].(isset($ps[1])?';'.$ps[1]:'');
+                
                 $start++;
                 $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=".$qr_content."&chs=180x180&choe=UTF-8&chld=L|0");
                 $qrcode[] = 'data:image/png;base64,' . base64_encode($barcode);
