@@ -635,7 +635,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
         else
         {
     
-            $index = $request->option-1;
+            $index = (int) $request->option - 1;
     
             if(!isset($options[$index]))
             {
@@ -723,7 +723,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
         
                         $notifAction = new NotifAction;
-                        $message = $notifAction->regticketSuccess($singleProduct, $user->alumni);
+                        $message = $notifAction->regticketSuccess($singleProduct, $user->alumni, $transaction);
                         WaBlast::webisnisSend($request->sender, $phone, $message);
         
                     endif;
@@ -795,8 +795,8 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
 
             
             WaBlast::webisnisSend($request->sender, $phone, "*Silahkan pilih salah satu :*
-1. Bawa makanan sendiri (FREE)
-2. Bayar 35k");
+1. Bawa Sendiri Berkatan (FREE)
+2. Titip Berkatan (Bayar 35k)");
 
             return response()->json([
                 'status' => 'succes',

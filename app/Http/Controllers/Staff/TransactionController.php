@@ -135,14 +135,18 @@ class TransactionController extends Controller
 
         $product  = $transaction->transactionItems[0]->product;
         $customer = $transaction->customer;
-        $payment  = $transaction->payment;
+        if($transaction->payment)
+        {
+            $payment  = $transaction->payment;
+    
+            $payment->update([
+                'status' => 'PAID'
+            ]);
+            
+            $notifAction = new NotifAction;
+            $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
+        }
 
-        $payment->update([
-            'status' => 'PAID'
-        ]);
-
-        $notifAction = new NotifAction;
-        $notifAction->paymentSuccess($product, $customer, $transaction, $payment);
 
         return redirect()->route('staff.transactions.index')
             ->with('success', 'Transaction approved successfully');
