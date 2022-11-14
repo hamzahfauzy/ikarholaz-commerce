@@ -170,7 +170,7 @@ Terima kasih.";
     {
         if(in_array($event->id,[121]))
         {
-            return 'Terima kasih Nama: *$alumni->name* - NRA: *$alumni->NRA* telah melakukan pendaftaran Event '.$event->name.' - BAWA SEGO BERKAT. Pendaftaran telah kami setujui dengan kode booking: *['.$transaction->id.']*. Saat ke lokasi WAJIB Bawa Sendiri Berkatan dengan kemasan box warna PUTIH berisi:
+            return 'Terima kasih Nama: *'.$alumni->name.'* - NRA: *'.$alumni->NRA.'* telah melakukan pendaftaran Event '.$event->name.' - BAWA SENDIRI BERKATAN. Pendaftaran telah kami setujui dengan kode booking: *['.$transaction->id.']*. Saat ke lokasi WAJIB Bawa Sendiri Berkatan dengan kemasan box warna PUTIH berisi:
 1. NASI PUTIH
 2. AYAM BAKAR
 3. URAP-URAP
@@ -189,7 +189,7 @@ Mimin Gerai
 Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
 
 *GERAI IKARHOLAZ*
-__part of Sistem Informasi Rholaz (SIR) 2022__';
+_part of Sistem Informasi Rholaz (SIR) 2022_';
         }
         return "Terima kasih telah melakukan pendaftaran Event $event->name. Pendaftaran atas Nama: *$alumni->name* - NRA: *$alumni->NRA* - Alumni: $alumni->graduation_year akan kami verifikasi berdasar syarat dan ketentuan berlaku.";
     }
