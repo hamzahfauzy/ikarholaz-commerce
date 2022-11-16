@@ -891,6 +891,10 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
             {
                 $alumnis = $alumnis->where('approval_status',$request->status);
             }
+            if($request->graduation_year)
+            {
+                $alumnis = $alumnis->where('graduation_year',$request->graduation_year);
+            }
             $alumnis = $alumnis->paginate($pageRows);
             return $alumnis;
         }
