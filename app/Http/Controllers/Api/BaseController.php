@@ -880,4 +880,24 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
             'data'   => $user->alumni
         ]);
     }
+
+    function getAlumnis(Request $request)
+    {
+        if($request->token == 'lintangapptoken')
+        {
+            $page = $request->page ?? 10;
+            $alumnis = new Alumni;
+            if($request->status)
+            {
+                $alumnis = $alumnis->where('approval_status',$request->status);
+            }
+            $alumnis = $alumnis->paginate($page);
+            return $alumnis;
+        }
+
+        return response()->json([
+            'status'  => 'failed',
+            'message' => 'Not found'
+        ], 404);
+    }
 }

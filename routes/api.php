@@ -45,6 +45,7 @@ Route::post('/reg-tiket-options', [BaseController::class, 'regTiketOption']);
 Route::post('/info-nra', [AlumniController::class, 'getNra']);
 Route::post('/cek-nra', [BaseController::class, 'cekNra']);
 Route::post('/send-candidates', [BaseController::class, 'sendCandidates']);
+Route::post('/get-alumnis', [BaseController::class, 'getAlumnis']);
 
 Route::prefix('mobile')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
