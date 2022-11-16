@@ -885,13 +885,13 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
     {
         if($request->token == 'lintangapptoken')
         {
-            $page = $request->page ?? 10;
+            $pageRows = $request->pageRows ?? 10;
             $alumnis = new Alumni;
             if($request->status)
             {
                 $alumnis = $alumnis->where('approval_status',$request->status);
             }
-            $alumnis = $alumnis->paginate($page);
+            $alumnis = $alumnis->paginate($pageRows);
             return $alumnis;
         }
 
