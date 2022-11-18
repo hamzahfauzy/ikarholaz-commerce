@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Api\BaseController;
+use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\AdminController;
 use App\Http\Controllers\Mobile\AlumniController;
@@ -46,6 +47,14 @@ Route::post('/info-nra', [AlumniController::class, 'getNra']);
 Route::post('/cek-nra', [BaseController::class, 'cekNra']);
 Route::post('/send-candidates', [BaseController::class, 'sendCandidates']);
 Route::post('/get-alumnis', [BaseController::class, 'getAlumnis']);
+
+Route::prefix('events')->group(function(){
+    Route::get('index',[EventController::class,'index']);
+    Route::post('create',[EventController::class,'store']);
+    Route::put('update/{id}',[EventController::class,'update']);
+    Route::delete('delete/{id}',[EventController::class,'destroy']);
+    Route::get('show/{id}',[EventController::class,'show']);
+});
 
 Route::prefix('mobile')->group(function () {
     Route::post('login', [AuthController::class, 'login']);

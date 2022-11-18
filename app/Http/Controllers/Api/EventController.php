@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Staff;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
@@ -13,23 +14,21 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::orderby('id','desc')->paginate();
+        $events = Event::orderby('id','desc');
+        
+        if($request->clauses)
+        {
+            $events = $events->where($request->clauses);
+        }
 
-        return view('staff.event.index', compact('events'))
-            ->with('i', (request()->input('page', 1) - 1) * $events->perPage());
-    }
+        $events = $events->paginate();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $event = new Event();
-        return view('staff.event.create', compact('event'));
+        return response()->json([
+            'status'=>'success',
+            'data' => $events
+        ]);
     }
 
     /**
@@ -40,10 +39,14 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
+        $validator = Validator::make($request->all(),[
             'name'=>'required',
             'image'=>'mimes:jpeg,jpg,png,gif|required|max:10000'
         ]);
+
+        if ($validator->fails()) {    
+            return response()->json($validator->messages(), Response::HTTP_BAD_REQUEST);
+        }
 
         $data = $request->all();
 
@@ -53,13 +56,12 @@ class EventController extends Controller
             $data['image']=$path;
         }
 
-        $data['created_by'] = auth()->user()->name;
-        $data['created_user_id'] = auth()->user()->id;
-
         $event = Event::create($data);
 
-        return redirect()->route('staff.events.index')
-            ->with('success', 'Event created successfully.');
+        return response()->json([
+            'status'=>'success',
+            'data' => $event
+        ]);
     }
 
     /**
@@ -72,27 +74,11 @@ class EventController extends Controller
     {
         $event = Event::find($id);
 
-        return view('staff.event.show', compact('event'));
+        return response()->json([
+            'status'=>'success',
+            'data' => $event
+        ]);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $event = Event::find($id);
-
-        $stime = \DateTime::createFromFormat('Y-m-d H:i:s', $event->start_time);
-        $ltime = \DateTime::createFromFormat('Y-m-d H:i:s', $event->end_time);
-        $event->start_time = $stime->format('Y-m-d\TH:i');
-        $event->end_time = $ltime->format('Y-m-d\TH:i');
-
-        return view('staff.event.edit', compact('event'));
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -102,10 +88,14 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        request()->validate([
+        $validator = Validator::make($request->all(),[
             'name'=>'required',
             'image'=>'mimes:jpeg,jpg,png,gif|required|max:10000'
         ]);
+
+        if ($validator->fails()) {    
+            return response()->json($validator->messages(), Response::HTTP_BAD_REQUEST);
+        }
 
         $data = $request->all();
 
@@ -117,8 +107,10 @@ class EventController extends Controller
 
         $event->update($data);
 
-        return redirect()->route('staff.events.index')
-            ->with('success', 'Event updated successfully');
+        return response()->json([
+            'status'=>'success',
+            'data' => $event
+        ]);
     }
 
     /**
@@ -130,7 +122,9 @@ class EventController extends Controller
     {
         $event = Event::find($id)->delete();
 
-        return redirect()->route('staff.events.index')
-            ->with('success', 'Event deleted successfully');
+        return response()->json([
+            'status'=>'success'
+        ]);
     }
 }
+

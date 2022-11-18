@@ -39,12 +39,15 @@ class PdfAction
                 }
             }
 
+            $flip = [];
             if(empty($participants))
             {
-                $participants[] = [$customer->full_name,''];
+                $flip[] = [$customer->full_name,' '];
             }
-    
-            $flip = array_map(null, ...$participants);
+            else
+            {
+                $flip = array_map(null, ...$participants);
+            }    
             $part = [];
             $qrcode = [];
             $no = 1;
