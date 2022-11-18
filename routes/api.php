@@ -49,7 +49,7 @@ Route::post('/send-candidates', [BaseController::class, 'sendCandidates']);
 Route::post('/get-alumnis', [BaseController::class, 'getAlumnis']);
 
 Route::prefix('events')->group(function(){
-    Route::get('index',[EventController::class,'index']);
+    Route::get('/',[EventController::class,'index']);
     Route::post('create',[EventController::class,'store']);
     Route::put('update/{id}',[EventController::class,'update']);
     Route::delete('delete/{id}',[EventController::class,'destroy']);
