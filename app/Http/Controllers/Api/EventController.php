@@ -91,7 +91,7 @@ class EventController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'name'=>'required',
-            'image'=>'mimes:jpeg,jpg,png,gif|required|max:10000'
+            'image'=>'nullable|mimes:jpeg,jpg,png,gif|max:10000'
         ]);
 
         if ($validator->fails()) {    
