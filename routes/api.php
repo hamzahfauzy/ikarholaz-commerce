@@ -51,7 +51,7 @@ Route::post('/get-alumnis', [BaseController::class, 'getAlumnis']);
 Route::prefix('events')->group(function(){
     Route::get('/',[EventController::class,'index']);
     Route::post('create',[EventController::class,'store']);
-    Route::put('update/{id}',[EventController::class,'update']);
+    Route::post('update/{id}',[EventController::class,'update']);
     Route::delete('delete/{id}',[EventController::class,'destroy']);
     Route::get('show/{id}',[EventController::class,'show']);
 });
