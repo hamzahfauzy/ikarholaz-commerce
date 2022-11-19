@@ -46,7 +46,7 @@ class EventController extends Controller
         ]);
 
         if ($validator->fails()) {    
-            return response()->json($validator->messages(), Response::HTTP_BAD_REQUEST);
+            return response()->json($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
         }
 
         $data = $request->all();
@@ -95,7 +95,7 @@ class EventController extends Controller
         ]);
 
         if ($validator->fails()) {    
-            return response()->json($validator->messages(), Response::HTTP_BAD_REQUEST);
+            return response()->json($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
         }
 
         $data = $request->all();
