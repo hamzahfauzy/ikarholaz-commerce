@@ -117,6 +117,26 @@ class EventController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  Event $event
+     * @return \Illuminate\Http\Response
+     */
+    public function patchStatus(Request $request, Event $event)
+    {
+        $event->update([
+            'status' => $request->status,
+            'status_update_by' => $request->status_update_by,
+        ]);
+
+        return response()->json([
+            'status'=>'success',
+            'data' => $event
+        ]);
+    }
+
+    /**
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
