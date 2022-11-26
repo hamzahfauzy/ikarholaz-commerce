@@ -13,7 +13,7 @@ class PdfAction
         $items    = $transaction->transactionItems;
         $payment  = $transaction->payment;
         $product  = $items[0]->product;
-        if(!$product || !$payment) return '';
+        if(!$product) return '';
         $customer = $transaction->customer;
 
         $filename = md5(md5($customer->id.".".$transaction->id.".".$transaction->created_at));

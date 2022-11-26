@@ -34,8 +34,10 @@
         <div  style="width:100%;text-align:center"><strong>INFO PEMESANAN</strong></div>
         <div  style="width:100%;text-align:center">Pemesan : {{ $customer->full_name}}</div>
         <div  style="width:100%;text-align:center">Total Biaya : {{$transaction->total_formated}}</div>
+        @if($payment)
         <div  style="width:100%;text-align:center">Pembayaran via {{$payment->payment_type}}</div>
         <div  style="width:100%;text-align:center">Waktu Bayar : {{$payment->updated_at->format('d-m-Y H:i')}}</div>
+        @endif
     </div>
     @endforeach
 </body>
