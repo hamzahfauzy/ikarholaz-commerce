@@ -63,6 +63,7 @@ class EventController extends Controller
 
         foreach($transactionItems as $item)
         {
+            $customer = $item->transaction->customer;
             $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
             $participants = [];
             foreach($participant_custom_fields as $key => $value)
@@ -74,7 +75,16 @@ class EventController extends Controller
                 }
             }
 
-            $flip = array_map(null, ...$participants);
+            $flip = [];
+            if(empty($participants))
+            {
+                $flip[] = [$customer->full_name,' '];
+            }
+            else
+            {
+                $flip = array_map(null, ...$participants);
+                $flip = array_map(null, ...$participants);
+            }    
             $item->participants = $flip;
         }
 
