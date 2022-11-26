@@ -71,6 +71,8 @@ class PdfAction
                     $qr_content = $start.';'.$transaction->id.';'.$ps;
                 }
                 $part[] = $p;
+
+                $qr_content = urlencode($qr_content);
     
                 
                 $start++;
