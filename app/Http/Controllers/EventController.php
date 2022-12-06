@@ -78,7 +78,8 @@ class EventController extends Controller
             $flip = [];
             if(empty($participants))
             {
-                $flip[] = [$customer->full_name,' '];
+                $tahun_lulus = $customer->user && $customer->user->alumni ? $customer->user->alumni->graduation_year : ' ';
+                $flip[] = [$customer->full_name,$tahun_lulus];
             }
             else
             {
