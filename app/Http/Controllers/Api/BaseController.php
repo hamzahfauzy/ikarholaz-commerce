@@ -30,11 +30,11 @@ class BaseController extends Controller
     }
 
     function getAgenda(){
-        return Event::take(3)->get();
+        return Event::take(3)->orderby('id','desc')->get();
     }
 
     function getJolali(){
-        return Jolali::take(3)->get();
+        return Jolali::take(3)->orderby('id','desc')->get();
     }
     
     function getFields($fields)
