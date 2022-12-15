@@ -817,6 +817,15 @@ _Hanya alumni berstatus *approved* yang bisa login._
 
 *NRA IKARHOLAZ SYSTEM*
 _part of Sistem Informasi Rholaz (SIR) 2022_
+
+*----- advertisement ------*
+Serunya mabar temen-temen alumni, tunjukkan hasil cek NRA di Whatsapp, dapatkan diskon 10% di *Es Teh Agsan* dan *Bakso Pipi Tembem*. Berlaku Sabtu-Minggu, 17-18 Des 2022, selama persediaan masih ada.
+
+------
+Harga khusus NRA sesuai tanggal lahir. Diskon 25%. Berlaku Sabtu-Minggu, 17-18 Des 2022. Order lgsg di https://gerai.ikarholaz.id
+
+------
+Pre Order Kaos dan Tumbler IKARHOLAZ. Diskon 10%.  Berlaku Sabtu, 17 Des 2022. Order lgsg di https://gerai.ikarholaz.id
 ";
 
         $data = [
