@@ -60,16 +60,16 @@ class WaBlast
         $curl = curl_init();
 
         $post_data = array(
-            'phone' => $to,
-            'type' => 'file',
+            'target' => $to,
+            // 'type' => 'file',
             'url' => $file_url,
-            'caption' => $message,
-            'delay' => '1',
+            'message' => $message,
+            // 'delay' => '1',
             'schedule' => '0'
         );
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://hp.fonnte.com/api/send_message.php",
+        CURLOPT_URL => "https://api.fonnte.com/send",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -95,7 +95,7 @@ class WaBlast
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://hp.fonnte.com/api/send_message.php",
+            CURLOPT_URL => "https://api.fonnte.com/send",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -104,11 +104,12 @@ class WaBlast
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => array(
-                'phone' => $to,
-                'type' => 'text',
-                'text' => $message,
-                'delay' => '1',
-                'schedule' => '0'),
+                'target' => $to,
+                // 'type' => 'text',
+                'message' => $message,
+                // 'delay' => '1',
+                'schedule' => '0'
+            ),
             CURLOPT_HTTPHEADER => array(
                 "Authorization: ".getenv('WA_FONNTE_DEVICE')
             ),
@@ -131,7 +132,7 @@ class WaBlast
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://md.fonnte.com/api/send_message.php",
+            CURLOPT_URL => "https://api.fonnte.com/send",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -140,10 +141,10 @@ class WaBlast
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => array(
-                'phone' => $to,
-                'type' => 'text',
-                'text' => $message,
-                'delay' => '1',
+                'target' => $to,
+                // 'type' => 'text',
+                'message' => $message,
+                // 'delay' => '1',
                 'schedule' => '0'
             ),
             CURLOPT_HTTPHEADER => array(
