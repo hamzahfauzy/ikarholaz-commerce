@@ -32,7 +32,7 @@
                         @if ($alumni->approval_status == '' && $alumni->NRA)
                         <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
                             @csrf
-                            <input type="hidden" name="status" value="approve">
+                            <input type="hidden" name="status" value="approved">
                             <button type="submit" class="btn btn-success"><i class="fa fa-fw fa-check"></i> {{__('Approve')}}</button>
                         </form>
                         <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
@@ -45,18 +45,25 @@
                             <input type="hidden" name="status" value="pending">
                             <button type="submit" class="btn btn-warning">{{__('Pending')}}</button>
                         </form>
-                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="return addNotes(this)">
                             @csrf
                             <input type="hidden" name="status" value="denied">
+                            <input type="hidden" name="notes" value="">
                             <button type="submit" class="btn btn-danger">{{__('Denied')}}</button>
                         </form>
-                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure ?')}}')){ return true }else{ return false }">
+                        @else
+                        <form action="{{ route('staff.alumnis.unapprove',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to un approve this item ?')}}')){ return true }else{ return false }">
+                            @csrf
+                            <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-fw fa-times"></i> {{__('Un Approve')}}</button>
+                        </form>
+                        @endif
+                        <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="return addNotes(this)">
                             @csrf
                             <input type="hidden" name="status" value="died">
+                            <input type="hidden" name="notes" value="">
                             <button type="submit" class="btn btn-dark">{{__('Died')}}</button>
                         </form>
                         <a class="btn btn-primary" href="{{ route('staff.alumnis.index') }}"> Back</a>
-                        @endif
                     </div>
                 </div>
                 
@@ -118,4 +125,17 @@
         </div>
     </div>
 </section>
+<script>
+function addNotes(el)
+{
+    var notes = prompt('Catatan')
+    if(notes)
+    {
+        el.querySelector('[name=notes]').value = notes
+        return true
+    }
+
+    return false
+}
+</script>
 @endsection

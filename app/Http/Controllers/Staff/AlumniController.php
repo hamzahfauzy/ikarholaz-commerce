@@ -430,7 +430,14 @@ class AlumniController extends Controller
             'approval_by' => 'admin',
         ]);
 
-        if($request->status == "approve"){
+        if($request->notes)
+        {
+            $alumni->update([
+                'notes' => $request->notes
+            ]);
+        }
+
+        if($request->status == "approved"){
             $alumni->user->email_verified_at = date('Y-m-d H:i:s');
             $alumni->user->update();
             WaBlast::send($alumni->user->email, "Selamat $alumni->name, data anda telah berhasil kami verifikasi. Nomor Registrasi Anggota (NRA) IKARHOLAZ anda adalah $alumni->NRA. 
