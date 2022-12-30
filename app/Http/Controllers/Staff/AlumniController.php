@@ -456,6 +456,7 @@ class AlumniController extends Controller
         $alumni->update([
             'approval_status' => NULL,
             'approval_by' => NULL,
+            'notes' => NULL,
         ]);
 
         $alumni->user->email_verified_at = NULL;
