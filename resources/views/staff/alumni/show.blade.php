@@ -52,9 +52,9 @@
                             <button type="submit" class="btn btn-danger">{{__('Denied')}}</button>
                         </form>
                         @else
-                        <form action="{{ route('staff.alumnis.unapprove',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to un approve this item ?')}}')){ return true }else{ return false }">
+                        <form class="mr-2" action="{{ route('staff.alumnis.unapprove',$alumni->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to un approve this item ?')}}')){ return true }else{ return false }">
                             @csrf
-                            <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-fw fa-times"></i> {{__('Un Approve')}}</button>
+                            <button type="submit" class="btn btn-secondary"><i class="fa fa-fw fa-times"></i> {{__('Un Approve')}}</button>
                         </form>
                         @endif
                         <form class="mr-2" action="{{ route('staff.alumnis.update-status',$alumni->id) }}" method="POST" onsubmit="return addNotes(this)">
