@@ -116,6 +116,11 @@
                                     <td>:</td>
                                     <td>{{ucwords($alumni->approval_status)}} Oleh {{$alumni->approval_by}}</td>
                                 </tr>
+                                <tr>
+                                    <td>Catatan</td>
+                                    <td>:</td>
+                                    <td>{{$alumni->notes}}</td>
+                                </tr>
                             </table>
                         </div>
                     </div>
