@@ -694,7 +694,7 @@ Hubungi mimin untuk memastikan/mengubah nomer WA yang terdaftar di sistem NRA IK
 
 _Jika anda belum melakukan pendaftaran anggota IKARHOLAZ/belum memiliki NRA, gunakan layanan pendaftaran anggota IKARHOLAZ melalui WA, lebih simpel dan praktis. Caranya, ketik:_
 
-REG#nama#kelas#tahunmasuk#tahunlulus#alamat
+REG nama#kelas#tahunmasuk#tahunlulus#alamat
 
 Alternatif lain melalui:
 web: https://gerai.ikarholaz.id/register";
