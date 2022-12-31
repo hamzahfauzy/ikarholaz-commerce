@@ -9,7 +9,7 @@
         
         <div class="form-group">
             {{ Form::label('Content') }}
-            {{ Form::text('content', $model->content, ['class' => 'form-control' . ($errors->has('content') ? ' is-invalid' : ''), 'placeholder' => 'content']) }}
+            {{ Form::textArea('content', $model->content, ['class' => 'form-control' . ($errors->has('content') ? ' is-invalid' : ''), 'placeholder' => 'content']) }}
             {!! $errors->first('content', '<p class="invalid-feedback">:message</p>') !!}
         </div>
     </div>
