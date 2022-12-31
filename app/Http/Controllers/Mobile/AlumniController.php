@@ -386,6 +386,9 @@ _Mohon maaf saat ini sistem belum bisa digunakan untuk login/signin hingga perba
     {
         // http://gerai.ikarholaz.id/api/register-wa?name=Aji&graduation_year=2002&gender=L&address=Semarang&city=Semarang&province=Semarang&country=Semarang&date_of_birth=1997&year_in=2000&year_out=2015
 
+        $advertisement = Advertisement::where('event','REG')->first();
+        $ads_content   = $advertisement ? $advertisement->contents : '';
+
         try {
             $request->validate([
                 'name' => 'required',
@@ -452,7 +455,9 @@ $pesan =
             DB::commit();
             $pesan = 
 "Terima kasih telah mendaftar sebagai anggota IKARHOLAZ. Lanjutkan langkah dengan mengirim foto melalui WA ini untuk memudahkan verifikasi. 
-Saat ini status masih PENDING hingga diverifikasi petugas. Ketik CEK NRA untuk mengetahui status pendaftaran anggota IKARHOLAZ.";
+Saat ini status masih PENDING hingga diverifikasi petugas. Ketik CEK NRA untuk mengetahui status pendaftaran anggota IKARHOLAZ.
+
+".$ads_content;
 
         $data = [
             'api_key' => env('WA_API'),
@@ -480,7 +485,9 @@ Saat ini status masih PENDING hingga diverifikasi petugas. Ketik CEK NRA untuk m
             DB::rollback();
 
 $pesan = 
-"Registrasi GAGAL. Nomer WA sudah digunakan pendaftaran sebelumnya. Ketik CEK NRA untuk mengetahui data terkait nomer WA yang digunakan.";
+"Registrasi GAGAL. Nomer WA sudah digunakan pendaftaran sebelumnya. Ketik CEK NRA untuk mengetahui data terkait nomer WA yang digunakan.
+
+".$ads_content;
             
             $data = [
                 'api_key' => env('WA_API'),
@@ -683,6 +690,10 @@ $pesan =
         $sender = $request->sender; 
         $phone = $request->phone; 
         $user = User::where('email', '+'.$phone)->first();
+
+        $advertisement = Advertisement::where('event','CEK NRA')->first();
+        $ads_content   = $advertisement ? $advertisement->contents : '';
+
         if(!$user)
         {
             $pesan = 
@@ -697,7 +708,9 @@ _Jika anda belum melakukan pendaftaran anggota IKARHOLAZ/belum memiliki NRA, gun
 REG nama#kelas#tahunmasuk#tahunlulus#alamat
 
 Alternatif lain melalui:
-web: https://gerai.ikarholaz.id/register";
+web: https://gerai.ikarholaz.id/register
+
+".$ads_content;
 
             $data = [
                 'api_key' => env('WA_API'),
@@ -818,15 +831,7 @@ _Hanya alumni berstatus *approved* yang bisa login._
 *NRA IKARHOLAZ SYSTEM*
 _part of Sistem Informasi Rholaz (SIR) 2022_
 
-*----- advertisement ------*
-Serunya mabar temen-temen alumni, tunjukkan hasil cek NRA di Whatsapp, dapatkan diskon 10% di *Es Teh Agsan* dan *Bakso Pipi Tembem*. Berlaku Sabtu-Minggu, 17-18 Des 2022, selama persediaan masih ada.
-
-------
-Harga khusus NRA sesuai tanggal lahir. Diskon 25%. Berlaku Sabtu-Minggu, 17-18 Des 2022. Order lgsg di https://gerai.ikarholaz.id
-
-------
-Pre Order Kaos dan Tumbler IKARHOLAZ. Diskon 10%.  Berlaku Sabtu, 17 Des 2022. Order lgsg di https://gerai.ikarholaz.id
-";
+".$ads_content;
 
         $data = [
             'api_key' => env('WA_API'),

@@ -426,7 +426,12 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
             endif;
 
             // return redirect()->to($response_data['checkout_url']);
-            WaBlast::webisnisSend($request->sender, $request->phone, "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']);
+            $advertisement = Advertisement::where('event','ORDERTIKET')->first();
+            $ads_content   = $advertisement ? $advertisement->contents : '';
+            $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']."
+            
+".$ads_content;
+            WaBlast::webisnisSend($request->sender, $request->phone, $msg);
             return response()->json([
                 'status' => 'succes',
             ]);
@@ -623,7 +628,13 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 endif;
 
                 // return redirect()->to($response_data['checkout_url']);
-                WaBlast::webisnisSend($request->sender, $phone, "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']);
+                $advertisement = Advertisement::where('event','REGTIKET HUT4')->first();
+                $ads_content   = $advertisement ? $advertisement->contents : '';
+                $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']."
+
+".$ads_content;
+                WaBlast::webisnisSend($request->sender, $phone, $msg);
+
                 return response()->json([
                     'status' => 'succes',
                 ]);

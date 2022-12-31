@@ -72,7 +72,7 @@
                         </div>
                     </div>
                 </div>
-                {!! $advertisements->links('vendor.pagination.bootstrap-4') !!}
+                {!! $model->links('vendor.pagination.bootstrap-4') !!}
             </div>
         </div>
     </div>
