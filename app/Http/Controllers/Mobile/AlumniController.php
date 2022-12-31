@@ -15,13 +15,14 @@ use App\Models\Broadcast;
 use App\Models\Community;
 use App\Models\Profession;
 use App\Models\UserApprove;
+use Illuminate\Support\Str;
 use App\Models\Appreciation;
 use Illuminate\Http\Request;
+use App\Models\Advertisement;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class AlumniController extends Controller
 {
