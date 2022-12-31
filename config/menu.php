@@ -207,4 +207,11 @@ $menu[] = [
 //     ]
 // ];
 
+$menu[] = [
+    'label' => 'Advertisements',
+    'icon'  => 'mdi mdi-google-pages',
+    'route' => 'staff.advertisements.index',
+    'childs' => []
+];
+
 return $menu;
