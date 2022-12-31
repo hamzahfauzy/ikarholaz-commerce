@@ -9,8 +9,8 @@
         
         <div class="form-group">
             {{ Form::label('Content') }}
-            {{ Form::textArea('content', $model->content, ['class' => 'form-control' . ($errors->has('content') ? ' is-invalid' : ''), 'placeholder' => 'content']) }}
-            {!! $errors->first('content', '<p class="invalid-feedback">:message</p>') !!}
+            {{ Form::textArea('contents', $model->contents, ['class' => 'form-control' . ($errors->has('contents') ? ' is-invalid' : ''), 'placeholder' => 'contents']) }}
+            {!! $errors->first('contents', '<p class="invalid-feedback">:message</p>') !!}
         </div>
     </div>
     <div class="box-footer mt20">
