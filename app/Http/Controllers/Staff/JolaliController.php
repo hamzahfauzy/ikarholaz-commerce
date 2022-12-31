@@ -28,7 +28,7 @@ class JolaliController extends Controller
      */
     public function create()
     {
-        $jolali = new jolali();
+        $jolali = new Jolali();
         return view('staff.jolali.create', compact('jolali'));
     }
 
@@ -93,7 +93,7 @@ class JolaliController extends Controller
      * @param  jolali $jolali
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, jolali $jolali)
+    public function update(Request $request, Jolali $jolali)
     {
         request()->validate([
             'text'=>'required',

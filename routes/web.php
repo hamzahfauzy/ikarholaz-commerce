@@ -12,6 +12,7 @@ use App\Http\Controllers\Staff\CustomerController;
 use App\Http\Controllers\Staff\BroadcastController;
 use App\Http\Controllers\Staff\TransactionController;
 use App\Http\Controllers\Staff\ProductImageController;
+use App\Http\Controllers\Staff\AdvertisementController;
 use App\Http\Controllers\Staff\ProductVariantController;
 use App\Http\Controllers\Staff\TransactionItemController;
 
@@ -51,6 +52,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::get('transactions/{transaction}/cancel', [TransactionController::class,'cancel'])->name('transactions.cancel');
     Route::resource('events', EventController::class);
     Route::resource('jolalis', JolaliController::class);
+    Route::resource('advertisements', AdvertisementController::class);
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('payments', PaymentController::class);
