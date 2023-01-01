@@ -91,7 +91,7 @@ class BaseController extends Controller
             ], 404);
         }
         
-        $exists = Card::where('nomor','LIKE','%'.$nomor.'%')->where('status','Checkout');
+        $exists = Card::where('card_number','LIKE','%'.$nomor.'%')->where('status','Checkout');
         if($exists->exists())
         {
             return response()->json([
