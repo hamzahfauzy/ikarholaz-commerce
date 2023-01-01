@@ -179,6 +179,18 @@
 function checkKartu()
 {
     event.preventDefault()
+    if(!no_seri.value)
+    {
+        swal(    
+            {
+                title: 'Maaf!',
+                text: 'Tahun lulus harus dipilih',
+                type: 'error',
+                confirmButtonColor: '#4fa7f3'
+            }
+        )
+        return
+    }
     var nomor_kartu = parseInt(no_kartu.value)
     var digit = `${nomor_kartu}`.length
     var no_request = nomor_kartu
