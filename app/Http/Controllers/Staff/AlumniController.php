@@ -46,7 +46,7 @@ class AlumniController extends Controller
             if(isset($_GET['filter']['approval_status']) && !empty($_GET['filter']['approval_status']) && $_GET['filter']['approval_status'] != 'semua')
             {
                 $alumnis = $alumnis->where('alumnis.approval_status', $_GET['filter']['approval_status']);
-                if($_GET['filter']['approval_status'] == "un approved"){
+                if($_GET['filter']['approval_status'] == "pending"){
                     $alumnis = $alumnis->orwhere('alumnis.approval_status',null);
                 }
             }
