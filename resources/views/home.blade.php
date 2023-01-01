@@ -205,7 +205,7 @@ function checkKartu()
 
     no_kartu.value = nomor_kartu
     var nomorkartu = no_seri.value +'.'+ nomor_kartu
-    fetch('/api/get-kartu/'+nomor_kartu)
+    fetch('/api/cek-kartu/'+nomor_kartu)
     .then(res => {
         if (!res.ok) {
             throw Error(res.statusText);

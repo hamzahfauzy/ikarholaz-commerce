@@ -30,6 +30,7 @@ Route::get('/get-district/{province_id}', [BaseController::class, 'getDistrict']
 Route::get('/get-service/{courier}', [BaseController::class, 'getService']);
 Route::get('/get-payment-channel', [BaseController::class, 'paymentChannel']);
 Route::get('/get-kartu/{nomor}', [BaseController::class, 'getKartu']);
+Route::get('/cek-kartu/{nomor}', [BaseController::class, 'cekKartu']);
 Route::get('/get-nomor-regular/{tahun_lulus}', [BaseController::class, 'getNomorRegular']);
 Route::get('/get-price/{digit}', [BaseController::class, 'getPrice']);
 Route::get('/test-wa', [BaseController::class, 'testWa']);
