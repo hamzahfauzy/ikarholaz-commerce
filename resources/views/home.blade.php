@@ -230,7 +230,7 @@ function checkKartu()
                     .then(res => {
                         $('#modal-nra-cantik').modal('hide'); 
                         $('#modal-order-kta').modal('show'); 
-                        $('[name=product_id]').val(found.id)
+                        // $('[name=product_id]').val(found.id)
                         $('[name=digit]').val(digit)
                         $('[name=no_request]').val(no_request)
                         $('#no_kartu_fix').val(nomorkartu)
