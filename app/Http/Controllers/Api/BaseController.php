@@ -12,6 +12,7 @@ use App\Models\Alumni;
 use App\Models\Jolali;
 use App\Models\WaBlast;
 use App\Models\Ref\Tripay;
+use App\Models\BlacklistNra;
 use App\Models\Ref\District;
 use App\Models\Ref\Province;
 use Illuminate\Http\Request;
