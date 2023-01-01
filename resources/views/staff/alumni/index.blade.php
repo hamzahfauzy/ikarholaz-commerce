@@ -56,11 +56,11 @@
                                 <option value="">- Pilih Status -</option>
                                 <option value="semua" {{isset($filter['approval_status']) && $filter['approval_status'] == 'semua' ? 'selected=""' : ''}}>Semua</option>
                                 <option value="approved" {{isset($filter['approval_status']) && $filter['approval_status'] == 'approved' ? 'selected=""' : ''}}>Approved</option>
-                                <option value="approved" {{isset($filter['approval_status']) && $filter['approval_status'] == 'un approved' ? 'selected=""' : ''}}>Un Approved</option>
-                                <option value="pending" {{isset($filter['approval_status']) && $filter['approval_status'] == 'pra anggota' ? 'selected=""' : ''}}>Pra Anggota</option>
+                                <option value="un approved" {{isset($filter['approval_status']) && $filter['approval_status'] == 'un approved' ? 'selected=""' : ''}}>Un Approved</option>
+                                <option value="pra anggota" {{isset($filter['approval_status']) && $filter['approval_status'] == 'pra anggota' ? 'selected=""' : ''}}>Pra Anggota</option>
                                 <option value="pending" {{isset($filter['approval_status']) && $filter['approval_status'] == 'pending' ? 'selected=""' : ''}}>Pending</option>
-                                <option value="pending" {{isset($filter['approval_status']) && $filter['approval_status'] == 'denied' ? 'selected=""' : ''}}>Denied</option>
-                                <option value="pending" {{isset($filter['approval_status']) && $filter['approval_status'] == 'died' ? 'selected=""' : ''}}>Died</option>
+                                <option value="denied" {{isset($filter['approval_status']) && $filter['approval_status'] == 'denied' ? 'selected=""' : ''}}>Denied</option>
+                                <option value="died" {{isset($filter['approval_status']) && $filter['approval_status'] == 'died' ? 'selected=""' : ''}}>Died</option>
                             </select>
                             &nbsp;
                             <input type="text" class="form-control" name="keyword" placeholder="Kata Kunci Disini..." value="<?=isset($_GET['keyword']) ? $_GET['keyword'] : ''?>">
