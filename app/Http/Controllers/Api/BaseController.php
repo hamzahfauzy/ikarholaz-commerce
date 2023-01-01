@@ -79,6 +79,42 @@ class BaseController extends Controller
         return Card::where('unique_number', $nomor)->firstOrFail();
     }
 
+    public function cekKartu($nomor)
+    {
+        $blacklist = BlacklistNra::where('nomor',$nomor);
+        if($blacklist->exists())
+        {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Maaf! Nomor ini tidak tersedia karena telah di blacklist'
+            ], 404);
+        }
+        
+        $exists = Card::where('nomor','LIKE','%'.$nomor.'%')->where('status','Checkout');
+        if($exists->exists())
+        {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Maaf! Nomor ini tidak tersedia lagi'
+            ], 404);
+        }
+        
+        $exists = Alumni::where('NRA','LIKE','%'.$nomor.'%')->where('status','Checkout');
+        if($exists->exists())
+        {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Maaf! Nomor ini tidak tersedia lagi'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Selamat! Nomor ini tersedia untuk anda'
+        ]);
+        // $cek = 
+    }
+
     public function getNomorRegular($tahun_lulus)
     {
         $tahun_lulus = substr($tahun_lulus, 2, 2);

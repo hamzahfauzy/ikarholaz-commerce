@@ -213,21 +213,7 @@ function checkKartu()
         return res.json()
     })
     .then(res => {
-        swal(    
-            {
-                title: 'Maaf!',
-                text: 'Nomor yang anda minta sudah digunakan! Silahkan pilih nomor yang lain',
-                type: 'error',
-                confirmButtonColor: '#4fa7f3'
-            }
-        )
-    })
-    .catch(function(error) {
-
-        var nra_cantiks = <?=$nra_cantiks?>;
-        var found = nra_cantiks.find(nra=>nra.name == nomorkartu);
-        if(found){
-            swal({
+        swal({
                 title: 'Selamat!',
                 text: 'Nomor yang anda minta tersedia! Klik OK untk lanjut ke tahap berikutnya',
                 type: 'success',
@@ -248,13 +234,14 @@ function checkKartu()
                         $('[name=digit]').val(digit)
                         $('[name=no_request]').val(no_request)
                         $('#no_kartu_fix').val(nomorkartu)
-                        $('#harga_fix').val(found.base_price)
+                        $('#harga_fix').val(res)
                     })
                 }
             })
-
-        }else{
-            swal(    
+        
+    })
+    .catch(function(error) {
+        swal(    
             {
                 title: 'Maaf!',
                 text: 'Nomor yang anda minta tidak tersedia! Silahkan pilih nomor yang lain',
@@ -262,7 +249,45 @@ function checkKartu()
                 confirmButtonColor: '#4fa7f3'
             }
         )
-        }
+        // var nra_cantiks = <?=$nra_cantiks?>;
+        // var found = nra_cantiks.find(nra=>nra.name == nomorkartu);
+        // if(found){
+        //     swal({
+        //         title: 'Selamat!',
+        //         text: 'Nomor yang anda minta tersedia! Klik OK untk lanjut ke tahap berikutnya',
+        //         type: 'success',
+        //         showCancelButton: true,
+        //         confirmButtonColor: '#4fa7f3',
+        //         cancelButtonColor: '#d57171',
+        //         confirmButtonText: 'Ok'
+        //     }).then(function (result) {
+        //         if(result.value)
+        //         {
+        //             // to order kta page
+        //             fetch('/api/get-price/'+digit)
+        //             .then(res => res.text())
+        //             .then(res => {
+        //                 $('#modal-nra-cantik').modal('hide'); 
+        //                 $('#modal-order-kta').modal('show'); 
+        //                 $('[name=product_id]').val(found.id)
+        //                 $('[name=digit]').val(digit)
+        //                 $('[name=no_request]').val(no_request)
+        //                 $('#no_kartu_fix').val(nomorkartu)
+        //                 $('#harga_fix').val(found.base_price)
+        //             })
+        //         }
+        //     })
+
+        // }else{
+        //     swal(    
+        //     {
+        //         title: 'Maaf!',
+        //         text: 'Nomor yang anda minta tidak tersedia! Silahkan pilih nomor yang lain',
+        //         type: 'error',
+        //         confirmButtonColor: '#4fa7f3'
+        //     }
+        // )
+        // }
 
         console.log(error);
     })

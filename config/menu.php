@@ -214,4 +214,11 @@ $menu[] = [
     'childs' => []
 ];
 
+$menu[] = [
+    'label' => 'Blacklist NRA',
+    'icon'  => 'mdi mdi-google-pages',
+    'route' => 'staff.blacklist-nra.index',
+    'childs' => []
+];
+
 return $menu;
