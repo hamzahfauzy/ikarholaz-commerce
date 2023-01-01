@@ -100,7 +100,7 @@ class BaseController extends Controller
             ], 404);
         }
         
-        $exists = Alumni::where('NRA','LIKE','%'.$nomor.'%')->where('status','Checkout');
+        $exists = Alumni::where('NRA','LIKE','%'.$nomor.'%');
         if($exists->exists())
         {
             return response()->json([
