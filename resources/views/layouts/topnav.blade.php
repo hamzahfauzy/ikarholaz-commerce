@@ -139,10 +139,6 @@
                         </ul>
                     </li>
                     
-                    <li>
-                        <a href="{{route('nra')}}"><i class="mdi mdi-view-list"></i>{{__('List NRA')}}</a>
-                    </li>
-
                     <li class="has-submenu">
                         <a href="#"><i class="mdi mdi-view-list"></i> {{__('Alumni')}}</a>
                         <ul class="submenu in">
