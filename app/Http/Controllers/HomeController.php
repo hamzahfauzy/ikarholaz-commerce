@@ -259,7 +259,15 @@ class HomeController extends Controller
         if(isset($_GET['draw']))
         {
 
-            $alumnis = (new Alumni)->select('id','name','graduation_year','created_at')->where('approval_status',$status);
+            $alumnis = (new Alumni)->select('id','name','graduation_year','created_at');
+            if($status == 'pending')
+            {
+                $alumnis = $alumnis->whereNull('approval_status');
+            }
+            else
+            {
+                $alumnis = $alumnis->where('approval_status',$status);
+            }
             $draw   = $_GET['draw'];
             $start  = $_GET['start'];
             $length = $_GET['length'];
@@ -284,7 +292,7 @@ class HomeController extends Controller
                 $alumnis = $alumnis->orwhere('created_at','LIKE','%'.$search.'%');
             }
 
-            $alumnis = $alumnis->whereNull('approval_status');
+            // $alumnis = $alumnis->whereNull('approval_status');
             $total   = $alumnis->count();
             $alumnis = $alumnis->orderby($columns[$order[0]['column']], $order[0]['dir']);
             $alumnis = $alumnis->skip($start)->take($length);
