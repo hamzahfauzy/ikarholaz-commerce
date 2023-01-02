@@ -80,7 +80,9 @@ Route::middleware(['auth:web'])->group(function () {
 
 // for public access
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nra');
+Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nra.list');
+Route::get('nra-buy', [App\Http\Controllers\HomeController::class, 'nraBuy'])->name('nra.buy');
+Route::get('nra-blacklist', [App\Http\Controllers\HomeController::class, 'nraBlacklist'])->name('nra.blacklist');
 Route::get('list-alumni/{status}', [App\Http\Controllers\HomeController::class, 'listAlumni'])->name('alumni.list');
 Route::name('events.')->prefix('events')->group(function () {
     Route::get('/', [App\Http\Controllers\EventController::class, 'index'])->name('index');

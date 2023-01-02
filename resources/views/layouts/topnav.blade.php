@@ -129,6 +129,15 @@
                     <li>
                         <a href="{{route('shop.index')}}"><i class="mdi mdi-shopping"></i>{{__('Shop')}}</a>
                     </li>
+
+                    <li class="has-submenu">
+                        <a href="#"><i class="mdi mdi-view-list"></i> {{__('NRA')}}</a>
+                        <ul class="submenu in">
+                            <li><a href="{{route('nra.list')}}">List NRA</a></li>
+                            <li><a href="{{route('nra.buy')}}">NRA Sudah Dibeli</a></li>
+                            <li><a href="{{route('nra.blacklist')}}">NRA Tidak Dijual</a></li>
+                        </ul>
+                    </li>
                     
                     <li>
                         <a href="{{route('nra')}}"><i class="mdi mdi-view-list"></i>{{__('List NRA')}}</a>

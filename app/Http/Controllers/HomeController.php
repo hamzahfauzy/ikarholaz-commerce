@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Cart;
 use App\Models\Alumni;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\BlacklistNra;
 use App\Models\Ref\District;
 use App\Models\Ref\Province;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class HomeController extends Controller
 {
@@ -252,6 +254,101 @@ class HomeController extends Controller
         }
 
         return view('nra');
+    }
+
+    function nraBuy()
+    {
+        if(isset($_GET['draw']))
+        {
+
+            $alumnis = (new Card)->select('id','name','card_number')->where('status','Checkout');
+            $draw   = $_GET['draw'];
+            $start  = $_GET['start'];
+            $length = $_GET['length'];
+            $search = $_GET['search']['value'];
+            $order  = $_GET['order'];
+    
+            $columns = [
+                'id',
+                'name',
+                'card_number'
+            ];
+    
+            if(!empty($search))
+            {
+                $alumnis = $alumnis->where('name','LIKE','%'.$search.'%');
+                $alumnis = $alumnis->orwhere('card_number','LIKE','%'.$search.'%');
+            }
+            
+            
+            $total = $alumnis->count();
+            $alumnis = $alumnis->orderby($columns[$order[0]['column']], $order[0]['dir']);
+            $alumnis = $alumnis->skip($start)->take($length);
+            $alumnis = $alumnis->get();
+    
+            $results  = [];
+            foreach($alumnis as $key => $alumni)
+            {
+                $results[$key][] = $key+1;
+                $results[$key][] = $alumni->name;
+                $results[$key][] = $alumni->card_number;
+            }
+    
+            return [
+                "draw" => $draw,
+                "recordsTotal" => $total,
+                "recordsFiltered" => $total,
+                "data" => $results
+            ];
+        }
+
+        return view('nra-buy');
+    }
+
+    function nraBlacklist()
+    {
+        if(isset($_GET['draw']))
+        {
+
+            $alumnis = (new BlacklistNra)->select('id','nomor');
+            $draw   = $_GET['draw'];
+            $start  = $_GET['start'];
+            $length = $_GET['length'];
+            $search = $_GET['search']['value'];
+            $order  = $_GET['order'];
+    
+            $columns = [
+                'id',
+                'nomor',
+            ];
+    
+            if(!empty($search))
+            {
+                $alumnis = $alumnis->where('nomor','LIKE','%'.$search.'%');
+            }
+            
+            
+            $total = $alumnis->count();
+            $alumnis = $alumnis->orderby($columns[$order[0]['column']], $order[0]['dir']);
+            $alumnis = $alumnis->skip($start)->take($length);
+            $alumnis = $alumnis->get();
+    
+            $results  = [];
+            foreach($alumnis as $key => $alumni)
+            {
+                $results[$key][] = $key+1;
+                $results[$key][] = $alumni->nomor;
+            }
+    
+            return [
+                "draw" => $draw,
+                "recordsTotal" => $total,
+                "recordsFiltered" => $total,
+                "data" => $results
+            ];
+        }
+
+        return view('nra-blacklist');
     }
 
     function listAlumni($status)
