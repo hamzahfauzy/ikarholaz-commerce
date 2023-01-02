@@ -11,7 +11,7 @@
 
             <div class="row text-center">
                 <div class="col-sm-12">
-                    <h3 class="m-t-20">{{__('Pending Alumni')}}</h3>
+                    <h3 class="m-t-20">{{__('List Alumni')}}</h3>
                     <div class="border mx-auto d-block m-b-20"></div>
                 </div>
             </div>
@@ -37,6 +37,7 @@
                                             <th>Nama</th>
                                             <th>Tahun Lulus</th>
                                             <th>Tanggal Register</th>
+                                            <th>Notes</th>
                                         </tr>
                                     </thead>
                                 </table>

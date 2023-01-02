@@ -81,7 +81,7 @@ Route::middleware(['auth:web'])->group(function () {
 // for public access
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nra');
-Route::get('pending', [App\Http\Controllers\HomeController::class, 'pending'])->name('pending');
+Route::get('list-alumni/{status}', [App\Http\Controllers\HomeController::class, 'listAlumni'])->name('alumni.list');
 Route::name('events.')->prefix('events')->group(function () {
     Route::get('/', [App\Http\Controllers\EventController::class, 'index'])->name('index');
     Route::get('{id}', [App\Http\Controllers\EventController::class, 'show'])->name('show');

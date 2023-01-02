@@ -111,7 +111,13 @@
             <div id="navigation">
                 <!-- Navigation Menu-->
                 <ul class="navigation-menu">
-
+                    <li class="has-submenu active">
+                        <a href="#" class="active"> <i class="mdi mdi-view-dashboard"></i>Dashboard</a>
+                        <ul class="submenu in">
+                            <li class="active"><a href="index.html" class="active">Dashboard 1</a></li>
+                            <li><a href="dashboard_2.html">Dashboard 2</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="{{route('home')}}"><i class="mdi mdi-view-dashboard"></i>{{__('Home')}}</a>
                     </li>
@@ -128,8 +134,12 @@
                         <a href="{{route('nra')}}"><i class="mdi mdi-view-list"></i>{{__('List NRA')}}</a>
                     </li>
 
-                    <li>
-                        <a href="{{route('pending')}}"><i class="mdi mdi-view-list"></i>{{__('Pending Alumni')}}</a>
+                    <li class="has-submenu">
+                        <a href="#"><i class="mdi mdi-view-list"></i> {{__('Alumni')}}</a>
+                        <ul class="submenu in">
+                            <li><a href="{{route('alumni.list',['status'=>'pending'])}}">Pending</a></li>
+                            <li><a href="{{route('alumni.list',['status'=>'died'])}}">Died</a></li>
+                        </ul>
                     </li>
 
                     <li>

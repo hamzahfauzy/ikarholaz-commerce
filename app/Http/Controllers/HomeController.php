@@ -254,12 +254,12 @@ class HomeController extends Controller
         return view('nra');
     }
 
-    function pending()
+    function listAlumni($status)
     {
         if(isset($_GET['draw']))
         {
 
-            $alumnis = (new Alumni)->select('id','name','graduation_year','created_at');
+            $alumnis = (new Alumni)->select('id','name','graduation_year','created_at')->where('approval_status',$status);
             $draw   = $_GET['draw'];
             $start  = $_GET['start'];
             $length = $_GET['length'];
@@ -271,6 +271,7 @@ class HomeController extends Controller
                 'name',
                 'graduation_year',
                 'created_at',
+                'notes'
             ];
 
             if(isset($_GET['year']) && !empty($_GET['year']))
@@ -296,6 +297,7 @@ class HomeController extends Controller
                 $results[$key][] = $alumni->name;
                 $results[$key][] = $alumni->graduation_year;
                 $results[$key][] = $alumni->tanggal;
+                $results[$key][] = $alumni->notes;
             }
     
             return [
