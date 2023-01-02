@@ -68,7 +68,7 @@
 <script src="{{asset('plugins/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script>
 
-    var ajaxUrl = "{{route('pending')}}"
+    var ajaxUrl = "{{url()->current()}}"
     $('.datatable').dataTable({
         processing: true,
         search: {
