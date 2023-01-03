@@ -52,7 +52,11 @@
                 @foreach($customFields as $customField)
                 <div class="form-group">
                     <label for="">{{ucwords(__($customField->field_key))}}</label>
-                    {{ Form::{$customField->field_type}("custom_fields[$customField->field_key]", $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control select2 select2-multiple' . ($errors->has('name') ? ' is-invalid' : '')]) }}
+                    @if($customField->field_type == 'select')
+                    {{ Form::select("custom_fields[$customField->field_key]", App\Models\Merchant::get()->pluck('name','name'), $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control select2' . ($errors->has('name') ? ' is-invalid' : '')]) }}
+                    @else
+                    {{ Form::{$customField->field_type}("custom_fields[$customField->field_key]", $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control ' . ($errors->has('name') ? ' is-invalid' : '')]) }}
+                    @endif
                     {!! $errors->first('name', '<p class="invalid-feedback">:message</p>') !!}
                 </div>
                 @endforeach

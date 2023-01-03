@@ -226,4 +226,11 @@ $menu[] = [
     'childs' => []
 ];
 
+$menu[] = [
+    'label' => 'Merchant',
+    'icon'  => 'mdi mdi-google-pages',
+    'route' => 'staff.merchants.index',
+    'childs' => []
+];
+
 return $menu;

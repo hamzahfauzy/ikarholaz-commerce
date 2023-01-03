@@ -9,6 +9,7 @@ use App\Http\Controllers\Staff\PaymentController;
 use App\Http\Controllers\Staff\ProductController;
 use App\Http\Controllers\Staff\CategoryController;
 use App\Http\Controllers\Staff\CustomerController;
+use App\Http\Controllers\Staff\MerchantController;
 use App\Http\Controllers\Staff\BroadcastController;
 use App\Http\Controllers\Staff\TransactionController;
 use App\Http\Controllers\Staff\BlacklistNraController;
@@ -55,6 +56,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::resource('events', EventController::class);
     Route::resource('jolalis', JolaliController::class);
     Route::resource('advertisements', AdvertisementController::class);
+    Route::resource('merchants', MerchantController::class);
     Route::resource('blacklist-nra', BlacklistNraController::class);
     Route::resource('broadcasts', BroadcastController::class);
     Route::resource('customers', CustomerController::class);
