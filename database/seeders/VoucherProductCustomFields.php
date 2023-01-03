@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CustomField;
 use Illuminate\Database\Seeder;
 
 class VoucherProductCustomFields extends Seeder
