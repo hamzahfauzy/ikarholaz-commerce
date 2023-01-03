@@ -14,7 +14,7 @@
 $is_event = false;
 foreach(cart()->all_lists()->get() as $cart)
 {
-    $is_event = (($cart->parent && $cart->parent->parent->categories->contains(config('reference.event_kategori'))) || ($cart->categories->contains(config('reference.event_kategori'))));
+    $is_event = ( ($cart->parent && $cart->parent->parent->categories->contains(config('reference.event_kategori'))) || $cart->categories->contains(config('reference.event_kategori')) || $cart->categories->contains(config('reference.voucher_kategori')) );
     if($is_event) break;
 }
 ?>
