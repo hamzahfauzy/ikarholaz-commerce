@@ -67,6 +67,29 @@ Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 
 *GERAI IKARHOLAZ*
 _part of Sistem Informasi Rholaz (SIR) 2022_";
         }
+        else if(($cart->parent && $cart->parent->parent->categories->contains(config('reference.voucher_kategori'))) ||  $cart->categories->contains(config('reference.voucher_kategori')))
+        {
+            $message = "Hai kak $customer->full_name,
+Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
+    
+Kode Transaksi: $transaction->id
+Metode Pembayaran: $payment->payment_type ".($payment->payment_type == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payment->payment_code)."
+Nama Pemesan: $customer->full_name
+    
+Biaya : Rp. ".number_format($total)."
+    
+Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
+
+Terima kasih,
+Salam hangat
+_Mimin Gerai_
+
+---------
+Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
+
+*GERAI IKARHOLAZ*
+_part of Sistem Informasi Rholaz (SIR) 2022_";
+        }
         else
         {
             $message = "Terima kasih sudah melakukan transaksi di IKARHOLAZ. Berikut adalah detail transaksi Anda:
