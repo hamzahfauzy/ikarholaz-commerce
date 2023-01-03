@@ -39,6 +39,11 @@ $menu[] = [
             'childs' => []
         ],
         [
+            'label' => 'Voucher',
+            'route' => 'staff.products.vouchers',
+            'childs' => []
+        ],
+        [
             'label' => 'Add New',
             'route' => 'staff.products.create',
             'childs' => []

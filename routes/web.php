@@ -45,6 +45,7 @@ Route::middleware(['auth:staff'])->prefix('staff')->name('staff.')->group(functi
     Route::get('cards/setting', [CardController::class, 'settin'])->name('cart.setting');
 
     Route::resource('cards', CardController::class);
+    Route::get('products/vouchers', [ProductController::class,'vouchers'])->name('products.vouchers');
     Route::resource('products', ProductController::class);
     Route::resource('product-variants', ProductVariantController::class);
     Route::resource('transactions', TransactionController::class);

@@ -29,6 +29,21 @@ class ProductController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function vouchers()
+    {
+        $products = Product::where('is_dynamic',NULL)->doesntHave('parent')->whereHas('categories', function ($query) {
+            return $query->where('category_id', config('reference.voucher_kategori'));
+        })->paginate();
+
+        return view('staff.product.index', compact('products'))
+            ->with('i', (request()->input('page', 1) - 1) * $products->perPage());
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
