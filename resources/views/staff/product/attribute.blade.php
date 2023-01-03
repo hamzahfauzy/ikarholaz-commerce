@@ -28,7 +28,7 @@
                 @php($customFields = App\Models\CustomField::where('class_target','App\Models\EventProduct')->get())
                 @foreach($customFields as $customField)
                 <div class="form-group">
-                    <label for="">{{ucwords($customField->field_key)}}</label>
+                    <label for="">{{ucwords(__($customField->field_key))}}</label>
                     {{ Form::{$customField->field_type}("custom_fields[$customField->field_key]", $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control select2 select2-multiple' . ($errors->has('name') ? ' is-invalid' : '')]) }}
                     {!! $errors->first('name', '<p class="invalid-feedback">:message</p>') !!}
                 </div>
