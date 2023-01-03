@@ -42,5 +42,10 @@
     "nama_merchant" : "Nama Merchant",
     "kode_voucher" : "Kode Voucher",
     "tanggal_berakhir" : "Tanggal Berakhir",
-    "no_wa" : "No. WA"
+    "no_wa" : "No. WA",
+    "tahun_lulus" : "Tahun Lulus",
+    "Cart item removed" : "Item Keranjang di hapus",
+    "Cart item updated" : "Item Keranjang di update",
+    "Customer Identity" : "Identitas Kustomer",
+    "Summary" : "Ringkasan"
 }

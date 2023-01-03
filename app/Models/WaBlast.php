@@ -123,13 +123,25 @@ class WaBlast
         return $response;
     }
 
-    static function fonnteSend($to, $message, $attacment = false)
+    static function fonnteSend($to, $message, $attachment = false)
     {
         if(config('env') == 'dev')
         {
             return;
         }
         $curl = curl_init();
+        $params = array(
+            'target' => $to,
+            // 'type' => 'text',
+            'message' => $message,
+            // 'delay' => '1',
+            'schedule' => '0'
+        );
+
+        if($attachment)
+        {
+            $params['url'] = $attachment;
+        }
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.fonnte.com/send",
@@ -140,13 +152,7 @@ class WaBlast
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => array(
-                'target' => $to,
-                // 'type' => 'text',
-                'message' => $message,
-                // 'delay' => '1',
-                'schedule' => '0'
-            ),
+            CURLOPT_POSTFIELDS => $params,
             CURLOPT_HTTPHEADER => array(
                 "Authorization: ".env('WA_FONNTE_TOKEN','')
             ),

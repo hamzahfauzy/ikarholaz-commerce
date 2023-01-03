@@ -98,4 +98,56 @@ class PdfAction
 
         return $file_to_save;
     }
+
+    function voucherUrl($transaction_id)
+    {
+        $transaction = \App\Models\Transaction::find($transaction_id);
+        $items    = $transaction->transactionItems;
+        $payment  = $transaction->payment;
+        $product  = $items[0]->product;
+        if(!$product) return '';
+        $customer = $transaction->customer;
+
+        $voucher  = null;
+        foreach($items as $item)
+        {
+            if($item->product->categories->contains(config('reference.voucher_kategori')))
+            {
+                $voucher = $item;
+                break;
+            }
+        }
+
+        $filename = md5(md5($customer->id.".".$transaction->id.".".$transaction->created_at));
+        $file_to_save = 'evoucher/'.$filename.'.pdf';
+        if(!file_exists($file_to_save))
+        {
+            $custom_fields = \App\Models\CustomField::where('class_target','App\Models\VoucherProduct')->get();
+            $cf = [];
+            $cf_product_id = isset($product->parent) ? $product->parent->parent->id : $product->id;
+            foreach($custom_fields as $key => $value)
+            {
+                $cf[$value->field_key] = $value->get_value($cf_product_id)->field_value;
+            }
+
+            $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=".$voucher->notes."&chs=180x180&choe=UTF-8&chld=L|0");
+            $barcode = 'data:image/png;base64,' . base64_encode($barcode);
+    
+            $path = public_path('storage/public/'.$voucher->product->thumb->file_url);
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $bg   = 'data:image/' . $type . ';base64,' . base64_encode($data);
+    
+            $content = view('pdf.voucher',compact('transaction','items','payment','product','customer','cf','bg','barcode'))->render();
+    
+            $pdf = PDF::loadHTML($content)->setOptions(['defaultFont' => 'Courier'])->setPaper([0,0,141,425], 'landscape'); 
+            // ->stream('download.pdf');
+            $filename = md5(md5($customer->id.".".$transaction->id.".".$transaction->created_at));
+            $file_to_save = 'evoucher/'.$filename.'.pdf';
+            //save the pdf file on the server
+            file_put_contents($file_to_save, $pdf->output());
+        }
+
+        return $file_to_save;
+    }
 }

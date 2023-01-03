@@ -74,11 +74,18 @@ Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
     
 Kode Transaksi: $transaction->id
 Metode Pembayaran: $payment->payment_type ".($payment->payment_type == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payment->payment_code)."
-Nama Pemesan: $customer->full_name
+Nama Anda: $customer->full_name
+Email: $customer->email
+Nomor HP: $customer->phone_number
+
+Rincian transaksi
+$order_items_string
     
-Biaya : Rp. ".number_format($total)."
+TOTAL : Rp. ".number_format($total)."
     
-Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
+Silahkan lakukan pembayaran sesuai metode yang dipilih. 
+    
+*Khusus transfer manual/cash lakukan konfirmasi dengan mereplay notifikasi ini*
 
 Terima kasih,
 Salam hangat
@@ -104,7 +111,7 @@ Alamat pengiriman: $customer->address
 Rincian transaksi
 $order_items_string
     
-TOTAL : ".number_format($total)."
+TOTAL : Rp. ".number_format($total)."
     
 Silahkan lakukan pembayaran sesuai metode yang dipilih. 
     
@@ -178,6 +185,25 @@ Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 
 *GERAI IKARHOLAZ*
 _part of Sistem Informasi Rholaz (SIR) 2022_";
         }
+        else if(($product->parent && $product->parent->parent->categories->contains(config('reference.voucher_kategori'))) || $product->categories->contains(config('reference.voucher_kategori')))
+        {
+            $pdf_url = (new \App\Libraries\PdfAction)->voucherUrl($transaction->id);
+
+            $message = "Hai kak $customer->full_name,
+Terima kasih telah melakukan pembayaran untuk kode transaksi *#$transaction->id* sebesar Rp. $transaction->total_formated melalui $payment->payment_type.
+
+Silakan download e-Voucher nya melalui ".url()->to($pdf_url)." 
+
+Terima kasih,
+Salam hangat
+_Mimin Gerai_
+
+---------
+Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
+
+*GERAI IKARHOLAZ*
+_part of Sistem Informasi Rholaz (SIR) 2022_";
+        }
         else
         {
             $message = "Terima Kasih Kak ".$customer->full_name."
@@ -238,6 +264,25 @@ Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 
 *GERAI IKARHOLAZ*
 _part of Sistem Informasi Rholaz (SIR) 2022_";
 
+        }
+        else if(($product->parent && $product->parent->parent->categories->contains(config('reference.voucher_kategori'))) || $product->categories->contains(config('reference.voucher_kategori')))
+        {
+            $pdf_url = (new \App\Libraries\PdfAction)->voucherUrl($transaction->id);
+
+            $message = "Hai kak $customer->full_name,
+Terima kasih telah melakukan pembayaran untuk kode transaksi *#$transaction->id* sebesar Rp. $transaction->total_formated telah kami terima.
+
+Silakan download e-Voucher nya melalui ".url()->to($pdf_url)." 
+
+Terima kasih,
+Salam hangat
+_Mimin Gerai_
+
+---------
+Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
+
+*GERAI IKARHOLAZ*
+_part of Sistem Informasi Rholaz (SIR) 2022_";
         }
         else
         {

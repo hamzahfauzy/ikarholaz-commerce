@@ -70,7 +70,7 @@ class ShopController extends Controller
         Cart::add($request->product_id,$request->qty);
         if($request->action == 'checkout')
             return redirect()->route('shop.checkout');
-        return redirect()->back()->with('success','Add to cart success');
+        return redirect()->back()->with('success',__('Add to cart success'));
     }
 
     public function addToCart($slug)
@@ -97,13 +97,13 @@ class ShopController extends Controller
     public function cartRemove($id)
     {
         Cart::pop($id);
-        return redirect()->back()->with('success','Cart item removed');
+        return redirect()->back()->with('success',__('Cart item removed'));
     }
 
     public function cartUpdate(Request $request)
     {
         Cart::update($request->id, $request->qty);
-        return redirect()->back()->with('success','Cart item updated');
+        return redirect()->back()->with('success',__('Cart item updated'));
     }
 
     public function placeOrder(Request $request)
@@ -183,12 +183,13 @@ class ShopController extends Controller
 
             foreach(cart()->all_lists()->get() as $index => $cart)
             {
+                $notes = $cart->categories->contains(config('reference.voucher_kategori')) ? substr(md5(strtotime('now')),0,8) : $request->notes[$index];
                 $transaction_item = TransactionItem::create([
                     'transaction_id' => $transaction->id,
                     'product_id'     => $cart->id,
                     'amount'         => cart()->get($cart->id),
                     'total'          => $cart->price*cart()->get($cart->id),
-                    'notes'          => $request->notes[$index]
+                    'notes'          => $notes
                 ]);
 
                 $singleProduct = Product::find($cart->id);

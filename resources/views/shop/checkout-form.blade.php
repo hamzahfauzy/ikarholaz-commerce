@@ -1,3 +1,4 @@
+<h4>{{__('Customer Identity')}}</h4>
 <div class="form-group">
     <label for="">{{__('First Name')}}</label>
     <input type="text" class="form-control" name="first_name" required="" value="{{old('first_name')}}">

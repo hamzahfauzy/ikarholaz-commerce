@@ -10,9 +10,11 @@
         </td>
         <td>{{number_format(cart()->subtotal($cart->id))}}</td>
     </tr>
+    @if(!($cart->categories->contains(config('reference.voucher_kategori'))))
     <tr>
         <td colspan="3"><input type="text" name="notes[]" id="" class="form-control" placeholder="Catatan"></td>
     </tr>
+    @endif
     @for($i=0;$i<cart()->get($cart->id);$i++)
     @if(count(cart()->custom_fields($cart)))
     <tr>
@@ -21,10 +23,10 @@
         @foreach(cart()->custom_fields($cart) as $cf)
             <div class="form-group">
                 @if($cf->field_key == 'NRA')
-                <label for="">{{ucwords($cf->field_key)}}</label>
+                <label for="">{{ucwords(__($cf->field_key))}}</label>
                 <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($cf->field_key)}}">
                 @elseif($cf->field_key == 'tahun_lulus')
-                <label for="">{{ucwords($cf->field_key)}}</label>
+                <label for="">{{ucwords(__($cf->field_key))}}</label>
                 <select name="cart_item[{{$cart->id}}][{{$cf->id}}][]" id="" class="form-control {{$cf->field_key}}" required>
                     <option value="">Pilih Tahun</option>
                     @for($j=1974;$j<=2021;$j++)
