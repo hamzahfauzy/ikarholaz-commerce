@@ -92,6 +92,15 @@ Route::name('events.')->prefix('events')->group(function () {
     Route::get('{id}', [App\Http\Controllers\EventController::class, 'show'])->name('show');
 });
 Route::post('tripay-callback', [App\Http\Controllers\CallbackController::class, 'tripay'])->name('tripay-callback');
+Route::name('merchant.')->prefix('merchant')->group(function(){
+    Route::get('/',[App\Http\Controllers\MerchantController::class, 'index'])->name('index');
+    Route::get('scan',[App\Http\Controllers\MerchantController::class, 'scan'])->name('scan');
+    Route::get('logout',[App\Http\Controllers\MerchantController::class, 'logout'])->name('logout');
+    Route::post('voucher-detail',[App\Http\Controllers\MerchantController::class, 'voucherDetail'])->name('voucher-detail');
+    Route::post('claim-voucher',[App\Http\Controllers\MerchantController::class, 'claimVoucher'])->name('claim-voucher');
+    Route::post('send-otp',[App\Http\Controllers\MerchantController::class, 'sendOtp'])->name('send-otp');
+    Route::post('verify-otp',[App\Http\Controllers\MerchantController::class, 'verifyOtp'])->name('verify-otp');
+});
 Route::name('shop.')->group(function () {
     Route::get('thankyou', function(){
         return view('shop.thankyou');

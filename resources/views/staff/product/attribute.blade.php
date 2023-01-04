@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label for="">{{ucwords(__($customField->field_key))}}</label>
                     @if($customField->field_type == 'select')
-                    {{ Form::select("custom_fields[$customField->field_key]", App\Models\Merchant::get()->pluck('name','name'), $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control select2' . ($errors->has('name') ? ' is-invalid' : '')]) }}
+                    {{ Form::select("custom_fields[$customField->field_key]", App\Models\Merchant::get()->pluck('merchant_name','merchant_name'), $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control select2' . ($errors->has('name') ? ' is-invalid' : '')]) }}
                     @else
                     {{ Form::{$customField->field_type}("custom_fields[$customField->field_key]", $customField->get_value($product->id)?$customField->get_value($product->id)->field_value:'', ['class' => 'form-control ' . ($errors->has('name') ? ' is-invalid' : '')]) }}
                     @endif

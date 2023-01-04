@@ -147,6 +147,10 @@
                     <li>
                         <a href="{{route('events.index')}}"><i class="mdi mdi-view-list"></i>{{__('Event')}}</a>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('merchant.index')}}"><i class="mdi mdi-store"></i>{{__('Merchant')}}</a>
+                    </li>
                 </ul>
                 <!-- End navigation menu -->
             </div> <!-- end #navigation -->

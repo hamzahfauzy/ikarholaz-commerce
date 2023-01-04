@@ -10,4 +10,9 @@ class Merchant extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function getMerchantNameAttribute()
+    {
+        return $this->code . ' | ' . $this->name;
+    }
 }

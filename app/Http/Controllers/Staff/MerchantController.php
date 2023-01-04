@@ -41,7 +41,8 @@ class MerchantController extends Controller
     public function store(Request $request)
     {
         request()->validate([
-            'name'=>'required|unique:merchants',
+            'code'=>'required|unique:merchants',
+            'name'=>'required',
             'phone'=>'required',
         ]);
 
@@ -89,7 +90,8 @@ class MerchantController extends Controller
     public function update(Request $request, Merchant $Merchant)
     {
         request()->validate([
-            'name'=>'required|unique:merchants,name,'.$Merchant->id,
+            'code'=>'required|unique:merchants,code,'.$Merchant->id,
+            'name'=>'required',
             'phone'=>'required',
         ]);
 

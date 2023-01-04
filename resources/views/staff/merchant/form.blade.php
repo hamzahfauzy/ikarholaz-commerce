@@ -2,6 +2,12 @@
     <div class="box-body">
         
         <div class="form-group">
+            {{ Form::label('kode merchant') }}
+            {{ Form::text('code', $model->code, ['class' => 'form-control' . ($errors->has('code') ? ' is-invalid' : '')]) }}
+            {!! $errors->first('code', '<p class="invalid-feedback">:message</p>') !!}
+        </div>
+        
+        <div class="form-group">
             {{ Form::label('name') }}
             {{ Form::text('name', $model->name, ['class' => 'form-control' . ($errors->has('name') ? ' is-invalid' : '')]) }}
             {!! $errors->first('name', '<p class="invalid-feedback">:message</p>') !!}

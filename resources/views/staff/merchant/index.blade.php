@@ -42,6 +42,7 @@
                                     <tr>
                                         <th>No</th>
                                         
+										<th>Kode Merchant</th>
 										<th>Nama</th>
 										<th>No. WA</th>
 
@@ -53,6 +54,7 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
+											<td>{{ $merchant->code }}</td>
 											<td>{{ $merchant->name }}</td>
 											<td>{{ $merchant->phone }}</td>
 
