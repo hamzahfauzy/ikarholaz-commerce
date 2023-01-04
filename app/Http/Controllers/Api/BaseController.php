@@ -652,6 +652,8 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                 $_payment = Payment::create($payments);
 
                 DB::commit();
+                $advertisement = Advertisement::where('event','REGTIKET HUT4')->first();
+                $ads_content   = $advertisement ? $advertisement->contents : '';
 
                 if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
 
@@ -660,18 +662,18 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
                     if(is_array($payment)) $total += $payment['total_fee']['flat'];
 
                     $notifAction = new NotifAction;
-                    $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string);
+                    $message = $notifAction->checkoutWASuccess($transaction, $total, $customer, $_payment, $order_items_string)."
+".$ads_content;
                     WaBlast::webisnisSend($request->sender, $phone, $message);
 
                 endif;
 
                 // return redirect()->to($response_data['checkout_url']);
-                $advertisement = Advertisement::where('event','REGTIKET HUT4')->first();
-                $ads_content   = $advertisement ? $advertisement->contents : '';
-                $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url']."
-
-".$ads_content;
-                WaBlast::webisnisSend($request->sender, $phone, $msg);
+                if($request->payment_method != 'cash')
+                {   
+                    $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url'];
+                    WaBlast::webisnisSend($request->sender, $phone, $msg);
+                }
 
                 return response()->json([
                     'status' => 'succes',

@@ -162,6 +162,40 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
             
         return $message;
     }
+
+    public function checkoutVoucherWASuccess($transaction, $total, $customer, $payment, $order_items_string = "")
+    {
+            
+        $message = "Hai kak $customer->full_name,
+Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
+    
+Kode Transaksi: $transaction->id
+Metode Pembayaran: $payment->payment_type ".($payment->payment_type == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payment->payment_code)."
+Nama Anda: $customer->full_name
+Email: $customer->email
+Nomor HP: $customer->phone_number
+
+Rincian transaksi
+$order_items_string
+    
+TOTAL : Rp. ".number_format($total)."
+    
+Silahkan lakukan pembayaran sesuai metode yang dipilih. 
+    
+*Khusus transfer manual/cash lakukan konfirmasi dengan mereplay notifikasi ini*
+
+Terima kasih,
+Salam hangat
+_Mimin Gerai_
+
+---------
+Jika ada pertanyaan silakan hubungi langsung di inbox@ikarholaz.com atau di +62 838-0661-1212
+
+*GERAI IKARHOLAZ*
+_part of Sistem Informasi Rholaz (SIR) 2022_";
+            
+        return $message;
+    }
     
     public function paymentSuccess($product, $customer, $transaction, $payment)
     {

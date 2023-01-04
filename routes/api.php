@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\Bot\VoucherController as BotVoucherController;
 use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\AdminController;
 use App\Http\Controllers\Mobile\AlumniController;
@@ -48,6 +49,13 @@ Route::post('/info-nra', [AlumniController::class, 'getNra']);
 Route::post('/cek-nra', [BaseController::class, 'cekNra']);
 Route::post('/send-candidates', [BaseController::class, 'sendCandidates']);
 Route::post('/get-alumnis', [BaseController::class, 'getAlumnis']);
+
+Route::prefix('bot')->group(function(){
+    Route::prefix('vouchers')->group(function(){
+        Route::post('/',[BotVoucherController::class,'index']);
+        Route::post('buy',[BotVoucherController::class,'buy']);
+    });
+});
 
 Route::prefix('events')->group(function(){
     Route::get('/',[EventController::class,'index']);
