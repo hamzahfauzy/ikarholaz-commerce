@@ -13,6 +13,7 @@ use App\Models\Advertisement;
 use App\Libraries\NotifAction;
 use App\Models\TransactionItem;
 use App\Models\CustomFieldValue;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
@@ -263,7 +264,7 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
             WaBlast::webisnisSend($request->sender, $phone, 'Maaf! Voucher yang anda pilih tidak valid. Silahkan ulangi pembelian.');
             return response()->json([
                 'status' => 'failed',
-                'errors' => $error
+                'errors' => 'Maaf! Voucher yang anda pilih tidak valid. Silahkan ulangi pembelian.'
             ], 400);
         }
         $paymentChannel = (array) $this->paymentChannel();
