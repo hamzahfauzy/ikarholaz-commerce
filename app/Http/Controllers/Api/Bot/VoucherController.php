@@ -13,6 +13,7 @@ use App\Models\Advertisement;
 use App\Libraries\NotifAction;
 use App\Models\TransactionItem;
 use App\Models\CustomFieldValue;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class VoucherController extends Controller
@@ -48,11 +49,13 @@ class VoucherController extends Controller
             ],400);
         }
 
-        $message = "Berikut adalah daftar voucher yang tersedia. Silahkan di pilih sesuai dengan nomor urut voucher.";
+        $message = "Berikut adalah daftar voucher yang tersedia. Silahkan di pilih sesuai dengan nomor urut voucher.
+";
         foreach($products as $no => $product)
         {
             $no = $no+1;
-            $message .= $no . ". ". $product->name;
+            $message .= $no . ". ". $product->name."
+";
         }
 
         WaBlast::webisnisSend($request->sender, $request->phone, $message);
@@ -69,6 +72,7 @@ class VoucherController extends Controller
     {
         $products = $this->listProducts();
         $phone    = str_replace('+','',$request->phone);
+        Log::info('Option : '.$request->option);
         if(strpos($request->option,"#") !== false)
         {
             $option = explode('#',$request->option); // 0 = option index, 1 = pg index
