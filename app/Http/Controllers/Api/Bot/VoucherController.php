@@ -258,13 +258,15 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
                         if(is_array($payment)) $total += $payment['total_fee']['flat'];
     
                         $message = $notifAction->checkoutVoucherWASuccess($transaction, $total, $customer, $_payment, $order_items_string)."
-    ".$ads_content;
-                        WaBlast::webisnisSend($request->sender, $phone, $message);
+".$ads_content;
                     }
                     else
                     {
-                        $notifAction->paymentSuccess($product, $customer, $transaction, $_payment);
+                        $message = $notifAction->paymentSuccess($product, $customer, $transaction, $_payment, true)."
+".$ads_content;
                     }
+
+                    WaBlast::webisnisSend($request->sender, $phone, $message);
                     
                     // return redirect()->to($response_data['checkout_url']);
                     if($_payment->payment_type != 'cash')

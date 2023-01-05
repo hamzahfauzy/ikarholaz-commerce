@@ -197,7 +197,7 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
         return $message;
     }
     
-    public function paymentSuccess($product, $customer, $transaction, $payment)
+    public function paymentSuccess($product, $customer, $transaction, $payment, $return_string = false)
     {
         if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
         {
@@ -246,6 +246,7 @@ Pembayaran atas tagihan #$payment->transaction_id sebesar ".$payment->total_form
 Pesanan kakak segera kami proses ya
 Terima kasih.";
         }
+        if($return_string) return $message;
         WaBlast::send($customer->phone_number,$message);
     }
 
