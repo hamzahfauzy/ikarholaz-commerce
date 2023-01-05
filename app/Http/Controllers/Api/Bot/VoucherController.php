@@ -33,9 +33,11 @@ class VoucherController extends Controller
                             ->where('field_key','tanggal_berakhir')
                             ->first();
 
-        $products = CustomFieldValue::where('custom_field_id',$end_date_field->id)->whereRaw("STR_TO_DATE(field_value, '%Y-%m-%dT%TZ') > now()")->join('products','products.id','=','custom_field_values.pk_id')->get();
+        $products = CustomFieldValue::where('custom_field_id',$end_date_field->id)->whereRaw("STR_TO_DATE(field_value, '%Y-%m-%dT%TZ') > now()")
+                    // ->join('products','products.id','=','custom_field_values.pk_id')
+                    ->get()->pluck('pk_id')->toArray();
 
-        return $products;
+        return Product::whereIn('id',$products)->get();
     }
     
     public function index(Request $request)
@@ -134,8 +136,6 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
                 ]);
                 
                 $singleProduct = $products[$option[0]-1];
-                Log::info($products);
-                Log::info($singleProduct);
                 
                 $transaction_item = TransactionItem::create([
                     'transaction_id' => $transaction->id,
