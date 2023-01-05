@@ -666,14 +666,15 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
 ".$ads_content;
                     WaBlast::webisnisSend($request->sender, $phone, $message);
 
+                    // return redirect()->to($response_data['checkout_url']);
+                    if($_payment->payment_type != 'cash')
+                    {   
+                        $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url'];
+                        WaBlast::webisnisSend($request->sender, $phone, $msg);
+                    }
+
                 endif;
 
-                // return redirect()->to($response_data['checkout_url']);
-                if($request->payment_method != 'cash')
-                {   
-                    $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url'];
-                    WaBlast::webisnisSend($request->sender, $phone, $msg);
-                }
 
                 return response()->json([
                     'status' => 'succes',

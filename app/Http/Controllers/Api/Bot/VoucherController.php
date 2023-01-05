@@ -78,34 +78,50 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
     {
         $products = $this->listProducts();
         $phone    = str_replace('+','',$request->phone);
-        Log::info('Option : '.$request->option);
+        $product_index = -1;
         if(strpos($request->option,"#") !== false)
         {
             $option = explode('#',$request->option); // 0 = option index, 1 = pg index
-            $paymentChannel = (array) $this->paymentChannel();
-            $payments = $paymentChannel['data'];
-            $payment  = false;
-            $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
+            $product_index = $option[0];
+        }
+        else
+        {
+            $product_index = $request->option;
+        }
+        $product = $products[$product_index-1];
+
+        if(strpos($request->option,"#") !== false || $product->price == 0)
+        {
             $order_items_string = "";
-            $pgIndex = $option[1]-1;
-            if($pgIndex == count($payments))
+            $payment  = false;
+
+            if($product->price)
             {
-                $payment = 'cash';
-            }
-            else
-            {
-                if(!isset($payments[$pgIndex]))
+                $option = explode('#',$request->option); // 0 = option index, 1 = pg index
+                $paymentChannel = (array) $this->paymentChannel();
+                $payments = $paymentChannel['data'];
+                $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
+                $pgIndex = $option[1]-1;
+                if($pgIndex == count($payments))
                 {
-                    WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan pembayaran yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
-                    return response()->json([
-                        'status' => 'failed',
-                        'errors' => $error
-                    ], 400);
+                    $payment = 'cash';
                 }
-    
-                $payment = $payments[$pgIndex];
-                $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+                else
+                {
+                    if(!isset($payments[$pgIndex]))
+                    {
+                        WaBlast::webisnisSend($request->sender, $request->phone, 'Maaf! Pilihan pembayaran yang anda pilih tidak valid. Silahkan ulangi pendaftaran.');
+                        return response()->json([
+                            'status' => 'failed',
+                            'errors' => $error
+                        ], 400);
+                    }
+        
+                    $payment = $payments[$pgIndex];
+                    $order_items_string = "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
+                }
             }
+            
             DB::beginTransaction();
             try {
 
@@ -135,7 +151,7 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
                     'status'      => 'checkout'
                 ]);
                 
-                $singleProduct = $products[$option[0]-1];
+                $singleProduct = $product;
                 
                 $transaction_item = TransactionItem::create([
                     'transaction_id' => $transaction->id,
@@ -219,7 +235,7 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
                         'checkout_url' => "",
                         'payment_type' => 'cash',
                         'merchant_ref'      => 'cash',
-                        'status' => "UNPAID",
+                        'status' => $product->price == 0 ? "PAID" : "UNPAID",
                         'payment_reference' => "",
                         'payment_code' => "",
                         'expired_time' => "",
@@ -234,24 +250,32 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
 
                 if(env('WA_BLAST_URL') !== null && env('WA_BLAST_URL') !== ''):
 
-                    $total = $all_total_price;
-
-                    if(is_array($payment)) $total += $payment['total_fee']['flat'];
-
                     $notifAction = new NotifAction;
-                    $message = $notifAction->checkoutVoucherWASuccess($transaction, $total, $customer, $_payment, $order_items_string)."
-".$ads_content;
-                    WaBlast::webisnisSend($request->sender, $phone, $message);
+                    if($product->price)
+                    {
+                        $total = $all_total_price;
+    
+                        if(is_array($payment)) $total += $payment['total_fee']['flat'];
+    
+                        $message = $notifAction->checkoutVoucherWASuccess($transaction, $total, $customer, $_payment, $order_items_string)."
+    ".$ads_content;
+                        WaBlast::webisnisSend($request->sender, $phone, $message);
+                    }
+                    else
+                    {
+                        $notifAction->paymentSuccess($product, $customer, $transaction, $_payment);
+                    }
+                    
+                    // return redirect()->to($response_data['checkout_url']);
+                    if($_payment->payment_type != 'cash')
+                    {
+                        $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url'];
+                        WaBlast::webisnisSend($request->sender, $phone, $msg);
+    
+                    }
 
                 endif;
 
-                // return redirect()->to($response_data['checkout_url']);
-                if($request->payment_method != 'cash')
-                {
-                    $msg = "Silahkan klik link berikut untuk menyelesaikan pembayaran ".$response_data['checkout_url'];
-                    WaBlast::webisnisSend($request->sender, $phone, $msg);
-
-                }
 
                 return response()->json([
                     'status' => 'succes',

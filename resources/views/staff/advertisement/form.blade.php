@@ -3,7 +3,7 @@
         
         <div class="form-group">
             {{ Form::label('Event') }}
-            {{ Form::select('event', ['REG'=>'REG','CEK NRA'=>'CEK NRA','ORDERTIKET'=>'ORDERTIKET','REGTIKET HUT4'=>'REGTIKET HUT4'], $model->event, ['class' => 'form-control' . ($errors->has('event') ? ' is-invalid' : '')]) }}
+            {{ Form::select('event', ['REG'=>'REG','CEK NRA'=>'CEK NRA','ORDERTIKET'=>'ORDERTIKET','REGTIKET HUT4'=>'REGTIKET HUT4','ORDER VOUCHER' => 'ORDER VOUCHER'], $model->event, ['class' => 'form-control' . ($errors->has('event') ? ' is-invalid' : '')]) }}
             {!! $errors->first('event', '<p class="invalid-feedback">:message</p>') !!}
         </div>
         
