@@ -57,6 +57,8 @@ class VoucherController extends Controller
             $message .= $no . ". ". $product->name."
 ";
         }
+        $message .= "
+_(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
 
         WaBlast::webisnisSend($request->sender, $request->phone, $message);
 
