@@ -134,6 +134,8 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
                 ]);
                 
                 $singleProduct = $products[$option[0]-1];
+                Log::info($products);
+                Log::info($singleProduct);
                 
                 $transaction_item = TransactionItem::create([
                     'transaction_id' => $transaction->id,
