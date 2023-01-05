@@ -19,7 +19,7 @@ body { margin: 0px; }
         <td>
             <div style="width:100%;text-align:center">
                 <b>e-Voucher</b><br>
-                {{$cf['nama_merchant']}}<br>
+                #{{$transaction->id}} | {{$cf['nama_merchant']}}<br>
                 Rp. {{$product->price_formated}}<br>
                 <img src="{{$barcode}}" width="100" height="100">
             </div>
