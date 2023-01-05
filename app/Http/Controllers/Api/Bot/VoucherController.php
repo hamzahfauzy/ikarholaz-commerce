@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Bot;
 
+use App\Models\User;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\WaBlast;
