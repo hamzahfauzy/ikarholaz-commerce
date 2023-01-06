@@ -148,7 +148,7 @@ _(cukup balas dengan nomer pilihannya saja. contoh: 2)_";
                 // then create transaction
                 $transaction = Transaction::create([
                     'customer_id' => $customer->id,
-                    'status'      => 'checkout'
+                    'status'      => $product->price == 0 ? "PAID" : 'checkout'
                 ]);
                 
                 $singleProduct = $product;
