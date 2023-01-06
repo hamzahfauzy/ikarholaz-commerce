@@ -199,6 +199,7 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
     
     public function paymentSuccess($product, $customer, $transaction, $payment, $return_string = false)
     {
+        $file_url = false;
         if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
@@ -222,11 +223,10 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
         else if(($product->parent && $product->parent->parent->categories->contains(config('reference.voucher_kategori'))) || $product->categories->contains(config('reference.voucher_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->voucherUrl($transaction->id);
+            $file_url = url()->to($pdf_url);
 
             $message = "Hai kak $customer->full_name,
 Terima kasih telah melakukan pembayaran untuk kode transaksi *#$transaction->id* sebesar Rp. $transaction->total_formated melalui $payment->payment_type.
-
-Silakan download e-Voucher nya melalui ".url()->to($pdf_url)." 
 
 Terima kasih,
 Salam hangat
@@ -246,8 +246,14 @@ Pembayaran atas tagihan #$payment->transaction_id sebesar ".$payment->total_form
 Pesanan kakak segera kami proses ya
 Terima kasih.";
         }
-        if($return_string) return $message;
-        WaBlast::send($customer->phone_number,$message);
+        if($return_string){
+            if($file_url)
+            {
+                WaBlast::send($customer->phone_number,'Lampiran',$file_url);
+            }
+            return $message;
+        }
+        WaBlast::send($customer->phone_number,$message,$file_url);
     }
 
     function regticketSuccess($event, $alumni, $transaction = false)
@@ -280,6 +286,7 @@ _part of Sistem Informasi Rholaz (SIR) 2022_';
 
     public function paymentCashSuccess($product, $customer, $transaction)
     {
+        $file_url = false;
         if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
@@ -303,11 +310,10 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
         else if(($product->parent && $product->parent->parent->categories->contains(config('reference.voucher_kategori'))) || $product->categories->contains(config('reference.voucher_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->voucherUrl($transaction->id);
+            $file_url = url()->to($pdf_url);
 
             $message = "Hai kak $customer->full_name,
 Terima kasih telah melakukan pembayaran untuk kode transaksi *#$transaction->id* sebesar Rp. $transaction->total_formated telah kami terima.
-
-Silakan download e-Voucher nya melalui ".url()->to($pdf_url)." 
 
 Terima kasih,
 Salam hangat
@@ -327,6 +333,6 @@ Pembayaran atas tagihan #$transaction->id sebesar ".$transaction->total_formated
 Pesanan kakak segera kami proses ya
 Terima kasih.";
         }
-        WaBlast::send($customer->phone_number,$message);
+        WaBlast::send($customer->phone_number,$message,$file_url);
     }
 }
