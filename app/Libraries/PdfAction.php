@@ -154,9 +154,13 @@ class PdfAction
         $im->setImageFormat('jpeg');
         $im->setImageCompression(\Imagick::COMPRESSION_JPEG); 
         $im->setImageCompressionQuality(100);
+        $im->setImageAlphaChannel(\Imagick::VIRTUALPIXELMETHOD_WHITE);
         $im->writeImage('evoucher/'.$filename.'.jpg');
         $im->clear();
         $im->destroy();
+
+        // $image->scaleImage(500, 500, true);
+
 
         return 'evoucher/'.$filename.'.jpg';
         // return $file_to_save;
