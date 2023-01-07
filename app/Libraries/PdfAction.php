@@ -148,17 +148,17 @@ class PdfAction
             file_put_contents($file_to_save, $pdf->output());
         }
 
-        // $im = new \Imagick();
-        // $im->setResolution(300, 300);
-        // $im->readImage(public_path($file_to_save));
-        // $im->setImageFormat('jpeg');
-        // $im->setImageCompression(\Imagick::COMPRESSION_JPEG); 
-        // $im->setImageCompressionQuality(100);
-        // $im->writeImage('evoucher/'.$filename.'.jpg');
-        // $im->clear();
-        // $im->destroy();
+        $im = new \Imagick();
+        $im->setResolution(300, 300);
+        $im->readImage(public_path($file_to_save));
+        $im->setImageFormat('jpeg');
+        $im->setImageCompression(\Imagick::COMPRESSION_JPEG); 
+        $im->setImageCompressionQuality(100);
+        $im->writeImage('evoucher/'.$filename.'.jpg');
+        $im->clear();
+        $im->destroy();
 
-        // return 'evoucher/'.$filename.'.jpg';
-        return $file_to_save;
+        return 'evoucher/'.$filename.'.jpg';
+        // return $file_to_save;
     }
 }

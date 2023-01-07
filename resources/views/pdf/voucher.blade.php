@@ -8,7 +8,7 @@
 </head>
 <style>
 @page { margin: 0px; }
-body { margin: 0px; }
+body { margin: 0px; background-color: #FFF;}
 </style>
 <body>
 <table width="100%" cellspacing="0" cellpadding="0">
