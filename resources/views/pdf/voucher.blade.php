@@ -16,7 +16,7 @@ body { margin: 0px; background-color: #FFF;}
         <td width="282">
             <img src="{{$bg}}" width="100%" height="100%" style="object-fit:cover">
         </td>
-        <td>
+        <td style="background-color:#FFF;">
             <div style="width:100%;text-align:center">
                 <b>e-Voucher</b><br>
                 #{{$transaction->id}} | {{$cf['nama_merchant']}}<br>
