@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Api\BaseController;
 use App\Http\Controllers\Api\EventController;
-use App\Http\Controllers\Api\Bot\VoucherController as BotVoucherController;
 use App\Http\Controllers\Mobile\AuthController;
 use App\Http\Controllers\Mobile\AdminController;
 use App\Http\Controllers\Mobile\AlumniController;
+use App\Http\Controllers\Api\Bot\LintangController;
+use App\Http\Controllers\Api\Bot\VoucherController as BotVoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,11 @@ Route::prefix('bot')->group(function(){
     Route::prefix('vouchers')->group(function(){
         Route::post('/',[BotVoucherController::class,'index']);
         Route::post('buy',[BotVoucherController::class,'buy']);
+    });
+
+    Route::prefix('lintang')->group(function(){
+        Route::post('send-otp',[LintangController::class,'sendOtp']);
+        Route::post('get-nra',[LintangController::class,'getNra']);
     });
 });
 

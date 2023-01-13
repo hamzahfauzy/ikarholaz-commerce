@@ -166,7 +166,7 @@ class WaBlast
         return $response;
     }
     
-    function webisnisSend($sender, $phone, $pesan)
+    static function webisnisSend($sender, $phone, $pesan)
     {
         $data = [
             'api_key' => env('WA_API'),
@@ -190,5 +190,11 @@ class WaBlast
         $response = curl_exec($curl);
         curl_close($curl);
         return json_encode($response);
+    }
+
+    static function webisnisSendNoSender($phone, $pesan)
+    {
+        $sender = env('WA_SENDER');
+        return self::webisnisSend($sender, $phone, $pesan);
     }
 }
