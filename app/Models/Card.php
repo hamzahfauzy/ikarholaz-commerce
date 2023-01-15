@@ -24,8 +24,8 @@ class Card extends Model
 		'card_number' => 'required',
 		'name' => 'required',
 		'status' => 'required',
-		'unique_number' => 'required',
-		'tahun' => 'required',
+		'unique_number' => 'nullable',
+		'tahun' => 'nullable',
     ];
 
     protected $perPage = 20;

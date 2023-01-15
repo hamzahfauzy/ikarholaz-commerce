@@ -1,6 +1,5 @@
 <div class="box box-info padding-1">
     <div class="box-body">
-        
         <div class="form-group">
             {{ Form::label('card_number') }}
             {{ Form::text('card_number', $card->card_number, ['class' => 'form-control' . ($errors->has('card_number') ? ' is-invalid' : ''), 'placeholder' => 'Card Number']) }}
@@ -13,7 +12,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('status') }}
-            {{ Form::text('status', $card->status, ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
+            {{ Form::select('status', $card->status, ['Checkout'=>'Checkout','Booking'=>'Booking'], ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
             {!! $errors->first('status', '<p class="invalid-feedback">:message</p>') !!}
         </div>
 
