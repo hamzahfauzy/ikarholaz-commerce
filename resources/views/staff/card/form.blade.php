@@ -12,7 +12,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('status') }}
-            {{ Form::select('status', $card->status, ['Checkout'=>'Checkout','Booking'=>'Booking'], ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
+            {{ Form::select('status', ['Checkout'=>'Checkout','Booking'=>'Booking'], $card->status, ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
             {!! $errors->first('status', '<p class="invalid-feedback">:message</p>') !!}
         </div>
 
