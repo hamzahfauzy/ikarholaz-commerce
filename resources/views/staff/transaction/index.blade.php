@@ -64,7 +64,7 @@
 											<td>{{ $transaction->customer->full_name }}</td>
                                             @if(count($transaction->transactionItems) && $transaction->transactionItems[0]->product)
                                             @if($transaction->transactionItems[0]->product->parent)
-											<td>{{ $transaction->transactionItems[0]->product->parent->parent->name }}</td>
+											<td>{{ isset($transaction->transactionItems[0]->product->parent->parent->name) ? $transaction->transactionItems[0]->product->parent->parent->name : '' }}</td>
 											<td>{{ $transaction->transactionItems[0]->product->name }}</td>
                                             @else
 											<td>{{ $transaction->transactionItems[0]->product->name }}</td>

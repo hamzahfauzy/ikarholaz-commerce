@@ -44,6 +44,7 @@
 										<th>Card Number</th>
 										<th>Name</th>
 										<th>Status</th>
+										<th>Created At</th>
 
                                         <th></th>
                                     </tr>
@@ -56,6 +57,7 @@
 											<td>{{ $card->card_number }}</td>
 											<td>{{ $card->name }}</td>
 											<td>{{ $card->status }}</td>
+											<td>{{ $card->created_at }}</td>
 
                                             <td>
                                                 <form action="{{ route('staff.cards.destroy',$card->id) }}" method="POST" onsubmit="if(confirm('{{__('Are you sure to delete this item ?')}}')){ return true }else{ return false }">
