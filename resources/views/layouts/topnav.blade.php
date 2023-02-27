@@ -122,6 +122,10 @@
                     <li>
                         <a href="{{route('shop.index')}}"><i class="mdi mdi-shopping"></i>{{__('Shop')}}</a>
                     </li>
+                    
+                    <li>
+                        <a href="{{route('shop.vouchers')}}"><i class="mdi mdi-ticket-confirmation"></i>{{__('Vouchers')}}</a>
+                    </li>
 
                     <li class="has-submenu">
                         <a href="#"><i class="mdi mdi-view-list"></i> {{__('NRA')}}</a>

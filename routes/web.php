@@ -106,6 +106,7 @@ Route::name('shop.')->group(function () {
         return view('shop.thankyou');
     })->name('thankyou');
     Route::get('shop', [App\Http\Controllers\ShopController::class, 'index'])->name('index');
+    Route::get('vouchers', [App\Http\Controllers\ShopController::class, 'vouchers'])->name('vouchers');
     Route::get('order-kta', [App\Http\Controllers\ShopController::class, 'orderKta'])->name('order-kta');
     Route::post('checkout-kta', [App\Http\Controllers\ShopController::class, 'checkoutKta'])->name('checkout-kta');
     Route::get('checkout', [App\Http\Controllers\ShopController::class, 'checkout'])->name('checkout');

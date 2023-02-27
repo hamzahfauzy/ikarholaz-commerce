@@ -34,8 +34,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $products = Product::where('is_dynamic',NULL)->doesntHave('parent')->whereHas('categories',function($query){
-            return $query->where('categories.slug','!=','nra');
+        $products = Product::where('status','Publish')->where('is_dynamic',NULL)->doesntHave('parent')->whereHas('categories',function($query){
+            return $query->where('categories.slug','!=','nra')->where('category_id','!=',config('reference.voucher_kategori'));
         })->orderby('created_at','desc')->paginate(8);
         $category = Category::find(getenv('DESAIN_KARTU_KATEGORI',1));
         $desain_products = $category ? $category->products : [];
@@ -402,6 +402,7 @@ class HomeController extends Controller
                 $results[$key][] = $alumni->name;
                 $results[$key][] = $alumni->graduation_year;
                 $results[$key][] = $alumni->tanggal;
+                $results[$key][] = $alumni->profile_pic ? "<a href='".Storage::url($alumni->profile_pic)."'>Lihat</a>" : '<i>Tidak ada gambar</i>';
                 $results[$key][] = $alumni->notes;
             }
     

@@ -44,8 +44,20 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $products = Product::where('is_dynamic',NULL)->doesntHave('parent')->orderby('created_at','desc')->paginate();
-        return view('shop.index',compact('products'));
+        $products = Product::where('status','Publish')->where('is_dynamic',NULL)->doesntHave('parent')->whereHas('categories',function($query){
+            return $query->where('categories.slug','!=','nra')->where('category_id','!=',config('reference.voucher_kategori'));
+        })->orderby('created_at','desc')->paginate();
+        $title = "All Products";
+        return view('shop.index',compact('products','title'));
+    }
+    
+    public function vouchers()
+    {
+        $products = Product::where('status','Publish')->where('is_dynamic',NULL)->doesntHave('parent')->whereHas('categories',function($query){
+            return $query->where('category_id',config('reference.voucher_kategori'));
+        })->orderby('created_at','desc')->paginate();
+        $title = "All Vouchers";
+        return view('shop.index',compact('products','title'));
     }
 
     public function productList($slug)

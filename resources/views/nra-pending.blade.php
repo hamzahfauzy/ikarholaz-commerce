@@ -37,6 +37,7 @@
                                             <th>Nama</th>
                                             <th>Tahun Lulus</th>
                                             <th>Tanggal Register</th>
+                                            <th>Gambar</th>
                                             <th>Notes</th>
                                         </tr>
                                     </thead>

@@ -38,6 +38,7 @@ class Product extends Model
 		'base_price' => 'required',
 		'discount_price' => 'nullable',
 		'stock' => 'required',
+		'status' => 'required',
 		'stock_status' => 'nullable',
 		'is_dynamic' => 'nullable',
 		'product_weight' => 'required',
@@ -50,7 +51,7 @@ class Product extends Model
      *
      * @var array
      */
-    protected $fillable = ['name','slug','description','base_price','discount_price','stock','stock_status','is_dynamic','product_weight'];
+    protected $fillable = ['name','slug','status','description','base_price','discount_price','stock','stock_status','is_dynamic','product_weight'];
 
     public function getPriceAttribute()
     {

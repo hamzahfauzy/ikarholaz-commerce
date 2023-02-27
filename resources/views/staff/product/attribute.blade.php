@@ -1,3 +1,19 @@
+<div class="card card-default">
+    <div class="card-header">
+        <span class="card-title">{{__('Status')}}</span>
+    </div>
+    <div class="card-body">
+        <div class="box box-info padding-1">
+            <div class="box-body">
+                <div class="form-group">
+                    {{ Form::select('status', ['Draft' => 'Draft','Publish' => 'Publish'], $product->status, ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'data-placeholder' => __('Status')]) }}
+                    {!! $errors->first('status', '<p class="invalid-feedback">:message</p>') !!}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @if(!$product->id || !$product->parent)
 <div class="card card-default">
     <div class="card-header">
@@ -7,8 +23,8 @@
         <div class="box box-info padding-1">
             <div class="box-body">
                 <div class="form-group">
-                    {{ Form::select('category_id[]', $categories, $product->categories()->pluck('category_id'), ['class' => 'form-control select2 select2-multiple' . ($errors->has('name') ? ' is-invalid' : ''), 'data-placeholder' => __('Category'), 'multiple' => 'true']) }}
-                    {!! $errors->first('name', '<p class="invalid-feedback">:message</p>') !!}
+                    {{ Form::select('category_id[]', $categories, $product->categories()->pluck('category_id'), ['class' => 'form-control select2 select2-multiple' . ($errors->has('category_id') ? ' is-invalid' : ''), 'data-placeholder' => __('Category'), 'multiple' => 'true']) }}
+                    {!! $errors->first('category_id', '<p class="invalid-feedback">:message</p>') !!}
                 </div>
             </div>
         </div>
