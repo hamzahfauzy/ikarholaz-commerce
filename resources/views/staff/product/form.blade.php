@@ -119,6 +119,7 @@ function deleteExistingThumbnail() {
 
 function loadAllProductImages()
 {
+    $("#profile").html('Loading...')
     fetch("{{route('product-images')}}")
     .then(res => res.json())
     .then(res => {
