@@ -87,11 +87,46 @@
         <span class="card-title">{{__('Thumbnail')}}</span>
     </div>
     <div class="card-body">
-        <input type="file" name="image" class="filestyle image" data-input="false"  data-iconname="fas fa-cloud-upload-alt">
+        <input type="hidden" name="hidden_image">
         <img src="{{$product->thumb?Storage::url($product->thumb->file_url):''}}" alt="" id="preview" width="100%">
         <button type="button" class="btn btn-danger btn-block d-none btn-delete" onclick="deleteThumbnail()"><i class="fa fa-times"></i> {{__('Remove')}}</button>
         @if($product->thumb)
         <button type="button" class="btn btn-danger btn-block btn-delete-existing" onclick="deleteExistingThumbnail()"><i class="fa fa-times"></i> {{__('Remove')}}</button>
         @endif
+        <button type="button" class="btn btn-info btn-lg btn-block" data-toggle="modal" data-target="#myModal">Pilih Gambar</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+  
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pilih Gambar</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Upload Gambar</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" onclick="loadAllProductImages()" id="profile-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Pilih Gambar</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <input type="file" name="image" class="filestyle image" data-input="false"  data-iconname="fas fa-cloud-upload-alt">
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Loading...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+  
     </div>
 </div>

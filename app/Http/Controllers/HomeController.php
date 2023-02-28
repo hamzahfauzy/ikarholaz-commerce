@@ -8,6 +8,7 @@ use App\Models\Alumni;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\BlacklistNra;
+use App\Models\ProductImage;
 use App\Models\Ref\District;
 use App\Models\Ref\Province;
 use Illuminate\Http\Request;
@@ -423,5 +424,12 @@ class HomeController extends Controller
         $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction_id);
 
         return redirect()->to($pdf_url);
+    }
+
+    public function productImages()
+    {
+        $productImages = ProductImage::select('file_url')->groupBy('file_url')->get();
+
+        return response()->json($productImages);
     }
 }

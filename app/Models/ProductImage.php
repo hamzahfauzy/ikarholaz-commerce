@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class ProductImage
@@ -35,6 +36,8 @@ class ProductImage extends Model
      */
     protected $fillable = ['product_id','file_url','image_type'];
 
+    protected $appends = ['full_image_url'];
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -42,6 +45,11 @@ class ProductImage extends Model
     public function product()
     {
         return $this->hasOne('App\Models\Product', 'id', 'product_id');
+    }
+
+    public function getFullImageUrlAttribute()
+    {
+      return Storage::url($this->file_url);
     }
     
 

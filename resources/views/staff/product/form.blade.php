@@ -87,6 +87,8 @@ function readURL(input,el) {
     
     reader.readAsDataURL(input.files[0]); // convert to base64 string
     $('.btn-delete').removeClass('d-none')
+    $('[name=hidden_image]').val("");
+    $('#myModal').modal('hide')
   }
 }
 
@@ -113,6 +115,30 @@ function deleteExistingThumbnail() {
     $(".btn-delete-existing").addClass('d-none')
 
     fetch("{{route('staff.product-images.delete',$product->thumb?$product->thumb->id:0)}}")
+}
+
+function loadAllProductImages()
+{
+    fetch("{{route('product-images')}}")
+    .then(res => res.json())
+    .then(res => {
+        var html = "<div class='row'>"
+        res.forEach(image => {
+            html += `<div class="col-12 col-sm-3"><img src="${image.full_image_url}" onclick='selectImage(${JSON.stringify(image)})' style="cursor:pointer"></div>`
+        })
+
+        html += "</div>"
+
+        $("#profile").html(html)
+    })
+}
+
+function selectImage(image)
+{
+    $('[name=hidden_image]').val(image.file_url);
+    $('#preview').attr('src',image.full_image_url)
+    $('.btn-delete').removeClass('d-none')
+    $('#myModal').modal('hide')
 }
 </script>
 @endsection

@@ -83,6 +83,7 @@ Route::middleware(['auth:web'])->group(function () {
 
 // for public access
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('all-product-images', [App\Http\Controllers\HomeController::class, 'productImages'])->name('product-images');
 Route::get('nra', [App\Http\Controllers\HomeController::class, 'nra'])->name('nra.list');
 Route::get('nra-buy', [App\Http\Controllers\HomeController::class, 'nraBuy'])->name('nra.buy');
 Route::get('nra-blacklist', [App\Http\Controllers\HomeController::class, 'nraBlacklist'])->name('nra.blacklist');

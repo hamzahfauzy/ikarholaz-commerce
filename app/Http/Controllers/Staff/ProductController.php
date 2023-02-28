@@ -83,6 +83,14 @@ class ProductController extends Controller
                 ]); 
             }
 
+            if($request->hidden_image)
+            {
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'file_url' => $request->hidden_image
+                ]); 
+            }
+
             DB::commit();
             return redirect()->route('staff.products.edit',$product->id)
                 ->with('success', 'Product created successfully.');
