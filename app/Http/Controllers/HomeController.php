@@ -357,7 +357,7 @@ class HomeController extends Controller
         if(isset($_GET['draw']))
         {
 
-            $alumnis = (new Alumni)->select('id','name','graduation_year','profile_pic','created_at');
+            $alumnis = (new Alumni)->select('id','name','graduation_year','profile_pic','notes','created_at');
             if($status == 'pending')
             {
                 $alumnis = $alumnis->whereNull('approval_status');
