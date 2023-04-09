@@ -140,6 +140,7 @@
                         <a href="#"><i class="mdi mdi-view-list"></i> {{__('Alumni')}}</a>
                         <ul class="submenu in">
                             <li><a href="{{route('alumni.list',['status'=>'pending'])}}">Pending</a></li>
+                            <li><a href="{{route('alumni.list',['status'=>'denied'])}}">Denied</a></li>
                             <li><a href="{{route('alumni.list',['status'=>'died'])}}">Died</a></li>
                         </ul>
                     </li>

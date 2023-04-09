@@ -403,7 +403,7 @@ class HomeController extends Controller
                 $results[$key][] = $alumni->name;
                 $results[$key][] = $alumni->graduation_year;
                 $results[$key][] = $alumni->tanggal;
-                $results[$key][] = $alumni->profile_pic ? "<a href='".Storage::url($alumni->profile_pic)."'>Lihat</a>" : '<i>Tidak ada gambar</i>';
+                $results[$key][] = $alumni->profile_pic ? "<a href='".asset('storage/public/'.$alumni->profile_pic)."'>Lihat</a>" : '<i>Tidak ada gambar</i>';
                 $results[$key][] = $alumni->notes;
             }
     
