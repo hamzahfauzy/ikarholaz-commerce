@@ -47,5 +47,7 @@
     "Cart item removed" : "Item Keranjang di hapus",
     "Cart item updated" : "Item Keranjang di update",
     "Customer Identity" : "Identitas Kustomer",
-    "Summary" : "Ringkasan"
+    "Summary" : "Ringkasan",
+    "Checkout" : "Bayar",
+    "Add To Cart" : "Tambah ke Keranjang"
 }
