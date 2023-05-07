@@ -301,6 +301,7 @@ _Mohon tidak menghapus notifikasi WA ini sampai program Munas berakhir sebagai b
         $payments = $paymentChannel['data'];
         $paymentChannel = array_map(function($p){ return $p['code']; }, $paymentChannel['data']);
         $paymentChannel = implode(',',$paymentChannel).',CASH';
+        $order_items_string = "";
         // validation
         $validator = Validator::make($request->all(), [
           'slug' => 'required|exists:products',
