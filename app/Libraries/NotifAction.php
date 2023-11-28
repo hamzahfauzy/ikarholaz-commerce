@@ -148,7 +148,7 @@ $customer->full_name
     
 Biaya : Rp. ".number_format($total)."
     
-".($total > 0 ? "Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi." : "")."
+Lakukan pembayaran sebesar Rp. ".number_format($total)." melalui metode pembayaran yang dipilih saat transaksi atau abaikan jika GRATIS. QRCODE akan dikirim setelah petugas menyetujui transaksi ini.
 
 Terima kasih,
 Salam hangat
