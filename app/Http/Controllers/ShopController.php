@@ -126,6 +126,7 @@ class ShopController extends Controller
         $order_items = [];
         $shipping_rates = $request->courier ? ShippingRates::init($request->dest_id,cart()->get_weight(),$request->courier)->get() : 0;
         $dest = $request->courier ? District::province($request->province_id)->find($request->dest_id) : [];
+        $payment = null;
         
         if($request->payment_method != 'cash'){
             $tripay = new Tripay(getenv('TRIPAY_PRIVATE_KEY'), getenv('TRIPAY_API_KEY'));
@@ -137,21 +138,29 @@ class ShopController extends Controller
 
         $all_total_price = 0; 
 
-        $order_items[] = [
-            'sku'       => 'ongkir',
-            'name'      => 'Ongkir',
-            'price'     => $shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : 0,
-            'quantity'  => 1
-        ];
+        if($request->courier)
+        {
+            $order_items[] = [
+                'sku'       => 'ongkir',
+                'name'      => 'Ongkir',
+                'price'     => $shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : 0,
+                'quantity'  => 1
+            ];
+    
+            $order_items_string .= "Ongkir : ".number_format($shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : $shipping_rates)."\n";
+        }
 
-        $order_items_string .= "Ongkir : ".number_format($shipping_rates ? $shipping_rates[$request->service]->cost[0]->value : $shipping_rates)."\n";
         
         if($request->payment_method != 'cash') $order_items_string .= "Biaya Administrasi : ".number_format($payment['total_fee']['flat'])."\n";
 
         $data = [];
         $data['request'] = $request->all();
         if($shipping_rates) $data['dest'] = $dest;
-        $data['shipping'] = $shipping_rates ? $shipping_rates[$request->service] : $shipping_rates;
+        if($request->courier)
+        {
+            $data['shipping'] = $shipping_rates ? $shipping_rates[$request->service] : $shipping_rates;
+        }
+
         $data['payment'] = $payment ?? "cash";
 
         DB::beginTransaction();
@@ -364,8 +373,8 @@ class ShopController extends Controller
                     'admin_fee' => 0,
                     'checkout_url' => "",
                     'payment_type' => $request->payment_method,
-                    'merchant_ref'      => $request->payment_method,
-                    'status' => "UNPAID",
+                    'merchant_ref' => $request->payment_method,
+                    'status' => $all_total_price > 0 ? "UNPAID" : "PAID",
                     'payment_reference' => "",
                     'payment_code' => "",
                     'expired_time' => "",

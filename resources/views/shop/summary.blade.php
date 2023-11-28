@@ -77,6 +77,7 @@
         </td>
     </tr>
     @endif
+    @if(cart()->subtotal() > 0)
     <tr>
         <td></td>
         <td>Metode Pembayaran</td>
@@ -91,6 +92,9 @@
         <td>Donasi</td>
         <td><input type="number" name="donasi" id="donasi" class="form-control" value="0" step=".1" onchange="recalculateSubtotal()"></td>
     </tr>
+    @else
+    <input type="hidden" name="payment_method" value="cash">
+    @endif
     <tr>
         <td colspan="2" style="text-align:right"><b>Total</b></td>
         <td><span id="total" data-total="{{cart()->subtotal()}}">{{number_format(cart()->subtotal())}}</span></td>

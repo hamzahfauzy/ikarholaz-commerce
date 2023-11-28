@@ -55,7 +55,7 @@ $part
     
 Biaya : Rp. ".number_format($total)."
     
-Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
+".($total > 0 ? "Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi." : "")."
 
 Terima kasih,
 Salam hangat
@@ -148,7 +148,7 @@ $customer->full_name
     
 Biaya : Rp. ".number_format($total)."
     
-Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
+".($total > 0 ? "Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi." : "")."
 
 Terima kasih,
 Salam hangat
