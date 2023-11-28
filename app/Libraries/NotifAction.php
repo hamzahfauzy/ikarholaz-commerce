@@ -43,7 +43,7 @@ class NotifAction
             $message = "Hai kak $customer->full_name,
 Terima kasih telah melakukan transaksi di Gerai IKARHOLAZ dengan rincian sbb:
     
-Kode Transaksi: $transaction->id
+Kode Transaksi: *$transaction->id*
 Metode Pembayaran: $payment->payment_type ".($payment->payment_type == 'cash' ? "(Hubungi mimin untuk info/panduan pembayaran CASH)" : $payment->payment_code)."
 Nama Pemesan: $customer->full_name
 Acara: ".($product->parent?$product->parent->parent->name.' - ':'').$product->name."
@@ -55,7 +55,7 @@ $part
     
 Biaya : Rp. ".number_format($total)."
     
-".($total > 0 ? "Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi." : "")."
+Lakukan pembayaran sebesar Rp. ".number_format($total)." melalui metode pembayaran yang dipilih saat transaksi atau abaikan jika GRATIS. QRCODE akan dikirim setelah petugas menyetujui transaksi ini.
 
 Terima kasih,
 Salam hangat
@@ -148,7 +148,7 @@ $customer->full_name
     
 Biaya : Rp. ".number_format($total)."
     
-".($total > 0 ? "Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi." : "")."
+Saat ini status pemesanan kakak masih PENDING hingga melakukan pembayaran sesuai jumlah tersebut melalui metode pembayaran yang dipilih saat transaksi.
 
 Terima kasih,
 Salam hangat
@@ -205,10 +205,9 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
             $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
 
             $message = "Hai kak $customer->full_name,
-Terima kasih telah melakukan pembayaran untuk kode booking *#$transaction->id* sebesar Rp. $transaction->total_formated melalui $payment->payment_type.
+Transaksi Etiket Anda dengan kode booking *#$transaction->id* telah disetujui.
 
 Silakan download E-TIKET nya melalui ".url()->to($pdf_url)." 
-Sampai ketemu di lokasi ya kak! Mimin pake baju pink.
 
 Terima kasih,
 Salam hangat
