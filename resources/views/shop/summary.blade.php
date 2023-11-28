@@ -42,7 +42,7 @@
                 @if(($cart->parent && $cart->parent->parent->categories->contains(config('reference.event_kategori')) && $cf->field_key == 'nama') || ($cart->categories->contains(config('reference.event_kategori')) && $cf->field_key == 'nama'))
                 @php($label="Nama Peserta")
                 @endif
-                <label for="">{{$label}}</label>
+                <label for="">{{__($label)}}</label>
                 <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($label)}}" required>
                 @endif
                 <small></small>
