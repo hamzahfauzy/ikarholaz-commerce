@@ -37,7 +37,7 @@
                         @include('shop.summary')
                         <div class="clearfix"></div>
                     </div>
-                    <button class="btn btn-success btn-block btn-order">{{__('Place Order')}}</button>
+                    <button class="btn btn-success btn-block btn-order">Kirim</button>
                 </div>
             </div>
             </form>
