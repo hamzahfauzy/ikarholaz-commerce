@@ -203,34 +203,11 @@ _part of Sistem Informasi Rholaz (SIR) 2022_";
         if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
-            $item    = $transaction->transactionItems[0];
-
-            $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
-            $participants = [];
-            foreach($participant_custom_fields as $key => $value)
-            {
-                $cf_values = $value->customFieldValues()->where('pk_id',$item->id)->get();
-                foreach($cf_values as $cf_value)
-                {
-                    $participants[$key][] = $cf_value->field_value;
-                }
-            }
-
-            $flip = array_map(null, ...$participants);
-            $part = "";
-            foreach($flip as $ps)
-            {
-                $part .= implode(',',$ps);
-                $part .= "\n";
-            }
 
             $message = "Hai kak $customer->full_name,
 Transaksi Etiket Anda dengan kode booking *#$transaction->id* telah disetujui.
 
 Silakan download E-TIKET nya melalui ".url()->to($pdf_url)." 
-
-Daftar peserta
-$part
 
 Terima kasih,
 Salam hangat
@@ -314,34 +291,10 @@ _part of Sistem Informasi Rholaz (SIR) 2022_';
         if(($product->parent && $product->parent->parent->categories->contains(config('reference.event_kategori'))) || $product->categories->contains(config('reference.event_kategori')))
         {
             $pdf_url = (new \App\Libraries\PdfAction)->ticketUrl($transaction->id);
-            $item    = $transaction->transactionItems[0];
-
-            $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
-            $participants = [];
-            foreach($participant_custom_fields as $key => $value)
-            {
-                $cf_values = $value->customFieldValues()->where('pk_id',$item->id)->get();
-                foreach($cf_values as $cf_value)
-                {
-                    $participants[$key][] = $cf_value->field_value;
-                }
-            }
-
-            $flip = array_map(null, ...$participants);
-            $part = "";
-            foreach($flip as $ps)
-            {
-                $part .= implode(',',$ps);
-                $part .= "\n";
-            }
-            
             $message = "Hai kak ".$customer->full_name.",
 Transaksi Etiket Anda dengan kode booking #".$transaction->id." telah disetujui.
 
 Silakan download E-TIKET nya melalui ".url()->to($pdf_url)."
-
-Daftar peserta
-$part
 
 Terima kasih,
 Salam hangat
