@@ -43,7 +43,7 @@
                 @php($label="Nama Peserta")
                 @endif
                 <label for="">{{__($label)}}</label>
-                <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($label)}}" required>
+                <input type="{{$cf->field_type}}" name="cart_item[{{$cart->id}}][{{$cf->id}}][]" class="form-control {{$cf->field_key}}" placeholder="{{ucwords($label)}}" @if($cf->field_key != 'no_wa') required @endif>
                 @endif
                 <small></small>
             </div>
