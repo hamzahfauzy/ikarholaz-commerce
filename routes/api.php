@@ -50,6 +50,7 @@ Route::post('/info-nra', [AlumniController::class, 'getNra']);
 Route::post('/cek-nra', [BaseController::class, 'cekNra']);
 Route::post('/send-candidates', [BaseController::class, 'sendCandidates']);
 Route::post('/get-alumnis', [BaseController::class, 'getAlumnis']);
+Route::post('/scan', [BaseController::class, 'scan']);
 
 Route::prefix('bot')->group(function(){
     Route::prefix('vouchers')->group(function(){

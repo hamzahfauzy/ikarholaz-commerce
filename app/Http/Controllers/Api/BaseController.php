@@ -957,4 +957,43 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
             'message' => 'Not found'
         ], 404);
     }
+
+    /**
+     * body : barcode (noseat;kodebooking;nama;tahun)
+     */
+    function scan(Request $request)
+    {
+        $barcode = explode(';',$request->barcode);
+        $transaction = Transaction::where('id', $barcode[1])->first();
+        $customer    = $transaction->customer;
+
+        foreach($transaction->transactionItems as $item)
+        {
+            $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
+            $participants = [];
+            foreach($participant_custom_fields as $key => $value)
+            {
+                if($value->field_key == 'nama')
+                {
+                    $nama = $value->customFieldValues()->where('pk_id',$item->id)->first();
+                    $nama = $nama->field_value;
+
+                    if($nama == $barcode[2])
+                    {
+                        return response()->json([
+                            'message' => 'Data Valid',
+                            'data'    => $barcode,
+                            'success' => true
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'Data not found',
+            'data'    => [],
+            'success' => false
+        ], 404);
+    }
 }
