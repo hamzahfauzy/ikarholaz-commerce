@@ -23,7 +23,7 @@ use App\Models\TransactionItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Ref\ShippingRates;
 use App\Http\Controllers\Controller;
-use App\Models\{User,Customer,Transaction,TransactionItem,Product,Payment};
+use App\Models\{User,Customer,Transaction,Product,Payment};
 
 class BaseController extends Controller
 {
