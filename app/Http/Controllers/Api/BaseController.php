@@ -18,12 +18,10 @@ use App\Models\Ref\Province;
 use Illuminate\Http\Request;
 use App\Models\Advertisement;
 use App\Libraries\NotifAction;
-use App\Models\ProductVariant;
-use App\Models\TransactionItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Ref\ShippingRates;
 use App\Http\Controllers\Controller;
-use App\Models\{User,Customer,Transaction,Product,Payment};
+use App\Models\{User,Customer,Transaction,TransactionItem,Product,Payment};
 
 class BaseController extends Controller
 {
@@ -969,38 +967,21 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
         $transaction = Transaction::where('id', $barcode[1])->first();
         $customer    = $transaction->customer;
 
-        $productId = $transaction->transactionItems[0]->product_id;
-
-        $variants = ProductVariant::where('parent_id',$productId)->pluck('product_id');
-        $variants[] = $productId;
-        $transactionItems = TransactionItem::where('transaction_id', $transaction->id)->whereIn('product_id',$variants)->whereHas('transaction',function($q){
-            $q->where('status','PAID');
-        })->get();
-
         $data = [];
 
-        foreach($transactionItems as $item)
+        foreach($transaction->transactionItems as $item)
         {
-            $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
-            $participants = [];
-            foreach($participant_custom_fields as $key => $value)
+            $participant_custom_field = \App\Models\CustomField::where('class_target','App\Models\Event')->where('field_key','nama')->first();
+            $nama = $participant_custom_field->customFieldValues()->where('pk_id',$item->id)->first();
+            $data[] = $nama;
+            
+            if($nama->field_value == $barcode[2])
             {
-                $nama = $value->customFieldValues()->where('pk_id',$item->id)->first();
-                $data[] = $nama;
-                if($value->field_key == 'nama')
-                {
-
-                    $nama = $nama->field_value;
-
-                    if($nama == $barcode[2])
-                    {
-                        return response()->json([
-                            'message' => 'Data Valid',
-                            'data'    => $barcode,
-                            'success' => true
-                        ]);
-                    }
-                }
+                return response()->json([
+                    'message' => 'Data Valid',
+                    'data'    => $barcode,
+                    'success' => true
+                ]);
             }
         }
 
