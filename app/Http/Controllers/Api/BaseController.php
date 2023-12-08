@@ -18,6 +18,8 @@ use App\Models\Ref\Province;
 use Illuminate\Http\Request;
 use App\Models\Advertisement;
 use App\Libraries\NotifAction;
+use App\Models\ProductVariant;
+use App\Models\TransactionItem;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Ref\ShippingRates;
 use App\Http\Controllers\Controller;
