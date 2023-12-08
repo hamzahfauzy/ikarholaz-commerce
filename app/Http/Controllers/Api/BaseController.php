@@ -972,10 +972,8 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
         foreach($transaction->transactionItems as $item)
         {
             $participant_custom_field = \App\Models\CustomField::where('class_target','App\Models\Event')->where('field_key','nama')->first();
-            $nama = $participant_custom_field->customFieldValues()->where('pk_id',$item->id)->first();
-            $data[] = $nama;
-            
-            if($nama->field_value == $barcode[2])
+            $nama = $participant_custom_field->customFieldValues()->where('pk_id',$item->id)->where('field_value', $barcode[2])->exists();
+            if($nama)
             {
                 return response()->json([
                     'message' => 'Data Valid',
