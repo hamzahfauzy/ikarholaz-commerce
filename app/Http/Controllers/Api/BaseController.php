@@ -967,6 +967,8 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
         $transaction = Transaction::where('id', $barcode[1])->first();
         $customer    = $transaction->customer;
 
+        $data = [];
+
         foreach($transaction->transactionItems as $item)
         {
             $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
@@ -976,6 +978,8 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
                 if($value->field_key == 'nama')
                 {
                     $nama = $value->customFieldValues()->where('pk_id',$item->id)->first();
+
+                    $data[] = $nama;
                     $nama = $nama->field_value;
 
                     if($nama == $barcode[2])
@@ -992,7 +996,7 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
 
         return response()->json([
             'message' => 'Data not found',
-            'data'    => [],
+            'data'    => $data,
             'success' => false
         ], 404);
     }
