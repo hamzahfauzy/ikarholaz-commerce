@@ -967,9 +967,15 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
         $transaction = Transaction::where('id', $barcode[1])->first();
         $customer    = $transaction->customer;
 
+        $variants = ProductVariant::where('parent_id',$barcode[1])->pluck('product_id');
+        $variants[] = $barcode[1];
+        $transactionItems = TransactionItem::whereIn('product_id',$variants)->whereHas('transaction',function($q){
+            $q->where('status','PAID');
+        })->get();
+
         $data = [];
 
-        foreach($transaction->transactionItems as $item)
+        foreach($transactionItems as $item)
         {
             $participant_custom_fields = \App\Models\CustomField::where('class_target','App\Models\Event')->get();
             $participants = [];
