@@ -975,11 +975,11 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
             $participants = [];
             foreach($participant_custom_fields as $key => $value)
             {
+                $nama = $value->customFieldValues()->where('pk_id',$item->id)->first();
+                $data[] = $nama;
                 if($value->field_key == 'nama')
                 {
-                    $nama = $value->customFieldValues()->where('pk_id',$item->id)->first();
 
-                    $data[] = $nama;
                     $nama = $nama->field_value;
 
                     if($nama == $barcode[2])
