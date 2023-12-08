@@ -969,8 +969,10 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
         $transaction = Transaction::where('id', $barcode[1])->first();
         $customer    = $transaction->customer;
 
-        $variants = ProductVariant::where('parent_id',$barcode[1])->pluck('product_id');
-        $variants[] = $barcode[1];
+        $productId = $transaction->transactionItems[0]->product_id;
+
+        $variants = ProductVariant::where('parent_id',$productId)->pluck('product_id');
+        $variants[] = $productId;
         $transactionItems = TransactionItem::whereIn('product_id',$variants)->whereHas('transaction',function($q){
             $q->where('status','PAID');
         })->get();
