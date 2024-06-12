@@ -89,8 +89,10 @@ class EventController extends Controller
             $item->participants = $flip;
         }
 
+        $data = $id == 177 ? $this->test() : [];
 
-        return view('events.show',compact('transactionItems'));
+
+        return view('events.show',compact('transactionItems','data'));
     }
 
     /**
@@ -125,5 +127,33 @@ class EventController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function test()
+    {
+        $file = 'data.xlsx';
+        $inputFileType = 'Xlsx';
+        $reader     = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+        $spreadsheet = $reader->load($file);
+        $worksheet   = $spreadsheet->getActiveSheet();
+        $highestRow  = $worksheet->getHighestRow();
+        $highestColumn = $worksheet->getHighestColumn();
+        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+        $data = [];
+
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $data[] = [
+                'nama' => $worksheet->getCellByColumnAndRow(1, $row)->getValue(),
+                'product' => $worksheet->getCellByColumnAndRow(2, $row)->getValue(),
+                'tahun_lulus' => $worksheet->getCellByColumnAndRow(3, $row)->getValue(),
+                'kode_booking' => $worksheet->getCellByColumnAndRow(4, $row)->getValue(),
+                'tanggal_order' => $worksheet->getCellByColumnAndRow(5, $row)->getFormattedValue(),
+                'nama_pemesan' => $worksheet->getCellByColumnAndRow(6, $row)->getValue(),
+                'link_ticket' => $worksheet->getCellByColumnAndRow(7, $row)->getValue(),
+            ];
+        }
+
+        return $data;
     }
 }

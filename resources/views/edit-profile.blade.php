@@ -21,6 +21,12 @@
                 <div class="col-12 col-md-8 m-auto">
                     <div class="card card-body">
 
+                        <h5>{{$progress_bar < 100 ? 'Lengkapi Profil Kamu' : 'Profil Kamu sudah Lengkap'}}</h5>
+
+                        <div class="progress">
+                            <div class="progress-bar {{$progress_bar < 100 ? 'bg-warning' : 'bg-success'}}" role="progressbar" style="width: {{$progress_bar}}%" aria-valuenow="{{$progress_bar}}" aria-valuemin="0" aria-valuemax="100">{{$progress_bar}}%</div>
+                        </div>
+
                         @if(session('success'))
                             <div class="alert alert-success">{{session('success')}}</div>
                         @endif
@@ -39,10 +45,15 @@
                                 <input class="form-check-input" type="checkbox" {{$alumni->private_domisili ? 'checked' : ''}} name="private_domisili" id="private_domisili">
                                 <label class="form-check-label" for="private_domisili">Private Domisili</label>
                             </div>
-                            <img src="{{Storage::url('public/'.$alumni->profile_pic)}}" width="200" class="my-2">
+                            <img src="{{Storage::url($alumni->profile_pic)}}" width="200" class="my-2">
                             <div class="form-group">
-                                <label for="">Photo Profile</label>
+                                <label for="">Foto lama (disarankan masa sekolah SMP/SMA)</label>
                                 <input type="file" name="profile" class="form-control">
+                            </div>
+                            <img src="{{Storage::url($alumni->face_sample)}}" width="200" class="my-2">
+                            <div class="form-group">
+                                <label for="">Face Sample</label>
+                                <input type="file" name="face_sample" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">NRA</label>
@@ -95,6 +106,10 @@
                             <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="text" name="email" value="{{old('email') ?? $alumni->email}}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Password</label>
+                                <input type="password" name="password" value="{{old('password')}}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Jenis Kelamin</label>

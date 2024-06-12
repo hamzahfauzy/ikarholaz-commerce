@@ -65,7 +65,7 @@ class RegisterController extends Controller
             'class_name' => ['required', 'string', 'max:255'],
             'year_in' => ['required', 'string', 'max:255'],
             'graduation_year' => ['required', 'string', 'max:255'],
-            'photo' => ['required', 'image'],
+            'photo' => ['required'],
         ]);
     }
 
@@ -129,15 +129,14 @@ class RegisterController extends Controller
 
             if ($data['photo']) {
 
-                $profile = $data['photo']->store('profiles');
+                $base64_image = $data['photo'];
 
-                if ($profile) {
+                if (preg_match('/^data:image\/(\w+);base64,/', $base64_image)) {
+                    $base64_data = substr($base64_image, strpos($base64_image, ',') + 1);
 
-                    $oldPic = $new_user->alumni->profile_pic;
-
-                    if ($oldPic) {
-                        Storage::delete($oldPic);
-                    }
+                    $base64_data = base64_decode($base64_data);
+                    $filename = md5(strtotime('now')).'.png';
+                    Storage::disk(env('FILESYSTEM_DRIVER'))->put('profiles/'.$filename, $base64_data);
 
                     $alumnis = Alumni::where('graduation_year',$new_alumni->graduation_year)->where('id','!=',$new_alumni->id)->inRandomOrder()->limit(5)->get();
 
@@ -148,13 +147,13 @@ class RegisterController extends Controller
                         ]);
 
                         $uploaded = $new_user->alumni()->update([
-                            'profile_pic' => $profile
+                            'profile_pic' => $filename
                         ]);
 
                     }else{
 
                         $uploaded = $new_user->alumni()->update([
-                            'profile_pic' => $profile
+                            'profile_pic' => $filename
                         ]);
 
                         
@@ -185,7 +184,10 @@ class RegisterController extends Controller
             return redirect('/register');
 
         }catch (\Exception $e) {
+            // throw $e;
             DB::rollback();
+
+            // \Log::info($e->getMessage());
 
             Session::flash('failed',"Anda sudah terdaftar dalam sistem. Mohon tidak mengulang pendaftaran. Hubungi admin jika ingin mengubah nomer HP atau NRA.");
 

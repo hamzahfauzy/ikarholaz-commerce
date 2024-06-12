@@ -44,6 +44,7 @@
                                     </thead>
                                     <tbody>
                                         @php($no=1)
+                                        @php($kode_booking=0)
                                         @foreach($transactionItems as $key => $item)
                                         @php($ticket_url=App\Libraries\PdfAction::ticketUrl($item->transaction_id))
                                         @foreach($item->participants as $participant)
@@ -62,12 +63,28 @@
                                             <td>-</td>
                                             @endif
                                             <td>{{$participant[1]}}</td>
-                                            <td>{{$item->transaction->id}}</td>
+                                            <td>{{$kode_booking++}}</td>
+                                            {{-- <td>{{$item->transaction->id}}</td> --}}
                                             <td>{{$item->transaction->created_at->format('d-m-Y H:i')}}</td>
                                             <td>{{$item->transaction->customer->full_name}}</td>
+                                            {{-- <td>{{$ticket_url ? url()->to($ticket_url) : '#'}}</td> --}}
                                             <td class="noExl"><a href="{{$ticket_url ? url()->to($ticket_url) : '#'}}" target="_blank" class="btn btn-success">Download E-Ticket</a></td>
                                         </tr>
                                         @endforeach
+                                        @endforeach
+
+                                        @foreach($data as $d)
+                                        <tr>
+                                            <td>{{$no++}}</td>
+                                            <td>{{$d['nama']}}</td>
+                                            <td>{{$d['product']}}</td>
+                                            <td>{{$d['tahun_lulus']}}</td>
+                                            <td>{{$d['kode_booking']}}</td>
+                                            <td>{{$d['tanggal_order']}}</td>
+                                            <td>{{$d['nama_pemesan']}}</td>
+                                            {{-- <td>{{url()->to($d['link_ticket'])}}</td> --}}
+                                            <td><a href="{{url()->to($d['link_ticket'])}}" target="_blank" class="btn btn-success">Download E-Ticket</a></td>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -98,7 +115,12 @@
 <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('plugins/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script>
-$('.datatable').dataTable()
+$('.datatable').dataTable({
+    aLengthMenu: [
+        [25, 50, 100, 200, -1],
+        [25, 50, 100, 200, "All"]
+    ],
+})
 </script>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -107,9 +129,9 @@ $('.datatable').dataTable()
 $(".btn-export").click(function(){
   $(".tbl-events").table2excel({
     // exclude CSS class
-    exclude: ".noExl",
+    // exclude: ".noExl",
     name: "Laporan Kegiatan",
-    filename: "LaporanKegiatan", //do not include extension
+    filename: "{{$d['product']}}", //do not include extension
     fileext: ".xls" // file extension
   }); 
 });

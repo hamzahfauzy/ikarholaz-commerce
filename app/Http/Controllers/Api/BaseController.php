@@ -989,4 +989,18 @@ $message .= ($i+2).'. CASH (transfer ke rek BCA/Mandiri - manual konfirm)';
             'success' => false
         ], 404);
     }
+
+    function generateQrcode(Request $request)
+    {
+        $text = urlencode($request->text);
+        $qrcode = file_get_contents("https://qrcode.tec-it.com/API/QRCode?data=".$text);
+        $qrcode = 'data:image/svg+xml;base64,'.base64_encode($qrcode);
+
+
+        $content = view('pdf.test-qrcode',compact('qrcode'))->render();
+
+        $pdf = PDF::loadHTML($content)->setOptions(['defaultFont' => 'Courier'])->setPaper([0,0,440,580]);
+
+        return $pdf->stream();
+    }
 }

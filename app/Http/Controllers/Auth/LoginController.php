@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Alumni;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\Mobile\AuthController;
@@ -103,5 +106,43 @@ class LoginController extends Controller
         ]);
 
         // return redirect()->route('login')->with('failed','data not found');
+    }
+
+    public function loginWithEmail(Request $request)
+    {
+        if($request->isMethod("POST")) {
+            $alumni = Alumni::where('email', $request['email'])->first();
+    
+            if ($alumni) {
+
+                if(Hash::check($request['password'], $alumni->password)) {
+
+                    if($alumni->user->email_verified_at == NULL){
+                        // return redirect()->route('login')->with('failed','user belum terkonfirmasi');
+                        return redirect()->back()->with([
+                            'failed' => 'user belum terkonfirmasi'
+                        ]);
+                    }
+
+                    Auth::guard()->login($alumni->user);
+
+                    return redirect()->back()->with([
+                        'success' => 'user valid'
+                    ]);
+
+                } else {
+                    return redirect()->back()->with([
+                        'failed' => 'user tidak valid'
+                    ]);
+                }
+    
+            }
+    
+            return redirect()->back()->with([
+                'failed' => 'user tidak valid'
+            ]);
+        }
+
+        return view('auth.login-email');
     }
 }

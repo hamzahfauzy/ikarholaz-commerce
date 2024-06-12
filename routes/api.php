@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\Bot\VoucherController as BotVoucherController;
 //     return $request->user();
 // });
 
+Route::get('/generate-qrcode', [BaseController::class, 'generateQrcode']);
 Route::get('/get-provinces', [BaseController::class, 'getProvinces']);
 Route::get('/get-fields/{fields}', [BaseController::class, 'getFields']);
 Route::get('/get-district/{province_id}', [BaseController::class, 'getDistrict']);
@@ -61,6 +62,14 @@ Route::prefix('bot')->group(function(){
     Route::prefix('lintang')->group(function(){
         Route::post('send-otp',[LintangController::class,'sendOtp']);
         Route::post('get-nra',[LintangController::class,'getNra']);
+    });
+
+    Route::prefix('greetings')->group(function(){
+        Route::post('create-payment', [App\Http\Controllers\Api\Bot\GreetingController::class, 'createPayment']);
+        Route::post('get-user', [App\Http\Controllers\Api\Bot\GreetingController::class, 'getUser']);
+        Route::post('cek-nra', [App\Http\Controllers\Api\Bot\GreetingController::class, 'cekNra']);
+        Route::post('validate-nra', [App\Http\Controllers\Api\Bot\GreetingController::class, 'validateNra']);
+        Route::post('generate-ticket-halbil', [App\Http\Controllers\Api\Bot\GreetingController::class, 'generateTicketHalbil']);
     });
 });
 

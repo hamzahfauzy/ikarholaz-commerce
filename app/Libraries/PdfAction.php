@@ -76,7 +76,7 @@ class PdfAction
     
                 
                 $start++;
-                $barcode = file_get_contents("http://www.barcode-generator.org/phpqrcode/getCode.php?cht=qr&chl=".$qr_content."&chs=180x180&choe=UTF-8&chld=L|0");
+                $barcode = file_get_contents("https://qrcode.tec-it.com/API/QRCode?data=".$qr_content);
                 $qrcode[] = 'data:image/png;base64,' . base64_encode($barcode);
                 $no++;
             }

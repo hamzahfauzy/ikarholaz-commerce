@@ -90,4 +90,17 @@ class CallbackController extends Controller
             return ['success'=>true];
         }
     }
+
+    function tripayBotGreetingsCallback()
+    {
+        $privateKey = getenv('TRIPAY_PRIVATE_KEY');
+        $apiKey = getenv('TRIPAY_API_KEY');
+        $tripay = new Tripay($privateKey, $apiKey);
+        $callback = $tripay->callback();
+
+        if($callback->status)
+        {
+            
+        }
+    }
 }

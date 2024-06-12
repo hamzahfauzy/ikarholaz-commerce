@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="col-md-3 mb-2">
-                            <a href="{{route('shop.product-list',App\Models\Category::find(getenv('DESAIN_KARTU_KATEGORI',1))->slug)}}" class="btn btn-block btn-kta-danger">REORDER KTA</a>
+                            <a href="{{route('shop.product-list',\App\Models\Category::find(getenv('DESAIN_KARTU_KATEGORI',1))->slug)}}" class="btn btn-block btn-kta-danger">REORDER KTA</a>
                         </div>
                     </div>
 

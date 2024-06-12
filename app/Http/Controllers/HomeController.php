@@ -74,6 +74,7 @@ class HomeController extends Controller
                     'class_name' => $request['class_name'],
                     'year_in' => $request['year_in'],
                     'email' => $request['email'],
+                    'password' => $request['password'] ? bcrypt($request['password']) : $user->alumni->password,
                     'gender' => $request['gender'],
                     'graduation_year' => $request['graduation_year'],
                     'place_of_birth' => $request['place_of_birth'],
@@ -183,6 +184,24 @@ class HomeController extends Controller
                         }
                     }
 
+                    if ($request->file('face_sample')) {
+
+                        $face_sample = $request->file('face_sample')->store('face_samples');
+    
+                        if ($face_sample) {
+    
+                            $oldPic = $user->alumni->face_sample;
+    
+                            if ($oldPic) {
+                                Storage::delete($oldPic);
+                            }
+    
+                            $uploaded = $user->alumni()->update([
+                                'face_sample' => $face_sample
+                            ]);
+                        }
+                    }
+
                     return redirect()->back()->with('success', 'success to update data');
                 }
 
@@ -197,7 +216,18 @@ class HomeController extends Controller
         $badan_hukums = json_decode(file_get_contents('badan_hukums.json'));
         $ijin_usahas = json_decode(file_get_contents('ijin_usahas.json'));
 
-        return view('edit-profile',compact('alumni','provincies','sektors','communities','professions','badan_hukums','ijin_usahas'));
+        $umum = ($alumni->user->email && $alumni->name && $alumni->class_name && $alumni->NRA && $alumni->email && $alumni->password && $alumni->gender && $alumni->place_of_birth && $alumni->date_of_birth && $alumni->address && $alumni->city && $alumni->province && $alumni->country && $alumni->profile_pic && $alumni->face_sample && $alumni->year_in && $alumni->graduation_year) ? 1 : 0;
+        $skills = $alumni->skills()->count() > 0 ? 1 : 0;
+        $businesses = $alumni->businesses()->count() > 0 ? 1 : 0;
+        $comms = $alumni->communities()->count() > 0 ? 1 : 0;
+        $profs = $alumni->professions()->count() > 0 ? 1 : 0;
+        $trainings = $alumni->trainings()->count() > 0 ? 1 : 0;
+        $appreciations = $alumni->appreciations()->count() > 0 ? 1 : 0;
+        $interests = $alumni->interests()->count() > 0 ? 1 : 0;
+
+        $progress_bar = ($umum+$skills+$businesses+$comms+$profs+$trainings+$appreciations+$interests)/8*100;
+
+        return view('edit-profile',compact('alumni','provincies','sektors','communities','professions','badan_hukums','ijin_usahas', 'progress_bar'));
     }
 
     function nra()

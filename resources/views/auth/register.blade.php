@@ -19,11 +19,29 @@
 
 
         <script src="{{asset('assets/js/modernizr.min.js')}}"></script>
+        <style>
+        #video1
+        {
+            transform: rotateY(180deg);
+            -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+            -moz-transform:rotateY(180deg); /* Firefox */
+        }
+        </style>
 
     </head>
 
 
     <body class="bg-transparent">
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content p-0">
+                <div class="modal-body p-0">
+                    <video id="video1" autoplay style="width:100%"></video>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <!-- HOME -->
         <section>
@@ -70,7 +88,7 @@
 
                                         <div class="form-group">
                                             <label for="">Kelas</label>
-                                            <input type="text" name="class_name" value="{{old('class_name')}}" class="form-control" data-role="tagsinput">
+                                            <input type="text" name="class_name" value="{{old('class_name')}}" class="form-control" placeholder="Kelas">
                                             @error('class_name')
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -128,9 +146,12 @@
 
                                         <div class="form-group">
 
-                                            <label for="">Photo (Max. 2MB)</label>
+                                            <label for="">Foto Wajah</label>
+                                            <img id="profile-face" class="w-100">
+                                            <input type="hidden" id="photo" name="photo">
+                                            <button type="button" class="btn btn-block btn-primary" onclick="openCam()">Ambil Wajah</button>
                                             
-                                            <input class="form-control @error('photo') is-invalid @enderror" name="photo" value="{{old('photo')}}" type="file" required="" placeholder="Photo">
+                                            {{-- <input class="form-control @error('photo') is-invalid @enderror" name="photo" value="{{old('photo')}}" type="file" required="" placeholder="Photo"> --}}
 
                                             @error('photo')
                                                 <span class="invalid-feedback" role="alert">
@@ -187,6 +208,65 @@
         <!-- App js -->
         <script src="{{asset('assets/js/jquery.core.js')}}"></script>
         <script src="{{asset('assets/js/jquery.app.js')}}"></script>
+        <script src="{{asset('faceapi/face-api.js')}}"></script>
+        <script>
+        var video = document.querySelector("#video1");
+
+        function openCam()
+        {
+            $("#myModal").modal("show");
+            Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri('/faceapi/weights'),
+                faceapi.nets.faceLandmark68Net.loadFromUri('/faceapi/weights'),
+                faceapi.nets.faceRecognitionNet.loadFromUri('/faceapi/weights'),
+                //faceapi.nets.faceExpressionNet.loadFromUri('/faceapi/weights')
+            ]).then(startVideo)
+        }
+
+        function startVideo()
+        {
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+            }
+        }
+
+        video.addEventListener('play', async () => {
+            setInterval(async () => {
+                const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
+                if(detection)
+                {
+                    // console.log(detection)
+                    // capture face, set preview to img
+                    var canvas = document.createElement('canvas');
+                    canvas.height = video.videoHeight;
+                    canvas.width = video.videoWidth;
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    document.querySelector('#profile-face').src = canvas.toDataURL();
+                    document.querySelector('#photo').value = canvas.toDataURL();
+                    video.pause()
+
+                    const stream = video.captureStream()
+                    stream.getTracks().forEach(function(track) {
+                        track.stop();
+                        $("#myModal").modal("hide");
+                    });
+                }
+            }, 500)
+        })
+
+        async function detection()
+        {
+            const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptor()
+            console.log(detection)
+        }
+        </script>
 
     </body>
 </html>

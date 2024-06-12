@@ -34,7 +34,12 @@ Auth::routes();
 Route::match(['get','post'],'otp', [App\Http\Controllers\Auth\OtpController::class, 'otp'])->name("otp");
 Route::get('kta', [App\Http\Controllers\Mobile\AlumniController::class, 'ktaDemo']);
 
+Route::match(['get','post'],'login-email', [App\Http\Controllers\Auth\LoginController::class, 'loginWithEmail'])->name("login-email");
+
 Route::get('preview-tiket', [App\Http\Controllers\HomeController::class, 'previewTicket']);
+Route::get('request-account-deletion', function(){
+    return view('request-account-deletion');
+});
 Route::get('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'showLoginForm'])->name('staff-login-form');
 Route::post('staff-login', [App\Http\Controllers\Auth\StaffLoginController::class, 'login'])->name('staff-login');
 Route::post('staff-logout', [App\Http\Controllers\Auth\StaffLoginController::class, 'logout'])->name('staff-logout');
@@ -90,9 +95,11 @@ Route::get('nra-blacklist', [App\Http\Controllers\HomeController::class, 'nraBla
 Route::get('list-alumni/{status}', [App\Http\Controllers\HomeController::class, 'listAlumni'])->name('alumni.list');
 Route::name('events.')->prefix('events')->group(function () {
     Route::get('/', [App\Http\Controllers\EventController::class, 'index'])->name('index');
+    Route::get('test', [App\Http\Controllers\EventController::class, 'test'])->name('test');
     Route::get('{id}', [App\Http\Controllers\EventController::class, 'show'])->name('show');
 });
 Route::post('tripay-callback', [App\Http\Controllers\CallbackController::class, 'tripay'])->name('tripay-callback');
+Route::post('tripay-bot-greetings-callback', [App\Http\Controllers\CallbackController::class, 'tripayBotGreetingsCallback'])->name('tripay-bot-greetings-callback');
 Route::name('merchant.')->prefix('merchant')->group(function(){
     Route::get('/',[App\Http\Controllers\MerchantController::class, 'index'])->name('index');
     Route::get('scan',[App\Http\Controllers\MerchantController::class, 'scan'])->name('scan');
